@@ -5,6 +5,16 @@ authors = []
 telemetry = true
 cache_dir = './.cache'
 requirements = []
+[contracts.mock-sbtc]
+path = 'contracts/mock-sbtc.clar'
+clarity_version = 3
+epoch = '3.1'
+
+[contracts.protocol-adapter]
+path = 'contracts/protocol-adapter.clar'
+clarity_version = 3
+epoch = 'latest'
+
 [contracts.yield-aggregator]
 path = 'contracts/yield-aggregator.clar'
 clarity_version = 3
