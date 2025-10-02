@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aureus Protocol - Institutional Digital Asset Optimization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand">Aureus</div>
+        <ul class="nav-menu">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#protocols">Protocols</a></li>
+            <li><a href="#vault">Vault</a></li>
+        </ul>
+        <button id="walletBtn" class="btn-wallet">Connect Wallet</button>
+    </nav>
+
+    <header class="hero">
+        <span class="hero-tag">Institutional Grade DeFi</span>
+        <h1>Digital Asset Optimization on Bitcoin</h1>
+        <p>Maximize sBTC yield through intelligent multi-protocol allocation. Built with Clarity smart contracts on the Stacks blockchain.</p>
+        <div class="hero-cta">
+            <a href="#vault" class="btn-gold">Launch App</a>
+            <a href="#features" class="btn-outline">Learn More</a>
+        </div>
+    </header>
+
+    <section class="metrics">
+        <div class="metrics-grid">
+            <div class="metric">
+                <span id="tvl" class="metric-val">--</span>
+                <span class="metric-label">Total Value Locked</span>
+            </div>
+            <div class="metric">
+                <span id="apy" class="metric-val">--</span>
+                <span class="metric-label">Best APY</span>
+            </div>
+            <div class="metric">
+                <span class="metric-val">4</span>
+                <span class="metric-label">Integrated Protocols</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <h2>Protocol Features</h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>Yield Aggregation</h3>
+                <p>Deposit sBTC and let the protocol route funds to the highest-yielding DeFi venues automatically.</p>
+            </div>
+            <div class="card">
+                <h3>Multi-Protocol</h3>
+                <p>Integrated with Zest, Velar, ALEX, and StackingDAO for diversified yield generation.</p>
+            </div>
+            <div class="card">
+                <h3>Security First</h3>
+                <p>Emergency pause controls, comprehensive input validation, and full on-chain audit trails.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="protocols" class="protocols">
+        <h2>Supported Protocols</h2>
+        <div class="protocol-list">
+            <div class="protocol-row">
+                <span class="protocol-name">Zest Protocol</span>
+                <span id="zestRate" class="protocol-rate">-- APY</span>
+                <span class="protocol-status active">Active</span>
+            </div>
+            <div class="protocol-row">
+                <span class="protocol-name">ALEX Protocol</span>
+                <span id="alexRate" class="protocol-rate">-- APY</span>
+                <span class="protocol-status active">Active</span>
+            </div>
+            <div class="protocol-row">
+                <span class="protocol-name">Velar Protocol</span>
+                <span id="velarRate" class="protocol-rate">-- APY</span>
+                <span class="protocol-status active">Active</span>
+            </div>
+            <div class="protocol-row">
+                <span class="protocol-name">StackingDAO</span>
+                <span id="stackingRate" class="protocol-rate">-- APY</span>
+                <span class="protocol-status active">Active</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="vault" class="vault">
+        <h2>Deposit Vault</h2>
+        <div class="vault-card">
+            <div class="vault-info">
+                <p>Your Deposit: <strong id="userDeposit">--</strong> sBTC</p>
+                <p>Earned Yield: <strong id="userYield">--</strong> sBTC</p>
+            </div>
+            <div class="vault-actions">
+                <input type="number" id="depositAmount" placeholder="Amount in sBTC" min="0">
+                <button id="depositBtn" class="btn-gold">Deposit</button>
+                <button id="withdrawBtn" class="btn-outline-dark">Withdraw</button>
+            </div>
+            <p class="vault-note">Connect wallet to interact with the vault</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>Aureus Protocol</h3>
+                <p>Institutional digital asset optimization on Stacks.</p>
+            </div>
+            <div>
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Smart Contracts</a></li>
+                    <li><a href="https://github.com/laykesydeoke/aureus-protocol">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2025 Aureus Protocol. Built on Stacks.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
