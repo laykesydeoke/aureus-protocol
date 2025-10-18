@@ -171,6 +171,53 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* How it works */
+.how-it-works {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--card-bg);
+}
+
+.how-it-works h2 {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
+
+.steps-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.step-item { flex: 1; }
+
+.step-n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    color: var(--dark);
+    border-radius: 50%;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.step-item h3 {
+    color: var(--text);
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+}
+
+.step-item p {
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
 /* Features */
 .features {
     padding: 4rem 2rem;
