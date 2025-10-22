@@ -58,7 +58,7 @@ The main contract implementing core asset optimization functionality:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/aoakande/aureus-protocol.git
+git clone https://github.com/laykesydeoke/aureus-protocol.git
 cd aureus-protocol
 ```
 
@@ -132,13 +132,23 @@ This project is designed for Code4STX submissions with:
 - ✅ Institutional-grade features
 - ✅ Modern development standards
 
+## Frontend
+
+The protocol includes a landing page with:
+- Real-time protocol rate display
+- Interactive deposit vault interface
+- Multi-protocol status overview
+
+Start frontend:
+```bash
+cd frontend && npx serve .
+```
+
 ## Future Enhancements
 
-Phase 2 development will include:
-- Multi-protocol integration layer
-- Automated rebalancing system  
+- Automated rebalancing triggers
 - Enhanced compliance reporting
-- Advanced value optimization algorithms
+- Advanced optimization algorithms
 
 ## Contributing
 
