@@ -1,24 +1,26 @@
 [project]
 name = 'aureus-protocol'
-description = 'Aureus Protocol - Institutional Digital Asset Optimization Platform with Clarity 3 and Nakamoto support'
+description = 'Aureus Protocol - Institutional Digital Asset Optimization Platform with Clarity 4'
 authors = []
 telemetry = true
 cache_dir = './.cache'
 requirements = []
+
 [contracts.mock-sbtc]
 path = 'contracts/mock-sbtc.clar'
-clarity_version = 3
-epoch = '3.1'
+clarity_version = 4
+epoch = 'latest'
 
 [contracts.protocol-adapter]
 path = 'contracts/protocol-adapter.clar'
-clarity_version = 3
+clarity_version = 4
 epoch = 'latest'
 
 [contracts.yield-aggregator]
 path = 'contracts/yield-aggregator.clar'
-clarity_version = 3
-epoch = '3.1'
+clarity_version = 4
+epoch = 'latest'
+
 [repl.analysis]
 passes = ['check_checker']
 
