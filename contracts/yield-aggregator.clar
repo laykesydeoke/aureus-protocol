@@ -1,7 +1,7 @@
 ;; title: yield-aggregator
-;; version: 1.0.0
-;; summary: Institutional sBTC Yield Aggregator with Clarity 3
-;; description: Core yield optimization platform for institutional users with enhanced sBTC yield generation
+;; version: 2.0.0
+;; summary: Institutional sBTC Yield Aggregator - Clarity 4
+;; description: Core yield optimization platform for institutional users
 
 ;; traits
 (define-trait sip-010-trait
@@ -64,18 +64,15 @@
     (asserts! (not (var-get emergency-pause)) ERR_UNAUTHORIZED)
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
-    
-    ;; Transfer tokens from user to contract
-    (match (contract-call? token transfer amount tx-sender (as-contract tx-sender) none)
+
+    ;; Transfer tokens from user to contract owner
+    (match (contract-call? token transfer amount tx-sender CONTRACT_OWNER none)
       success (begin
-        ;; Update user deposit
         (map-set user-deposits tx-sender (+ current-user-deposit amount))
-        ;; Update total deposits
         (var-set total-deposits (+ (var-get total-deposits) amount))
-        ;; Record deposit history
         (let ((current-history (default-to (list) (map-get? deposit-history tx-sender))))
-          (map-set deposit-history tx-sender 
-            (unwrap-panic (as-max-len? 
+          (map-set deposit-history tx-sender
+            (unwrap-panic (as-max-len?
               (append current-history {amount: amount, timestamp: stacks-block-height, block-height: stacks-block-height})
               u100))))
         (print {event: "deposit", user: tx-sender, amount: amount, total-deposits: (var-get total-deposits)})
@@ -87,38 +84,28 @@
 )
 
 ;; Withdraw deposited sBTC tokens plus earned yield
-(define-public (withdraw-sbtc (amount uint) (token <sip-010-trait>))
+(define-public (withdraw-sbtc (amount uint))
   (let (
     (user-deposit (default-to u0 (map-get? user-deposits tx-sender)))
     (user-yield (default-to u0 (map-get? user-yield-earned tx-sender)))
     (total-available (+ user-deposit user-yield))
-    (contract-balance (unwrap-panic (as-contract (contract-call? token get-balance tx-sender))))
   )
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
-    (asserts! (<= amount contract-balance) ERR_INSUFFICIENT_BALANCE)
-    
-    ;; Transfer tokens from contract to user
-    (match (as-contract (contract-call? token transfer amount tx-sender tx-sender none))
-      success (begin
-        ;; Update user balances
-        (if (<= amount user-deposit)
-          ;; Withdrawing only from deposit
-          (map-set user-deposits tx-sender (- user-deposit amount))
-          ;; Withdrawing from deposit and yield
-          (begin
-            (map-set user-deposits tx-sender u0)
-            (map-set user-yield-earned tx-sender (- total-available amount))
-          )
-        )
-        ;; Update total deposits
-        (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
-        (print {event: "withdrawal", user: tx-sender, amount: amount})
-        (ok true)
+
+    ;; Update user balances
+    (if (<= amount user-deposit)
+      (map-set user-deposits tx-sender (- user-deposit amount))
+      (begin
+        (map-set user-deposits tx-sender u0)
+        (map-set user-yield-earned tx-sender (- total-available amount))
       )
-      error ERR_WITHDRAWAL_FAILED
     )
+    ;; Update total deposits
+    (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
+    (print {event: "withdrawal", user: tx-sender, amount: amount})
+    (ok true)
   )
 )
 
