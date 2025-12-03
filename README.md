@@ -2,12 +2,12 @@
 
 ## Project Overview
 
-Aureus Protocol is a professional-grade digital asset optimization platform designed for institutional users. Built with Clarity 3 and Nakamoto upgrade support, it provides secure and efficient Bitcoin-backed asset enhancement through intelligent smart contract automation. The name "Aureus" evokes the golden standard of value optimization in decentralized finance.
+Aureus Protocol is a professional-grade digital asset optimization platform designed for institutional users. Built with Clarity 4 on the Stacks blockchain, it provides secure and efficient Bitcoin-backed asset enhancement through intelligent smart contract automation. The name "Aureus" evokes the golden standard of value optimization in decentralized finance.
 
 ## Technology Stack
 
-- **Clarinet**: v3.3.0+ (Nakamoto support)
-- **Clarity**: Version 3 with epoch 3.1
+- **Clarinet**: v3.11.0+
+- **Clarity**: Version 4
 - **Testing**: Vitest with @hirosystems/clarinet-sdk
 - **TypeScript**: Latest version for type safety
 - **Node.js**: Modern JavaScript runtime
@@ -19,7 +19,7 @@ Aureus Protocol is a professional-grade digital asset optimization platform desi
 - **Automated value optimization calculation and distribution**
 - **Comprehensive security controls with emergency pause**
 - **Detailed transaction history and audit trails**
-- **Enhanced precision calculations using Clarity 3**
+- **Enhanced precision calculations using Clarity 4**
 
 ### Security Features
 - **Contract owner access controls**
@@ -80,7 +80,7 @@ npm run test
 ## Development Workflow
 
 ### Contract Development
-- All contracts use Clarity 3 with latest epoch support
+- All contracts use Clarity 4 with latest epoch support
 - Comprehensive error handling and validation
 - Event logging for all major operations
 - Gas-optimized implementations
@@ -126,7 +126,7 @@ Follow Stacks ecosystem deployment procedures using Clarinet's deployment tools.
 
 This project is designed for Code4STX submissions with:
 - ✅ Open source GitHub repository
-- ✅ Clarity 3 contracts with Nakamoto support
+- ✅ Clarity 4 contracts with Nakamoto support
 - ✅ Professional documentation
 - ✅ Comprehensive testing suite
 - ✅ Institutional-grade features
@@ -160,4 +160,4 @@ Open source - suitable for Code4STX submission and community development.
 
 ---
 
-**Aureus Protocol** - Where digital gold meets intelligent optimization. Built with Clarity 3 and modern Stacks tooling for institutional-grade DeFi applications.
+**Aureus Protocol** - Where digital gold meets intelligent optimization. Built with Clarity 4 and modern Stacks tooling for institutional-grade DeFi applications.
