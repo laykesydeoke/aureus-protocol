@@ -1,5 +1,5 @@
 ;; title: yield-aggregator
-;; version: 2.0.0
+;; version: 2.1.0
 ;; summary: Institutional sBTC Yield Aggregator - Clarity 4
 ;; description: Core yield optimization platform for institutional users
 
@@ -15,9 +15,6 @@
     (get-token-uri () (response (optional (string-utf8 256)) uint))
   )
 )
-
-;; token definitions
-;;
 
 ;; constants
 (define-constant CONTRACT_OWNER tx-sender)
@@ -65,7 +62,7 @@
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
 
-    ;; Transfer tokens from user to contract owner
+    ;; Transfer tokens from user to contract owner (vault custodian)
     (match (contract-call? token transfer amount tx-sender CONTRACT_OWNER none)
       success (begin
         (map-set user-deposits tx-sender (+ current-user-deposit amount))
@@ -84,7 +81,7 @@
 )
 
 ;; Withdraw deposited sBTC tokens plus earned yield
-(define-public (withdraw-sbtc (amount uint))
+(define-public (withdraw-sbtc (amount uint) (token <sip-010-trait>))
   (let (
     (user-deposit (default-to u0 (map-get? user-deposits tx-sender)))
     (user-yield (default-to u0 (map-get? user-yield-earned tx-sender)))
@@ -94,28 +91,57 @@
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
 
-    ;; Update user balances
-    (if (<= amount user-deposit)
-      (map-set user-deposits tx-sender (- user-deposit amount))
-      (begin
-        (map-set user-deposits tx-sender u0)
-        (map-set user-yield-earned tx-sender (- total-available amount))
+    ;; Transfer tokens back from vault to user
+    (match (as-contract (contract-call? token transfer amount CONTRACT_OWNER tx-sender none))
+      success (begin
+        ;; Update user balances
+        (if (<= amount user-deposit)
+          (map-set user-deposits tx-sender (- user-deposit amount))
+          (begin
+            (map-set user-deposits tx-sender u0)
+            (map-set user-yield-earned tx-sender (- total-available amount))
+          )
+        )
+        ;; Update total deposits
+        (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
+        (print {event: "withdrawal", user: tx-sender, amount: amount})
+        (ok true)
       )
+      error ERR_WITHDRAWAL_FAILED
     )
-    ;; Update total deposits
-    (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
-    (print {event: "withdrawal", user: tx-sender, amount: amount})
-    (ok true)
   )
 )
 
-;; Calculate and distribute yield (only contract owner)
+;; Credit yield to a specific user proportionally (owner only)
+(define-public (credit-user-yield (user principal) (total-yield uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
+    (asserts! (> total-yield u0) ERR_INVALID_AMOUNT)
+
+    (let (
+      (yield-share (calculate-user-yield user total-yield))
+      (current-yield (default-to u0 (map-get? user-yield-earned user)))
+    )
+      (if (> yield-share u0)
+        (begin
+          (map-set user-yield-earned user (+ current-yield yield-share))
+          (print {event: "yield-credited", user: user, amount: yield-share})
+          (ok yield-share)
+        )
+        (ok u0)
+      )
+    )
+  )
+)
+
+;; Calculate and distribute yield globally (only contract owner)
 (define-public (distribute-yield (total-yield uint))
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
     (asserts! (> total-yield u0) ERR_INVALID_AMOUNT)
-    
+
     ;; Update total yield earned
     (var-set total-yield-earned (+ (var-get total-yield-earned) total-yield))
     (print {event: "yield-distributed", amount: total-yield, total-yield: (var-get total-yield-earned)})
