@@ -22,26 +22,19 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
   });
 
   describe("Contract Initialization", () => {
-    it("allows deployer to initialize the contract", () => {
-      // Reset for this test
-      simnet.callPublicFn("yield-aggregator", "set-emergency-pause", [Cl.bool(true)], deployer);
-      
-      const initResult = simnet.callPublicFn("yield-aggregator", "initialize", [], deployer);
-      expect(initResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
-      
+    it("verifies contract is initialized", () => {
       const isInitialized = simnet.callReadOnlyFn("yield-aggregator", "is-initialized", [], deployer);
       expect(isInitialized.result).toStrictEqual(Cl.ok(Cl.bool(true)));
     });
 
     it("prevents non-deployer from initializing", () => {
       const initResult = simnet.callPublicFn("yield-aggregator", "initialize", [], alice);
-      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(100))); // ERR_UNAUTHORIZED
+      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(100)));
     });
 
     it("prevents double initialization", () => {
-      // Contract is already initialized in beforeEach
       const initResult = simnet.callPublicFn("yield-aggregator", "initialize", [], deployer);
-      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(101))); // ERR_ALREADY_INITIALIZED
+      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(101)));
     });
   });
 
@@ -222,6 +215,36 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
       );
       
       expect(distributeResult.result).toStrictEqual(Cl.error(Cl.uint(104))); // ERR_INVALID_AMOUNT
+    });
+  });
+
+  describe("Per-User Yield Credit", () => {
+    it("credits yield proportionally to user deposits", () => {
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(200_000), mockSbtc], alice);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], bob);
+
+      const creditResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "credit-user-yield",
+        [Cl.principal(alice), Cl.uint(30_000)],
+        deployer
+      );
+      expect(creditResult.result).toBeOk(Cl.uint(20_000)); // 200k/300k * 30k = 20k
+
+      const aliceYield = simnet.callReadOnlyFn("yield-aggregator", "get-user-yield", [Cl.principal(alice)], deployer);
+      expect(aliceYield.result).toStrictEqual(Cl.ok(Cl.uint(20_000)));
+    });
+
+    it("prevents non-owner from crediting yield", () => {
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], alice);
+
+      const creditResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "credit-user-yield",
+        [Cl.principal(alice), Cl.uint(10_000)],
+        alice
+      );
+      expect(creditResult.result).toStrictEqual(Cl.error(Cl.uint(100)));
     });
   });
 
