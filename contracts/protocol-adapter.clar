@@ -219,28 +219,35 @@
 ;; Get optimal protocol based on highest yield rate
 (define-read-only (get-optimal-protocol)
   (let (
-    (zest-info (unwrap-panic (map-get? protocol-info PROTOCOL_ZEST)))
-    (velar-info (unwrap-panic (map-get? protocol-info PROTOCOL_VELAR)))
-    (alex-info (unwrap-panic (map-get? protocol-info PROTOCOL_ALEX)))
-    (stacking-info (unwrap-panic (map-get? protocol-info PROTOCOL_STACKINGDAO)))
+    (zest-info (map-get? protocol-info PROTOCOL_ZEST))
+    (velar-info (map-get? protocol-info PROTOCOL_VELAR))
+    (alex-info (map-get? protocol-info PROTOCOL_ALEX))
+    (stacking-info (map-get? protocol-info PROTOCOL_STACKINGDAO))
   )
-    (let (
-      (best-rate (fold max (list 
-        (get yield-rate zest-info)
-        (get yield-rate velar-info) 
-        (get yield-rate alex-info)
-        (get yield-rate stacking-info)
-      ) u0))
-    )
-      (if (and (is-eq best-rate (get yield-rate zest-info)) (get is-active zest-info))
-        (ok PROTOCOL_ZEST)
-        (if (and (is-eq best-rate (get yield-rate velar-info)) (get is-active velar-info))
-          (ok PROTOCOL_VELAR)
-          (if (and (is-eq best-rate (get yield-rate alex-info)) (get is-active alex-info))
-            (ok PROTOCOL_ALEX)
-            (if (and (is-eq best-rate (get yield-rate stacking-info)) (get is-active stacking-info))
-              (ok PROTOCOL_STACKINGDAO)
-              (ok PROTOCOL_ZEST) ;; Default fallback
+    (if (is-none zest-info)
+      (ok PROTOCOL_ZEST) ;; Not initialized yet, return default
+      (let (
+        (zest (unwrap-panic zest-info))
+        (velar (unwrap-panic velar-info))
+        (alex (unwrap-panic alex-info))
+        (stacking (unwrap-panic stacking-info))
+        (best-rate (fold max (list
+          (get yield-rate zest)
+          (get yield-rate velar)
+          (get yield-rate alex)
+          (get yield-rate stacking)
+        ) u0))
+      )
+        (if (and (is-eq best-rate (get yield-rate zest)) (get is-active zest))
+          (ok PROTOCOL_ZEST)
+          (if (and (is-eq best-rate (get yield-rate velar)) (get is-active velar))
+            (ok PROTOCOL_VELAR)
+            (if (and (is-eq best-rate (get yield-rate alex)) (get is-active alex))
+              (ok PROTOCOL_ALEX)
+              (if (and (is-eq best-rate (get yield-rate stacking)) (get is-active stacking))
+                (ok PROTOCOL_STACKINGDAO)
+                (ok PROTOCOL_ZEST)
+              )
             )
           )
         )
@@ -277,10 +284,10 @@
 ;; Get all protocol rates for comparison
 (define-read-only (get-all-protocol-rates)
   (ok {
-    zest: (get yield-rate (unwrap-panic (map-get? protocol-info PROTOCOL_ZEST))),
-    velar: (get yield-rate (unwrap-panic (map-get? protocol-info PROTOCOL_VELAR))),
-    alex: (get yield-rate (unwrap-panic (map-get? protocol-info PROTOCOL_ALEX))),
-    stacking: (get yield-rate (unwrap-panic (map-get? protocol-info PROTOCOL_STACKINGDAO)))
+    zest: (default-to u0 (get yield-rate (map-get? protocol-info PROTOCOL_ZEST))),
+    velar: (default-to u0 (get yield-rate (map-get? protocol-info PROTOCOL_VELAR))),
+    alex: (default-to u0 (get yield-rate (map-get? protocol-info PROTOCOL_ALEX))),
+    stacking: (default-to u0 (get yield-rate (map-get? protocol-info PROTOCOL_STACKINGDAO)))
   })
 )
 
