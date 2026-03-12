@@ -62,8 +62,8 @@
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
 
-    ;; Transfer tokens from user to contract owner (vault custodian)
-    (match (contract-call? token transfer amount tx-sender CONTRACT_OWNER none)
+    ;; Transfer tokens from user to this contract (vault)
+    (match (contract-call? token transfer amount tx-sender (as-contract tx-sender) none)
       success (begin
         (map-set user-deposits tx-sender (+ current-user-deposit amount))
         (var-set total-deposits (+ (var-get total-deposits) amount))
@@ -83,6 +83,7 @@
 ;; Withdraw deposited sBTC tokens plus earned yield
 (define-public (withdraw-sbtc (amount uint) (token <sip-010-trait>))
   (let (
+    (caller tx-sender)
     (user-deposit (default-to u0 (map-get? user-deposits tx-sender)))
     (user-yield (default-to u0 (map-get? user-yield-earned tx-sender)))
     (total-available (+ user-deposit user-yield))
@@ -91,20 +92,20 @@
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
 
-    ;; Transfer tokens back from vault to user
-    (match (as-contract (contract-call? token transfer amount CONTRACT_OWNER tx-sender none))
+    ;; Transfer tokens back from contract vault to user
+    (match (as-contract (contract-call? token transfer amount tx-sender caller none))
       success (begin
         ;; Update user balances
         (if (<= amount user-deposit)
-          (map-set user-deposits tx-sender (- user-deposit amount))
+          (map-set user-deposits caller (- user-deposit amount))
           (begin
-            (map-set user-deposits tx-sender u0)
-            (map-set user-yield-earned tx-sender (- total-available amount))
+            (map-set user-deposits caller u0)
+            (map-set user-yield-earned caller (- total-available amount))
           )
         )
         ;; Update total deposits
         (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
-        (print {event: "withdrawal", user: tx-sender, amount: amount})
+        (print {event: "withdrawal", user: caller, amount: amount})
         (ok true)
       )
       error ERR_WITHDRAWAL_FAILED
