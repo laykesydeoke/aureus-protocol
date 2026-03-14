@@ -583,3 +583,8 @@
     (map-set notif-queue-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set notif-queue-counter id)
     (ok id)))
+(define-public (update-notif-queue (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? notif-queue-registry id) (err u691))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u692))
+    (asserts! (get active entry) (err u693))
+    (ok (map-set notif-queue-registry id (merge entry {value: new-val})))))
