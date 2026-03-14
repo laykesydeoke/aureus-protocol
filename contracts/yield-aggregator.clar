@@ -385,3 +385,8 @@
     (map-set analytics-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set analytics-counter id)
     (ok id)))
+(define-public (update-analytics (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? analytics-registry id) (err u631))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u632))
+    (asserts! (get active entry) (err u633))
+    (ok (map-set analytics-registry id (merge entry {value: new-val})))))
