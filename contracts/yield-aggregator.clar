@@ -373,3 +373,5 @@
   (match (map-get? batch-ops-registry id)
     entry (ok (get owner entry))
     (err u621)))
+(define-read-only (get-batch-ops-value (id uint))
+  (default-to u0 (get value (map-get? batch-ops-registry id))))
