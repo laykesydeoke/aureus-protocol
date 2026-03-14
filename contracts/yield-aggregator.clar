@@ -412,3 +412,9 @@
 ;; caching module
 (define-map caching-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var caching-counter uint u0)
+(define-public (create-caching (val uint))
+  (let ((id (+ (var-get caching-counter) u1)))
+    (asserts! (> val u0) (err u640))
+    (map-set caching-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set caching-counter id)
+    (ok id)))
