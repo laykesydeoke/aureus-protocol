@@ -352,3 +352,8 @@
     (map-set batch-ops-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set batch-ops-counter id)
     (ok id)))
+(define-public (update-batch-ops (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? batch-ops-registry id) (err u621))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u622))
+    (asserts! (get active entry) (err u623))
+    (ok (map-set batch-ops-registry id (merge entry {value: new-val})))))
