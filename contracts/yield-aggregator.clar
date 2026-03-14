@@ -427,3 +427,7 @@
   (let ((entry (unwrap! (map-get? caching-registry id) (err u641))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u642))
     (ok (map-set caching-registry id (merge entry {active: false})))))
+(define-read-only (get-caching-entry (id uint))
+  (map-get? caching-registry id))
+(define-read-only (get-caching-count)
+  (ok (var-get caching-counter)))
