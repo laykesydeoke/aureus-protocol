@@ -451,3 +451,8 @@
     (map-set event-sys-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set event-sys-counter id)
     (ok id)))
+(define-public (update-event-sys (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? event-sys-registry id) (err u651))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u652))
+    (asserts! (get active entry) (err u653))
+    (ok (map-set event-sys-registry id (merge entry {value: new-val})))))
