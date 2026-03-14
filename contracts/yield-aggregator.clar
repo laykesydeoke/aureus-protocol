@@ -604,3 +604,5 @@
   (match (map-get? notif-queue-registry id)
     entry (ok (get owner entry))
     (err u691)))
+(define-read-only (get-notif-queue-value (id uint))
+  (default-to u0 (get value (map-get? notif-queue-registry id))))
