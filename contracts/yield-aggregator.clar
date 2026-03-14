@@ -517,3 +517,8 @@
     (map-set pagination-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set pagination-counter id)
     (ok id)))
+(define-public (update-pagination (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? pagination-registry id) (err u671))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u672))
+    (asserts! (get active entry) (err u673))
+    (ok (map-set pagination-registry id (merge entry {value: new-val})))))
