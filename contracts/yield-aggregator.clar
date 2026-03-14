@@ -435,3 +435,7 @@
   (match (map-get? caching-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-caching-owner (id uint))
+  (match (map-get? caching-registry id)
+    entry (ok (get owner entry))
+    (err u641)))
