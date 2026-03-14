@@ -588,3 +588,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u692))
     (asserts! (get active entry) (err u693))
     (ok (map-set notif-queue-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-notif-queue (id uint))
+  (let ((entry (unwrap! (map-get? notif-queue-registry id) (err u691))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u692))
+    (ok (map-set notif-queue-registry id (merge entry {active: false})))))
