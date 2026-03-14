@@ -497,3 +497,7 @@
   (map-get? error-handler-registry id))
 (define-read-only (get-error-handler-count)
   (ok (var-get error-handler-counter)))
+(define-read-only (is-error-handler-active (id uint))
+  (match (map-get? error-handler-registry id)
+    entry (get active entry)
+    false))
