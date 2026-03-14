@@ -324,3 +324,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u612))
     (asserts! (get active entry) (err u613))
     (ok (map-set rate-limit-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-rate-limit (id uint))
+  (let ((entry (unwrap! (map-get? rate-limit-registry id) (err u611))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u612))
+    (ok (map-set rate-limit-registry id (merge entry {active: false})))))
