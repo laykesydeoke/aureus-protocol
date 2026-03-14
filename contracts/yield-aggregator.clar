@@ -332,3 +332,7 @@
   (map-get? rate-limit-registry id))
 (define-read-only (get-rate-limit-count)
   (ok (var-get rate-limit-counter)))
+(define-read-only (is-rate-limit-active (id uint))
+  (match (map-get? rate-limit-registry id)
+    entry (get active entry)
+    false))
