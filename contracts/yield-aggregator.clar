@@ -526,3 +526,7 @@
   (let ((entry (unwrap! (map-get? pagination-registry id) (err u671))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u672))
     (ok (map-set pagination-registry id (merge entry {active: false})))))
+(define-read-only (get-pagination-entry (id uint))
+  (map-get? pagination-registry id))
+(define-read-only (get-pagination-count)
+  (ok (var-get pagination-counter)))
