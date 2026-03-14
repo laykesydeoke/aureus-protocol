@@ -280,3 +280,9 @@
 ;; access-ctrl module
 (define-map access-ctrl-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var access-ctrl-counter uint u0)
+(define-public (create-access-ctrl (val uint))
+  (let ((id (+ (var-get access-ctrl-counter) u1)))
+    (asserts! (> val u0) (err u600))
+    (map-set access-ctrl-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set access-ctrl-counter id)
+    (ok id)))
