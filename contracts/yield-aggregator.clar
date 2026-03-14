@@ -361,3 +361,7 @@
   (let ((entry (unwrap! (map-get? batch-ops-registry id) (err u621))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u622))
     (ok (map-set batch-ops-registry id (merge entry {active: false})))))
+(define-read-only (get-batch-ops-entry (id uint))
+  (map-get? batch-ops-registry id))
+(define-read-only (get-batch-ops-count)
+  (ok (var-get batch-ops-counter)))
