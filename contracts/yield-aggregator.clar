@@ -544,3 +544,9 @@
 ;; search-idx module
 (define-map search-idx-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var search-idx-counter uint u0)
+(define-public (create-search-idx (val uint))
+  (let ((id (+ (var-get search-idx-counter) u1)))
+    (asserts! (> val u0) (err u680))
+    (map-set search-idx-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set search-idx-counter id)
+    (ok id)))
