@@ -441,3 +441,7 @@
     (err u641)))
 (define-read-only (get-caching-value (id uint))
   (default-to u0 (get value (map-get? caching-registry id))))
+
+;; event-sys module
+(define-map event-sys-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var event-sys-counter uint u0)
