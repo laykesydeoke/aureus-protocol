@@ -408,3 +408,7 @@
     (err u631)))
 (define-read-only (get-analytics-value (id uint))
   (default-to u0 (get value (map-get? analytics-registry id))))
+
+;; caching module
+(define-map caching-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var caching-counter uint u0)
