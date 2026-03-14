@@ -286,3 +286,8 @@
     (map-set access-ctrl-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set access-ctrl-counter id)
     (ok id)))
+(define-public (update-access-ctrl (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? access-ctrl-registry id) (err u601))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u602))
+    (asserts! (get active entry) (err u603))
+    (ok (map-set access-ctrl-registry id (merge entry {value: new-val})))))
