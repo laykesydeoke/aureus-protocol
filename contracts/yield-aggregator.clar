@@ -379,3 +379,9 @@
 ;; analytics module
 (define-map analytics-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var analytics-counter uint u0)
+(define-public (create-analytics (val uint))
+  (let ((id (+ (var-get analytics-counter) u1)))
+    (asserts! (> val u0) (err u630))
+    (map-set analytics-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set analytics-counter id)
+    (ok id)))
