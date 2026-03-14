@@ -489,3 +489,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u662))
     (asserts! (get active entry) (err u663))
     (ok (map-set error-handler-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-error-handler (id uint))
+  (let ((entry (unwrap! (map-get? error-handler-registry id) (err u661))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u662))
+    (ok (map-set error-handler-registry id (merge entry {active: false})))))
