@@ -328,3 +328,7 @@
   (let ((entry (unwrap! (map-get? rate-limit-registry id) (err u611))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u612))
     (ok (map-set rate-limit-registry id (merge entry {active: false})))))
+(define-read-only (get-rate-limit-entry (id uint))
+  (map-get? rate-limit-registry id))
+(define-read-only (get-rate-limit-count)
+  (ok (var-get rate-limit-counter)))
