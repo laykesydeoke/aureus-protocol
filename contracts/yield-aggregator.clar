@@ -375,3 +375,7 @@
     (err u621)))
 (define-read-only (get-batch-ops-value (id uint))
   (default-to u0 (get value (map-get? batch-ops-registry id))))
+
+;; analytics module
+(define-map analytics-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var analytics-counter uint u0)
