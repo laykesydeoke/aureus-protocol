@@ -460,3 +460,7 @@
   (let ((entry (unwrap! (map-get? event-sys-registry id) (err u651))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u652))
     (ok (map-set event-sys-registry id (merge entry {active: false})))))
+(define-read-only (get-event-sys-entry (id uint))
+  (map-get? event-sys-registry id))
+(define-read-only (get-event-sys-count)
+  (ok (var-get event-sys-counter)))
