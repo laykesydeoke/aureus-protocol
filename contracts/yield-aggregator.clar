@@ -464,3 +464,7 @@
   (map-get? event-sys-registry id))
 (define-read-only (get-event-sys-count)
   (ok (var-get event-sys-counter)))
+(define-read-only (is-event-sys-active (id uint))
+  (match (map-get? event-sys-registry id)
+    entry (get active entry)
+    false))
