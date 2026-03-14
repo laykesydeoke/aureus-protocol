@@ -567,3 +567,7 @@
   (match (map-get? search-idx-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-search-idx-owner (id uint))
+  (match (map-get? search-idx-registry id)
+    entry (ok (get owner entry))
+    (err u681)))
