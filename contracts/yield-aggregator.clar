@@ -474,3 +474,7 @@
     (err u651)))
 (define-read-only (get-event-sys-value (id uint))
   (default-to u0 (get value (map-get? event-sys-registry id))))
+
+;; error-handler module
+(define-map error-handler-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var error-handler-counter uint u0)
