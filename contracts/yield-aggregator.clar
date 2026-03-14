@@ -596,3 +596,7 @@
   (map-get? notif-queue-registry id))
 (define-read-only (get-notif-queue-count)
   (ok (var-get notif-queue-counter)))
+(define-read-only (is-notif-queue-active (id uint))
+  (match (map-get? notif-queue-registry id)
+    entry (get active entry)
+    false))
