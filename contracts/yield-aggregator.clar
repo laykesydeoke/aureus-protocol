@@ -555,3 +555,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u682))
     (asserts! (get active entry) (err u683))
     (ok (map-set search-idx-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-search-idx (id uint))
+  (let ((entry (unwrap! (map-get? search-idx-registry id) (err u681))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u682))
+    (ok (map-set search-idx-registry id (merge entry {active: false})))))
