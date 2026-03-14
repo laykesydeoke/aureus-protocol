@@ -522,3 +522,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u672))
     (asserts! (get active entry) (err u673))
     (ok (map-set pagination-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-pagination (id uint))
+  (let ((entry (unwrap! (map-get? pagination-registry id) (err u671))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u672))
+    (ok (map-set pagination-registry id (merge entry {active: false})))))
