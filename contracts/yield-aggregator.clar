@@ -577,3 +577,9 @@
 ;; notif-queue module
 (define-map notif-queue-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var notif-queue-counter uint u0)
+(define-public (create-notif-queue (val uint))
+  (let ((id (+ (var-get notif-queue-counter) u1)))
+    (asserts! (> val u0) (err u690))
+    (map-set notif-queue-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set notif-queue-counter id)
+    (ok id)))
