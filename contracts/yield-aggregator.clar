@@ -592,3 +592,7 @@
   (let ((entry (unwrap! (map-get? notif-queue-registry id) (err u691))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u692))
     (ok (map-set notif-queue-registry id (merge entry {active: false})))))
+(define-read-only (get-notif-queue-entry (id uint))
+  (map-get? notif-queue-registry id))
+(define-read-only (get-notif-queue-count)
+  (ok (var-get notif-queue-counter)))
