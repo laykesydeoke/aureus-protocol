@@ -398,3 +398,7 @@
   (map-get? analytics-registry id))
 (define-read-only (get-analytics-count)
   (ok (var-get analytics-counter)))
+(define-read-only (is-analytics-active (id uint))
+  (match (map-get? analytics-registry id)
+    entry (get active entry)
+    false))
