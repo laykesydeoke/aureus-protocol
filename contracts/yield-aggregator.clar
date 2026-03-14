@@ -478,3 +478,9 @@
 ;; error-handler module
 (define-map error-handler-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var error-handler-counter uint u0)
+(define-public (create-error-handler (val uint))
+  (let ((id (+ (var-get error-handler-counter) u1)))
+    (asserts! (> val u0) (err u660))
+    (map-set error-handler-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set error-handler-counter id)
+    (ok id)))
