@@ -505,3 +505,5 @@
   (match (map-get? error-handler-registry id)
     entry (ok (get owner entry))
     (err u661)))
+(define-read-only (get-error-handler-value (id uint))
+  (default-to u0 (get value (map-get? error-handler-registry id))))
