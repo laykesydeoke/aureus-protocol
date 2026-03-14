@@ -472,3 +472,5 @@
   (match (map-get? event-sys-registry id)
     entry (ok (get owner entry))
     (err u651)))
+(define-read-only (get-event-sys-value (id uint))
+  (default-to u0 (get value (map-get? event-sys-registry id))))
