@@ -445,3 +445,9 @@
 ;; event-sys module
 (define-map event-sys-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var event-sys-counter uint u0)
+(define-public (create-event-sys (val uint))
+  (let ((id (+ (var-get event-sys-counter) u1)))
+    (asserts! (> val u0) (err u650))
+    (map-set event-sys-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set event-sys-counter id)
+    (ok id)))
