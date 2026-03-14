@@ -540,3 +540,7 @@
     (err u671)))
 (define-read-only (get-pagination-value (id uint))
   (default-to u0 (get value (map-get? pagination-registry id))))
+
+;; search-idx module
+(define-map search-idx-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var search-idx-counter uint u0)
