@@ -309,3 +309,7 @@
     (err u601)))
 (define-read-only (get-access-ctrl-value (id uint))
   (default-to u0 (get value (map-get? access-ctrl-registry id))))
+
+;; rate-limit module
+(define-map rate-limit-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var rate-limit-counter uint u0)
