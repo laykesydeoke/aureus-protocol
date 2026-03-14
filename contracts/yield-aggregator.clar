@@ -511,3 +511,9 @@
 ;; pagination module
 (define-map pagination-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var pagination-counter uint u0)
+(define-public (create-pagination (val uint))
+  (let ((id (+ (var-get pagination-counter) u1)))
+    (asserts! (> val u0) (err u670))
+    (map-set pagination-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set pagination-counter id)
+    (ok id)))
