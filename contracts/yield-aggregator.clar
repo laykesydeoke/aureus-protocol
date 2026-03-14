@@ -423,3 +423,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u642))
     (asserts! (get active entry) (err u643))
     (ok (map-set caching-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-caching (id uint))
+  (let ((entry (unwrap! (map-get? caching-registry id) (err u641))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u642))
+    (ok (map-set caching-registry id (merge entry {active: false})))))
