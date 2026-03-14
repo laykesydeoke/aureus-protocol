@@ -563,3 +563,7 @@
   (map-get? search-idx-registry id))
 (define-read-only (get-search-idx-count)
   (ok (var-get search-idx-counter)))
+(define-read-only (is-search-idx-active (id uint))
+  (match (map-get? search-idx-registry id)
+    entry (get active entry)
+    false))
