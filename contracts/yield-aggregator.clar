@@ -299,3 +299,7 @@
   (map-get? access-ctrl-registry id))
 (define-read-only (get-access-ctrl-count)
   (ok (var-get access-ctrl-counter)))
+(define-read-only (is-access-ctrl-active (id uint))
+  (match (map-get? access-ctrl-registry id)
+    entry (get active entry)
+    false))
