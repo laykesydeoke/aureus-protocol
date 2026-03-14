@@ -530,3 +530,7 @@
   (map-get? pagination-registry id))
 (define-read-only (get-pagination-count)
   (ok (var-get pagination-counter)))
+(define-read-only (is-pagination-active (id uint))
+  (match (map-get? pagination-registry id)
+    entry (get active entry)
+    false))
