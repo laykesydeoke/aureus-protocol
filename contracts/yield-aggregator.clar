@@ -493,3 +493,7 @@
   (let ((entry (unwrap! (map-get? error-handler-registry id) (err u661))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u662))
     (ok (map-set error-handler-registry id (merge entry {active: false})))))
+(define-read-only (get-error-handler-entry (id uint))
+  (map-get? error-handler-registry id))
+(define-read-only (get-error-handler-count)
+  (ok (var-get error-handler-counter)))
