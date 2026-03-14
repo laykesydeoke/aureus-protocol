@@ -369,3 +369,7 @@
   (match (map-get? batch-ops-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-batch-ops-owner (id uint))
+  (match (map-get? batch-ops-registry id)
+    entry (ok (get owner entry))
+    (err u621)))
