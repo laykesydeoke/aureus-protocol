@@ -538,3 +538,5 @@
   (match (map-get? pagination-registry id)
     entry (ok (get owner entry))
     (err u671)))
+(define-read-only (get-pagination-value (id uint))
+  (default-to u0 (get value (map-get? pagination-registry id))))
