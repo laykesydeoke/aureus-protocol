@@ -346,3 +346,9 @@
 ;; batch-ops module
 (define-map batch-ops-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var batch-ops-counter uint u0)
+(define-public (create-batch-ops (val uint))
+  (let ((id (+ (var-get batch-ops-counter) u1)))
+    (asserts! (> val u0) (err u620))
+    (map-set batch-ops-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set batch-ops-counter id)
+    (ok id)))
