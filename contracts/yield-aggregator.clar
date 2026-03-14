@@ -456,3 +456,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u652))
     (asserts! (get active entry) (err u653))
     (ok (map-set event-sys-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-event-sys (id uint))
+  (let ((entry (unwrap! (map-get? event-sys-registry id) (err u651))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u652))
+    (ok (map-set event-sys-registry id (merge entry {active: false})))))
