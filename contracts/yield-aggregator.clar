@@ -336,3 +336,7 @@
   (match (map-get? rate-limit-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-rate-limit-owner (id uint))
+  (match (map-get? rate-limit-registry id)
+    entry (ok (get owner entry))
+    (err u611)))
