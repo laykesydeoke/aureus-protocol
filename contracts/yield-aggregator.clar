@@ -507,3 +507,7 @@
     (err u661)))
 (define-read-only (get-error-handler-value (id uint))
   (default-to u0 (get value (map-get? error-handler-registry id))))
+
+;; pagination module
+(define-map pagination-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var pagination-counter uint u0)
