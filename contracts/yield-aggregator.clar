@@ -295,3 +295,7 @@
   (let ((entry (unwrap! (map-get? access-ctrl-registry id) (err u601))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u602))
     (ok (map-set access-ctrl-registry id (merge entry {active: false})))))
+(define-read-only (get-access-ctrl-entry (id uint))
+  (map-get? access-ctrl-registry id))
+(define-read-only (get-access-ctrl-count)
+  (ok (var-get access-ctrl-counter)))
