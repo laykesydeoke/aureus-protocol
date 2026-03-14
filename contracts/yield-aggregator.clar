@@ -313,3 +313,9 @@
 ;; rate-limit module
 (define-map rate-limit-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var rate-limit-counter uint u0)
+(define-public (create-rate-limit (val uint))
+  (let ((id (+ (var-get rate-limit-counter) u1)))
+    (asserts! (> val u0) (err u610))
+    (map-set rate-limit-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set rate-limit-counter id)
+    (ok id)))
