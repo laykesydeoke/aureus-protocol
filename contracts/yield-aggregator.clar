@@ -276,3 +276,7 @@
     )
   )
 )
+
+;; access-ctrl module
+(define-map access-ctrl-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var access-ctrl-counter uint u0)
