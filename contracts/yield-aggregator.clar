@@ -357,3 +357,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u622))
     (asserts! (get active entry) (err u623))
     (ok (map-set batch-ops-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-batch-ops (id uint))
+  (let ((entry (unwrap! (map-get? batch-ops-registry id) (err u621))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u622))
+    (ok (map-set batch-ops-registry id (merge entry {active: false})))))
