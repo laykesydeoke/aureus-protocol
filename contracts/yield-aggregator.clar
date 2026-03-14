@@ -342,3 +342,7 @@
     (err u611)))
 (define-read-only (get-rate-limit-value (id uint))
   (default-to u0 (get value (map-get? rate-limit-registry id))))
+
+;; batch-ops module
+(define-map batch-ops-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var batch-ops-counter uint u0)
