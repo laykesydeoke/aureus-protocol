@@ -394,3 +394,7 @@
   (let ((entry (unwrap! (map-get? analytics-registry id) (err u631))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u632))
     (ok (map-set analytics-registry id (merge entry {active: false})))))
+(define-read-only (get-analytics-entry (id uint))
+  (map-get? analytics-registry id))
+(define-read-only (get-analytics-count)
+  (ok (var-get analytics-counter)))
