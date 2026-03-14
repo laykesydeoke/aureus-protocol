@@ -303,3 +303,7 @@
   (match (map-get? access-ctrl-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-access-ctrl-owner (id uint))
+  (match (map-get? access-ctrl-registry id)
+    entry (ok (get owner entry))
+    (err u601)))
