@@ -291,3 +291,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u602))
     (asserts! (get active entry) (err u603))
     (ok (map-set access-ctrl-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-access-ctrl (id uint))
+  (let ((entry (unwrap! (map-get? access-ctrl-registry id) (err u601))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u602))
+    (ok (map-set access-ctrl-registry id (merge entry {active: false})))))
