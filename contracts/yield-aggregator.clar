@@ -431,3 +431,7 @@
   (map-get? caching-registry id))
 (define-read-only (get-caching-count)
   (ok (var-get caching-counter)))
+(define-read-only (is-caching-active (id uint))
+  (match (map-get? caching-registry id)
+    entry (get active entry)
+    false))
