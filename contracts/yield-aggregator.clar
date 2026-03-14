@@ -319,3 +319,8 @@
     (map-set rate-limit-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set rate-limit-counter id)
     (ok id)))
+(define-public (update-rate-limit (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? rate-limit-registry id) (err u611))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u612))
+    (asserts! (get active entry) (err u613))
+    (ok (map-set rate-limit-registry id (merge entry {value: new-val})))))
