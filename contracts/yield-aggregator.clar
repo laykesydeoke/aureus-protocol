@@ -573,3 +573,7 @@
     (err u681)))
 (define-read-only (get-search-idx-value (id uint))
   (default-to u0 (get value (map-get? search-idx-registry id))))
+
+;; notif-queue module
+(define-map notif-queue-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var notif-queue-counter uint u0)
