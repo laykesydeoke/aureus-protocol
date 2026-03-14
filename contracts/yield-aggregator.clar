@@ -390,3 +390,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u632))
     (asserts! (get active entry) (err u633))
     (ok (map-set analytics-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-analytics (id uint))
+  (let ((entry (unwrap! (map-get? analytics-registry id) (err u631))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u632))
+    (ok (map-set analytics-registry id (merge entry {active: false})))))
