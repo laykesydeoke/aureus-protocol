@@ -870,3 +870,7 @@
     (err u771)))
 (define-read-only (get-health-chk-value (id uint))
   (default-to u0 (get value (map-get? health-chk-registry id))))
+
+;; load-bal module
+(define-map load-bal-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var load-bal-counter uint u0)
