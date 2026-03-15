@@ -705,3 +705,7 @@
     (err u721)))
 (define-read-only (get-encrypt-mod-value (id uint))
   (default-to u0 (get value (map-get? encrypt-mod-registry id))))
+
+;; data-valid module
+(define-map data-valid-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var data-valid-counter uint u0)
