@@ -757,3 +757,7 @@
   (let ((entry (unwrap! (map-get? queue-sys-registry id) (err u741))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u742))
     (ok (map-set queue-sys-registry id (merge entry {active: false})))))
+(define-read-only (get-queue-sys-entry (id uint))
+  (map-get? queue-sys-registry id))
+(define-read-only (get-queue-sys-count)
+  (ok (var-get queue-sys-counter)))
