@@ -926,3 +926,7 @@
   (map-get? failover-registry id))
 (define-read-only (get-failover-count)
   (ok (var-get failover-counter)))
+(define-read-only (is-failover-active (id uint))
+  (match (map-get? failover-registry id)
+    entry (get active entry)
+    false))
