@@ -621,3 +621,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u702))
     (asserts! (get active entry) (err u703))
     (ok (map-set audit-trail-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-audit-trail (id uint))
+  (let ((entry (unwrap! (map-get? audit-trail-registry id) (err u701))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u702))
+    (ok (map-set audit-trail-registry id (merge entry {active: false})))))
