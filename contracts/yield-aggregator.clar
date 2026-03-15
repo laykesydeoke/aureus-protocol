@@ -823,3 +823,7 @@
   (let ((entry (unwrap! (map-get? api-gw-registry id) (err u761))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u762))
     (ok (map-set api-gw-registry id (merge entry {active: false})))))
+(define-read-only (get-api-gw-entry (id uint))
+  (map-get? api-gw-registry id))
+(define-read-only (get-api-gw-count)
+  (ok (var-get api-gw-counter)))
