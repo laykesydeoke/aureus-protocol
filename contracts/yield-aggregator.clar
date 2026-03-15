@@ -616,3 +616,8 @@
     (map-set audit-trail-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set audit-trail-counter id)
     (ok id)))
+(define-public (update-audit-trail (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? audit-trail-registry id) (err u701))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u702))
+    (asserts! (get active entry) (err u703))
+    (ok (map-set audit-trail-registry id (merge entry {value: new-val})))))
