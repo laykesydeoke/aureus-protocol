@@ -798,3 +798,7 @@
   (match (map-get? webhook-mgr-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-webhook-mgr-owner (id uint))
+  (match (map-get? webhook-mgr-registry id)
+    entry (ok (get owner entry))
+    (err u751)))
