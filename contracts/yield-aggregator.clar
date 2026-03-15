@@ -736,3 +736,5 @@
   (match (map-get? data-valid-registry id)
     entry (ok (get owner entry))
     (err u731)))
+(define-read-only (get-data-valid-value (id uint))
+  (default-to u0 (get value (map-get? data-valid-registry id))))
