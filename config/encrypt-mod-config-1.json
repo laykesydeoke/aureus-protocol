@@ -1,0 +1,14 @@
+{
+  "module": "encrypt-mod",
+  "version": "1.1.0",
+  "contract": "yield-aggregator",
+  "network": "testnet",
+  "settings": {
+    "maxEntries": 100,
+    "minValue": 1,
+    "maxValue": 1000000000,
+    "errorBase": 720,
+    "autoDeactivate": false,
+    "auditLog": true
+  }
+}
