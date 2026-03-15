@@ -897,3 +897,7 @@
   (match (map-get? load-bal-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-load-bal-owner (id uint))
+  (match (map-get? load-bal-registry id)
+    entry (ok (get owner entry))
+    (err u781)))
