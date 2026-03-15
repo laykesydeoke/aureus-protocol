@@ -662,3 +662,7 @@
   (map-get? compliance-registry id))
 (define-read-only (get-compliance-count)
   (ok (var-get compliance-counter)))
+(define-read-only (is-compliance-active (id uint))
+  (match (map-get? compliance-registry id)
+    entry (get active entry)
+    false))
