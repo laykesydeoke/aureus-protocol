@@ -637,3 +637,5 @@
   (match (map-get? audit-trail-registry id)
     entry (ok (get owner entry))
     (err u701)))
+(define-read-only (get-audit-trail-value (id uint))
+  (default-to u0 (get value (map-get? audit-trail-registry id))))
