@@ -649,3 +649,8 @@
     (map-set compliance-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set compliance-counter id)
     (ok id)))
+(define-public (update-compliance (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? compliance-registry id) (err u711))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u712))
+    (asserts! (get active entry) (err u713))
+    (ok (map-set compliance-registry id (merge entry {value: new-val})))))
