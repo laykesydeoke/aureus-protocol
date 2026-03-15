@@ -625,3 +625,7 @@
   (let ((entry (unwrap! (map-get? audit-trail-registry id) (err u701))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u702))
     (ok (map-set audit-trail-registry id (merge entry {active: false})))))
+(define-read-only (get-audit-trail-entry (id uint))
+  (map-get? audit-trail-registry id))
+(define-read-only (get-audit-trail-count)
+  (ok (var-get audit-trail-counter)))
