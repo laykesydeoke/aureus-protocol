@@ -672,3 +672,7 @@
     (err u711)))
 (define-read-only (get-compliance-value (id uint))
   (default-to u0 (get value (map-get? compliance-registry id))))
+
+;; encrypt-mod module
+(define-map encrypt-mod-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var encrypt-mod-counter uint u0)
