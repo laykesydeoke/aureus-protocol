@@ -676,3 +676,9 @@
 ;; encrypt-mod module
 (define-map encrypt-mod-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var encrypt-mod-counter uint u0)
+(define-public (create-encrypt-mod (val uint))
+  (let ((id (+ (var-get encrypt-mod-counter) u1)))
+    (asserts! (> val u0) (err u720))
+    (map-set encrypt-mod-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set encrypt-mod-counter id)
+    (ok id)))
