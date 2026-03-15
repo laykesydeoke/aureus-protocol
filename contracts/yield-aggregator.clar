@@ -790,3 +790,7 @@
   (let ((entry (unwrap! (map-get? webhook-mgr-registry id) (err u751))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u752))
     (ok (map-set webhook-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-webhook-mgr-entry (id uint))
+  (map-get? webhook-mgr-registry id))
+(define-read-only (get-webhook-mgr-count)
+  (ok (var-get webhook-mgr-counter)))
