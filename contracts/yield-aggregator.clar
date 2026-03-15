@@ -682,3 +682,8 @@
     (map-set encrypt-mod-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set encrypt-mod-counter id)
     (ok id)))
+(define-public (update-encrypt-mod (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? encrypt-mod-registry id) (err u721))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u722))
+    (asserts! (get active entry) (err u723))
+    (ok (map-set encrypt-mod-registry id (merge entry {value: new-val})))))
