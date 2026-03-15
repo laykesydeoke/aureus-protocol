@@ -903,3 +903,7 @@
     (err u781)))
 (define-read-only (get-load-bal-value (id uint))
   (default-to u0 (get value (map-get? load-bal-registry id))))
+
+;; failover module
+(define-map failover-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var failover-counter uint u0)
