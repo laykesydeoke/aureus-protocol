@@ -794,3 +794,7 @@
   (map-get? webhook-mgr-registry id))
 (define-read-only (get-webhook-mgr-count)
   (ok (var-get webhook-mgr-counter)))
+(define-read-only (is-webhook-mgr-active (id uint))
+  (match (map-get? webhook-mgr-registry id)
+    entry (get active entry)
+    false))
