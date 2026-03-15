@@ -775,3 +775,9 @@
 ;; webhook-mgr module
 (define-map webhook-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var webhook-mgr-counter uint u0)
+(define-public (create-webhook-mgr (val uint))
+  (let ((id (+ (var-get webhook-mgr-counter) u1)))
+    (asserts! (> val u0) (err u750))
+    (map-set webhook-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set webhook-mgr-counter id)
+    (ok id)))
