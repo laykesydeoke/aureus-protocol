@@ -804,3 +804,7 @@
     (err u751)))
 (define-read-only (get-webhook-mgr-value (id uint))
   (default-to u0 (get value (map-get? webhook-mgr-registry id))))
+
+;; api-gw module
+(define-map api-gw-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var api-gw-counter uint u0)
