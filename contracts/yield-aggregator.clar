@@ -724,3 +724,7 @@
   (let ((entry (unwrap! (map-get? data-valid-registry id) (err u731))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u732))
     (ok (map-set data-valid-registry id (merge entry {active: false})))))
+(define-read-only (get-data-valid-entry (id uint))
+  (map-get? data-valid-registry id))
+(define-read-only (get-data-valid-count)
+  (ok (var-get data-valid-counter)))
