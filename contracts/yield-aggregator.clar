@@ -695,3 +695,7 @@
   (map-get? encrypt-mod-registry id))
 (define-read-only (get-encrypt-mod-count)
   (ok (var-get encrypt-mod-counter)))
+(define-read-only (is-encrypt-mod-active (id uint))
+  (match (map-get? encrypt-mod-registry id)
+    entry (get active entry)
+    false))
