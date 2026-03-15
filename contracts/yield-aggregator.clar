@@ -786,3 +786,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u752))
     (asserts! (get active entry) (err u753))
     (ok (map-set webhook-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-webhook-mgr (id uint))
+  (let ((entry (unwrap! (map-get? webhook-mgr-registry id) (err u751))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u752))
+    (ok (map-set webhook-mgr-registry id (merge entry {active: false})))))
