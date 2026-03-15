@@ -658,3 +658,7 @@
   (let ((entry (unwrap! (map-get? compliance-registry id) (err u711))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u712))
     (ok (map-set compliance-registry id (merge entry {active: false})))))
+(define-read-only (get-compliance-entry (id uint))
+  (map-get? compliance-registry id))
+(define-read-only (get-compliance-count)
+  (ok (var-get compliance-counter)))
