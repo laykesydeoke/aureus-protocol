@@ -885,3 +885,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u782))
     (asserts! (get active entry) (err u783))
     (ok (map-set load-bal-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-load-bal (id uint))
+  (let ((entry (unwrap! (map-get? load-bal-registry id) (err u781))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u782))
+    (ok (map-set load-bal-registry id (merge entry {active: false})))))
