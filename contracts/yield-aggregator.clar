@@ -808,3 +808,9 @@
 ;; api-gw module
 (define-map api-gw-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var api-gw-counter uint u0)
+(define-public (create-api-gw (val uint))
+  (let ((id (+ (var-get api-gw-counter) u1)))
+    (asserts! (> val u0) (err u760))
+    (map-set api-gw-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set api-gw-counter id)
+    (ok id)))
