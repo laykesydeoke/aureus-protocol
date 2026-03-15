@@ -835,3 +835,5 @@
   (match (map-get? api-gw-registry id)
     entry (ok (get owner entry))
     (err u761)))
+(define-read-only (get-api-gw-value (id uint))
+  (default-to u0 (get value (map-get? api-gw-registry id))))
