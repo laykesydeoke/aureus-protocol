@@ -643,3 +643,9 @@
 ;; compliance module
 (define-map compliance-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var compliance-counter uint u0)
+(define-public (create-compliance (val uint))
+  (let ((id (+ (var-get compliance-counter) u1)))
+    (asserts! (> val u0) (err u710))
+    (map-set compliance-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set compliance-counter id)
+    (ok id)))
