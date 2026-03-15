@@ -907,3 +907,9 @@
 ;; failover module
 (define-map failover-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var failover-counter uint u0)
+(define-public (create-failover (val uint))
+  (let ((id (+ (var-get failover-counter) u1)))
+    (asserts! (> val u0) (err u790))
+    (map-set failover-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set failover-counter id)
+    (ok id)))
