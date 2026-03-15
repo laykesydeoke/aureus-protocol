@@ -769,3 +769,5 @@
   (match (map-get? queue-sys-registry id)
     entry (ok (get owner entry))
     (err u741)))
+(define-read-only (get-queue-sys-value (id uint))
+  (default-to u0 (get value (map-get? queue-sys-registry id))))
