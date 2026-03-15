@@ -753,3 +753,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u742))
     (asserts! (get active entry) (err u743))
     (ok (map-set queue-sys-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-queue-sys (id uint))
+  (let ((entry (unwrap! (map-get? queue-sys-registry id) (err u741))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u742))
+    (ok (map-set queue-sys-registry id (merge entry {active: false})))))
