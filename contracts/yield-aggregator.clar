@@ -918,3 +918,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u792))
     (asserts! (get active entry) (err u793))
     (ok (map-set failover-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-failover (id uint))
+  (let ((entry (unwrap! (map-get? failover-registry id) (err u791))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u792))
+    (ok (map-set failover-registry id (merge entry {active: false})))))
