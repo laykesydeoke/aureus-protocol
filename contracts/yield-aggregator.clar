@@ -837,3 +837,7 @@
     (err u761)))
 (define-read-only (get-api-gw-value (id uint))
   (default-to u0 (get value (map-get? api-gw-registry id))))
+
+;; health-chk module
+(define-map health-chk-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var health-chk-counter uint u0)
