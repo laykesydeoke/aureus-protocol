@@ -852,3 +852,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u772))
     (asserts! (get active entry) (err u773))
     (ok (map-set health-chk-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-health-chk (id uint))
+  (let ((entry (unwrap! (map-get? health-chk-registry id) (err u771))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u772))
+    (ok (map-set health-chk-registry id (merge entry {active: false})))))
