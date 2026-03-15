@@ -666,3 +666,7 @@
   (match (map-get? compliance-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-compliance-owner (id uint))
+  (match (map-get? compliance-registry id)
+    entry (ok (get owner entry))
+    (err u711)))
