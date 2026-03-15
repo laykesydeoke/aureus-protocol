@@ -761,3 +761,7 @@
   (map-get? queue-sys-registry id))
 (define-read-only (get-queue-sys-count)
   (ok (var-get queue-sys-counter)))
+(define-read-only (is-queue-sys-active (id uint))
+  (match (map-get? queue-sys-registry id)
+    entry (get active entry)
+    false))
