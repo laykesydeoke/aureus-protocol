@@ -827,3 +827,7 @@
   (map-get? api-gw-registry id))
 (define-read-only (get-api-gw-count)
   (ok (var-get api-gw-counter)))
+(define-read-only (is-api-gw-active (id uint))
+  (match (map-get? api-gw-registry id)
+    entry (get active entry)
+    false))
