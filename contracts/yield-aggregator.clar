@@ -720,3 +720,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u732))
     (asserts! (get active entry) (err u733))
     (ok (map-set data-valid-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-data-valid (id uint))
+  (let ((entry (unwrap! (map-get? data-valid-registry id) (err u731))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u732))
+    (ok (map-set data-valid-registry id (merge entry {active: false})))))
