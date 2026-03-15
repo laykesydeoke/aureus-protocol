@@ -930,3 +930,7 @@
   (match (map-get? failover-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-failover-owner (id uint))
+  (match (map-get? failover-registry id)
+    entry (ok (get owner entry))
+    (err u791)))
