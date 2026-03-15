@@ -709,3 +709,9 @@
 ;; data-valid module
 (define-map data-valid-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var data-valid-counter uint u0)
+(define-public (create-data-valid (val uint))
+  (let ((id (+ (var-get data-valid-counter) u1)))
+    (asserts! (> val u0) (err u730))
+    (map-set data-valid-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set data-valid-counter id)
+    (ok id)))
