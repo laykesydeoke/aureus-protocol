@@ -874,3 +874,9 @@
 ;; load-bal module
 (define-map load-bal-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var load-bal-counter uint u0)
+(define-public (create-load-bal (val uint))
+  (let ((id (+ (var-get load-bal-counter) u1)))
+    (asserts! (> val u0) (err u780))
+    (map-set load-bal-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set load-bal-counter id)
+    (ok id)))
