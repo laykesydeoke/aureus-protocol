@@ -654,3 +654,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u712))
     (asserts! (get active entry) (err u713))
     (ok (map-set compliance-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-compliance (id uint))
+  (let ((entry (unwrap! (map-get? compliance-registry id) (err u711))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u712))
+    (ok (map-set compliance-registry id (merge entry {active: false})))))
