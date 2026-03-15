@@ -748,3 +748,8 @@
     (map-set queue-sys-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set queue-sys-counter id)
     (ok id)))
+(define-public (update-queue-sys (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? queue-sys-registry id) (err u741))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u742))
+    (asserts! (get active entry) (err u743))
+    (ok (map-set queue-sys-registry id (merge entry {value: new-val})))))
