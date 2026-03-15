@@ -814,3 +814,8 @@
     (map-set api-gw-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set api-gw-counter id)
     (ok id)))
+(define-public (update-api-gw (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? api-gw-registry id) (err u761))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u762))
+    (asserts! (get active entry) (err u763))
+    (ok (map-set api-gw-registry id (merge entry {value: new-val})))))
