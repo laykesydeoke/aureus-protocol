@@ -610,3 +610,9 @@
 ;; audit-trail module
 (define-map audit-trail-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var audit-trail-counter uint u0)
+(define-public (create-audit-trail (val uint))
+  (let ((id (+ (var-get audit-trail-counter) u1)))
+    (asserts! (> val u0) (err u700))
+    (map-set audit-trail-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set audit-trail-counter id)
+    (ok id)))
