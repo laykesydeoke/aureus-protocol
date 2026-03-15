@@ -868,3 +868,5 @@
   (match (map-get? health-chk-registry id)
     entry (ok (get owner entry))
     (err u771)))
+(define-read-only (get-health-chk-value (id uint))
+  (default-to u0 (get value (map-get? health-chk-registry id))))
