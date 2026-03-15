@@ -738,3 +738,7 @@
     (err u731)))
 (define-read-only (get-data-valid-value (id uint))
   (default-to u0 (get value (map-get? data-valid-registry id))))
+
+;; queue-sys module
+(define-map queue-sys-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var queue-sys-counter uint u0)
