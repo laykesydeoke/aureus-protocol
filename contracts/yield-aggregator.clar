@@ -715,3 +715,8 @@
     (map-set data-valid-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set data-valid-counter id)
     (ok id)))
+(define-public (update-data-valid (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? data-valid-registry id) (err u731))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u732))
+    (asserts! (get active entry) (err u733))
+    (ok (map-set data-valid-registry id (merge entry {value: new-val})))))
