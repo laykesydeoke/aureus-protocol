@@ -893,3 +893,7 @@
   (map-get? load-bal-registry id))
 (define-read-only (get-load-bal-count)
   (ok (var-get load-bal-counter)))
+(define-read-only (is-load-bal-active (id uint))
+  (match (map-get? load-bal-registry id)
+    entry (get active entry)
+    false))
