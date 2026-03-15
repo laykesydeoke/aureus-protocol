@@ -629,3 +629,7 @@
   (map-get? audit-trail-registry id))
 (define-read-only (get-audit-trail-count)
   (ok (var-get audit-trail-counter)))
+(define-read-only (is-audit-trail-active (id uint))
+  (match (map-get? audit-trail-registry id)
+    entry (get active entry)
+    false))
