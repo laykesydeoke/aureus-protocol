@@ -781,3 +781,8 @@
     (map-set webhook-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set webhook-mgr-counter id)
     (ok id)))
+(define-public (update-webhook-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? webhook-mgr-registry id) (err u751))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u752))
+    (asserts! (get active entry) (err u753))
+    (ok (map-set webhook-mgr-registry id (merge entry {value: new-val})))))
