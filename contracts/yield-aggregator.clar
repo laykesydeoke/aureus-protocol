@@ -889,3 +889,7 @@
   (let ((entry (unwrap! (map-get? load-bal-registry id) (err u781))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u782))
     (ok (map-set load-bal-registry id (merge entry {active: false})))))
+(define-read-only (get-load-bal-entry (id uint))
+  (map-get? load-bal-registry id))
+(define-read-only (get-load-bal-count)
+  (ok (var-get load-bal-counter)))
