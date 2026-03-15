@@ -819,3 +819,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u762))
     (asserts! (get active entry) (err u763))
     (ok (map-set api-gw-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-api-gw (id uint))
+  (let ((entry (unwrap! (map-get? api-gw-registry id) (err u761))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u762))
+    (ok (map-set api-gw-registry id (merge entry {active: false})))))
