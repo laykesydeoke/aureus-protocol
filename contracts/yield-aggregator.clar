@@ -728,3 +728,7 @@
   (map-get? data-valid-registry id))
 (define-read-only (get-data-valid-count)
   (ok (var-get data-valid-counter)))
+(define-read-only (is-data-valid-active (id uint))
+  (match (map-get? data-valid-registry id)
+    entry (get active entry)
+    false))
