@@ -880,3 +880,8 @@
     (map-set load-bal-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set load-bal-counter id)
     (ok id)))
+(define-public (update-load-bal (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? load-bal-registry id) (err u781))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u782))
+    (asserts! (get active entry) (err u783))
+    (ok (map-set load-bal-registry id (merge entry {value: new-val})))))
