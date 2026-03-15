@@ -633,3 +633,7 @@
   (match (map-get? audit-trail-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-audit-trail-owner (id uint))
+  (match (map-get? audit-trail-registry id)
+    entry (ok (get owner entry))
+    (err u701)))
