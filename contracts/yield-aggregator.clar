@@ -856,3 +856,7 @@
   (let ((entry (unwrap! (map-get? health-chk-registry id) (err u771))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u772))
     (ok (map-set health-chk-registry id (merge entry {active: false})))))
+(define-read-only (get-health-chk-entry (id uint))
+  (map-get? health-chk-registry id))
+(define-read-only (get-health-chk-count)
+  (ok (var-get health-chk-counter)))
