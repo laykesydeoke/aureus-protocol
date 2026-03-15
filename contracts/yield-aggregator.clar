@@ -703,3 +703,5 @@
   (match (map-get? encrypt-mod-registry id)
     entry (ok (get owner entry))
     (err u721)))
+(define-read-only (get-encrypt-mod-value (id uint))
+  (default-to u0 (get value (map-get? encrypt-mod-registry id))))
