@@ -691,3 +691,7 @@
   (let ((entry (unwrap! (map-get? encrypt-mod-registry id) (err u721))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u722))
     (ok (map-set encrypt-mod-registry id (merge entry {active: false})))))
+(define-read-only (get-encrypt-mod-entry (id uint))
+  (map-get? encrypt-mod-registry id))
+(define-read-only (get-encrypt-mod-count)
+  (ok (var-get encrypt-mod-counter)))
