@@ -860,3 +860,7 @@
   (map-get? health-chk-registry id))
 (define-read-only (get-health-chk-count)
   (ok (var-get health-chk-counter)))
+(define-read-only (is-health-chk-active (id uint))
+  (match (map-get? health-chk-registry id)
+    entry (get active entry)
+    false))
