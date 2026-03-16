@@ -955,3 +955,7 @@
   (let ((entry (unwrap! (map-get? carrier-api-registry id) (err u801))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u802))
     (ok (map-set carrier-api-registry id (merge entry {active: false})))))
+(define-read-only (get-carrier-api-entry (id uint))
+  (map-get? carrier-api-registry id))
+(define-read-only (get-carrier-api-count)
+  (ok (var-get carrier-api-counter)))
