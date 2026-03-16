@@ -1167,3 +1167,7 @@
     (err u861)))
 (define-read-only (get-invoice-gen-value (id uint))
   (default-to u0 (get value (map-get? invoice-gen-registry id))))
+
+;; receipt-log module
+(define-map receipt-log-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var receipt-log-counter uint u0)
