@@ -317,3 +317,9 @@ gov2.
 ```bash
 npm run test:gov2
 ```
+
+## treasury
+
+```bash
+npm run test:treasury
+```
