@@ -556,3 +556,28 @@
     (asserts\! (<= pct u100) (err u151))
     (var-set insurance-coverage-pct pct)
     (ok true)))
+
+;; Enhanced governance v2
+(define-map governance-proposals uint { proposer: principal, description: (string-ascii 128), votes-for: uint, votes-against: uint, executed: bool, created-at: uint })
+(define-data-var proposal-count uint u0)
+(define-data-var quorum-threshold uint u100)
+
+(define-read-only (get-gov2-params)
+  { proposals: (var-get proposal-count), quorum: (var-get quorum-threshold) })
+
+(define-read-only (get-proposal (id uint))
+  (map-get? governance-proposals id))
+
+(define-public (create-proposal (description (string-ascii 128)))
+  (begin
+    (let ((id (+ (var-get proposal-count) u1)))
+      (map-set governance-proposals id { proposer: tx-sender, description: description, votes-for: u0, votes-against: u0, executed: false, created-at: stacks-block-height })
+      (var-set proposal-count id)
+      (ok id))))
+
+(define-public (vote-on-proposal (id uint) (support bool))
+  (let ((proposal (unwrap\! (map-get? governance-proposals id) (err u160))))
+    (if support
+      (map-set governance-proposals id (merge proposal { votes-for: (+ (get votes-for proposal) u1) }))
+      (map-set governance-proposals id (merge proposal { votes-against: (+ (get votes-against proposal) u1) })))
+    (ok true)))
