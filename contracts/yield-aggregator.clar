@@ -1101,3 +1101,7 @@
     (err u841)))
 (define-read-only (get-promo-engine-value (id uint))
   (default-to u0 (get value (map-get? promo-engine-registry id))))
+
+;; discount-calc module
+(define-map discount-calc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var discount-calc-counter uint u0)
