@@ -1111,3 +1111,8 @@
     (map-set discount-calc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set discount-calc-counter id)
     (ok id)))
+(define-public (update-discount-calc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? discount-calc-registry id) (err u851))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u852))
+    (asserts! (get active entry) (err u853))
+    (ok (map-set discount-calc-registry id (merge entry {value: new-val})))))
