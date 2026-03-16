@@ -1050,3 +1050,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u832))
     (asserts! (get active entry) (err u833))
     (ok (map-set rollover-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-rollover-mgr (id uint))
+  (let ((entry (unwrap! (map-get? rollover-mgr-registry id) (err u831))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u832))
+    (ok (map-set rollover-mgr-registry id (merge entry {active: false})))))
