@@ -35,7 +35,9 @@
     "test:emergency-access": "vitest run tests/emergency_access_test.ts tests/resume_access_test.ts tests/emergency_summary_test.ts",
     "test:perf": "vitest run tests/perf_metrics_test.ts tests/uptime_test.ts tests/tvl_metric_test.ts",
     "test:perf-integration": "vitest run tests/perf_integration_test.ts tests/perf_full_test.ts tests/perf_snapshot_test.ts",
-    "test:perf-edge": "vitest run tests/perf_edge_test.ts tests/perf_invariant_test.ts tests/perf_emergency_test.ts"
+    "test:perf-edge": "vitest run tests/perf_edge_test.ts tests/perf_invariant_test.ts tests/perf_emergency_test.ts",
+    "test:strategies": "vitest run tests/vstrat_default_test.ts tests/vstrat_add_test.ts tests/vstrat_full_test.ts",
+    "test:strat-edge": "vitest run tests/vstrat_edge_test.ts tests/vstrat_invariant_test.ts tests/vstrat_multi_test.ts"
   },
   "author": "",
   "license": "ISC",

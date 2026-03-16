@@ -40,3 +40,5 @@ incident-reports/
 metrics-exports/
 performance-logs/
 uptime-reports/
+strategy-cache/
+strategy-logs/
