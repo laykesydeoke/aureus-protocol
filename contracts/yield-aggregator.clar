@@ -1124,3 +1124,7 @@
   (map-get? discount-calc-registry id))
 (define-read-only (get-discount-calc-count)
   (ok (var-get discount-calc-counter)))
+(define-read-only (is-discount-calc-active (id uint))
+  (match (map-get? discount-calc-registry id)
+    entry (get active entry)
+    false))
