@@ -368,3 +368,8 @@ async function loadStrategyParams() {
   const r = await callReadOnly("yield-aggregator", "get-strategy-params", []);
   if (r) document.getElementById("strategy-data").textContent = JSON.stringify(r);
 }
+
+async function loadFeeParams() {
+  const r = await callReadOnly("yield-aggregator", "get-fee-params", []);
+  if (r) document.getElementById("fee-data").textContent = JSON.stringify(r);
+}
