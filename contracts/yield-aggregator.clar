@@ -1087,3 +1087,7 @@
   (let ((entry (unwrap! (map-get? promo-engine-registry id) (err u841))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u842))
     (ok (map-set promo-engine-registry id (merge entry {active: false})))))
+(define-read-only (get-promo-engine-entry (id uint))
+  (map-get? promo-engine-registry id))
+(define-read-only (get-promo-engine-count)
+  (ok (var-get promo-engine-counter)))
