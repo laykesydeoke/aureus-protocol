@@ -329,3 +329,9 @@ npm run test:treasury
 ```bash
 npm run test:booster
 ```
+
+## analytics-v2
+
+```bash
+npm run test:analytics-v2
+```
