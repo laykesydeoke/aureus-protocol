@@ -318,3 +318,14 @@ function loadPortfolioReport() {
         }
     }).catch(function () {});
 }
+
+function loadRiskParams() {
+    callReadOnly('yield-aggregator', 'get-risk-params', []).then(function (data) {
+        var riskLevel = document.getElementById('riskLevel');
+        var maxDeposit = document.getElementById('riskMaxDeposit');
+        if (data && data.result) {
+            if (riskLevel) riskLevel.textContent = ['Minimal', 'Standard', 'Conservative', 'Maximum'][data.result['risk-level']] || '--';
+            if (maxDeposit) maxDeposit.textContent = data.result['max-single-deposit'] ? (parseInt(data.result['max-single-deposit']) / 100000000).toFixed(0) + ' sBTC' : '--';
+        }
+    }).catch(function () {});
+}
