@@ -988,3 +988,7 @@
   (let ((entry (unwrap! (map-get? plan-mgr-registry id) (err u811))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u812))
     (ok (map-set plan-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-plan-mgr-entry (id uint))
+  (map-get? plan-mgr-registry id))
+(define-read-only (get-plan-mgr-count)
+  (ok (var-get plan-mgr-counter)))
