@@ -265,3 +265,13 @@ Comprehensive protocol performance monitoring:
 npm run test:perf
 npm run test:perf-integration
 ```
+
+## Vault Strategies
+
+Multiple yield strategies:
+- Add custom strategies
+- Set active strategy
+
+```bash
+npm run test:strategies
+```
