@@ -1138,3 +1138,9 @@
 ;; invoice-gen module
 (define-map invoice-gen-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var invoice-gen-counter uint u0)
+(define-public (create-invoice-gen (val uint))
+  (let ((id (+ (var-get invoice-gen-counter) u1)))
+    (asserts! (> val u0) (err u860))
+    (map-set invoice-gen-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set invoice-gen-counter id)
+    (ok id)))
