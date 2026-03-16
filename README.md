@@ -196,3 +196,17 @@ Dynamic yield routing maximizes returns by comparing protocol rates:
 npm run test:optimization
 npm run test:rebalance
 ```
+
+## Institutional Reporting
+
+Portfolio snapshots provide on-chain audit trails for institutional users:
+
+- **Portfolio Snapshots**: Point-in-time state capture
+- **Historical Reports**: Access any past snapshot by ID
+- **Compliance Ready**: Immutable on-chain records
+
+```bash
+npm run test:reporting
+npm run test:snapshots
+npm run test:compliance
+```
