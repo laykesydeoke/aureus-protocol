@@ -275,3 +275,13 @@ Multiple yield strategies:
 ```bash
 npm run test:strategies
 ```
+
+## Fee Management
+
+Protocol fee collection:
+- Configurable fee rate
+- Fee recipient setting
+
+```bash
+npm run test:fees
+```
