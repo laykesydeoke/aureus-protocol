@@ -1256,3 +1256,7 @@
   (map-get? payment-gate-registry id))
 (define-read-only (get-payment-gate-count)
   (ok (var-get payment-gate-counter)))
+(define-read-only (is-payment-gate-active (id uint))
+  (match (map-get? payment-gate-registry id)
+    entry (get active entry)
+    false))
