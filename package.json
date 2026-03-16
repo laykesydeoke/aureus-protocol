@@ -42,7 +42,8 @@
     "test:fee-edge": "vitest run tests/fee_mgmt_t15.ts tests/fee_mgmt_t16.ts tests/fee_mgmt_t17.ts",
     "test:referral": "vitest run tests/referral_t1.ts tests/referral_t2.ts tests/referral_t3.ts",
     "test:compound": "vitest run tests/compound_t1.ts tests/compound_t2.ts tests/compound_t3.ts",
-    "test:insurance": "vitest run tests/insurance_t1.ts tests/insurance_t2.ts tests/insurance_t3.ts"
+    "test:insurance": "vitest run tests/insurance_t1.ts tests/insurance_t2.ts tests/insurance_t3.ts",
+    "test:gov2": "vitest run tests/gov2_t1.ts tests/gov2_t2.ts"
   },
   "author": "",
   "license": "ISC",
