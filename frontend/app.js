@@ -1,6 +1,22 @@
 var API_URL = 'https://stacks-node-api.testnet.stacks.co';
 var CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
 
+function loadYieldAnalytics() {
+    Promise.all([
+        callReadOnly('yield-aggregator', 'get-yield-analytics', []),
+        callReadOnly('protocol-adapter', 'get-adapter-analytics', [])
+    ]).then(function (results) {
+        var yieldData = results[0] && results[0].result ? results[0].result : {};
+        var adapterData = results[1] && results[1].result ? results[1].result : {};
+        var totalDep = document.getElementById('analyticsTotalDeposits');
+        var totalYield = document.getElementById('analyticsTotalYield');
+        var activeProto = document.getElementById('analyticsActiveProtocol');
+        if (totalDep) totalDep.textContent = yieldData['total-deposits'] || '--';
+        if (totalYield) totalYield.textContent = yieldData['total-yield-earned'] || '--';
+        if (activeProto) activeProto.textContent = adapterData['active-protocol'] || '--';
+    }).catch(function () {});
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('walletBtn').addEventListener('click', connectWallet);
     document.getElementById('depositBtn').addEventListener('click', handleDeposit);
