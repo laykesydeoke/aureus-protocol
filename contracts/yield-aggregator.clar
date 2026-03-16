@@ -1215,3 +1215,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u882))
     (asserts! (get active entry) (err u883))
     (ok (map-set refund-proc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-refund-proc (id uint))
+  (let ((entry (unwrap! (map-get? refund-proc-registry id) (err u881))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u882))
+    (ok (map-set refund-proc-registry id (merge entry {active: false})))))
