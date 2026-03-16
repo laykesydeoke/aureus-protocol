@@ -536,3 +536,16 @@ footer {
     font-size: 1rem;
     margin-bottom: 0.8rem;
 }
+
+/* Assets section */
+#assets {
+    background: #0a0f18;
+    border-top: 1px solid #182030;
+    padding: 1.5rem 3rem;
+}
+
+#assets h2 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
