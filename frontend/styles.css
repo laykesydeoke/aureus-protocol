@@ -523,3 +523,16 @@ footer {
     font-size: 1rem;
     margin-bottom: 0.8rem;
 }
+
+/* Risk management section */
+#risk {
+    background: #0c1018;
+    border-top: 1px solid #1a2230;
+    padding: 1.5rem 3rem;
+}
+
+#risk h2 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
