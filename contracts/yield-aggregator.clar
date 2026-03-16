@@ -936,3 +936,7 @@
     (err u791)))
 (define-read-only (get-failover-value (id uint))
   (default-to u0 (get value (map-get? failover-registry id))))
+
+;; carrier-api module
+(define-map carrier-api-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var carrier-api-counter uint u0)
