@@ -1223,3 +1223,7 @@
   (map-get? refund-proc-registry id))
 (define-read-only (get-refund-proc-count)
   (ok (var-get refund-proc-counter)))
+(define-read-only (is-refund-proc-active (id uint))
+  (match (map-get? refund-proc-registry id)
+    entry (get active entry)
+    false))
