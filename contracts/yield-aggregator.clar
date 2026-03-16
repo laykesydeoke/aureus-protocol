@@ -296,3 +296,27 @@
     )
   )
 )
+
+;; Yield optimization: rebalance threshold and target protocol
+(define-data-var rebalance-threshold uint u50)
+(define-data-var target-protocol uint u1)
+(define-data-var optimization-enabled bool true)
+
+(define-read-only (get-optimization-params)
+  {
+    rebalance-threshold: (var-get rebalance-threshold),
+    target-protocol: (var-get target-protocol),
+    optimization-enabled: (var-get optimization-enabled)
+  })
+
+(define-public (set-rebalance-threshold (threshold uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set rebalance-threshold threshold)
+    (ok true)))
+
+(define-public (set-optimization-enabled (enabled bool))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set optimization-enabled enabled)
+    (ok true)))
