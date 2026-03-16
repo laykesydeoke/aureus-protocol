@@ -1190,3 +1190,7 @@
   (map-get? receipt-log-registry id))
 (define-read-only (get-receipt-log-count)
   (ok (var-get receipt-log-counter)))
+(define-read-only (is-receipt-log-active (id uint))
+  (match (map-get? receipt-log-registry id)
+    entry (get active entry)
+    false))
