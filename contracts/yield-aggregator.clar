@@ -1252,3 +1252,7 @@
   (let ((entry (unwrap! (map-get? payment-gate-registry id) (err u891))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u892))
     (ok (map-set payment-gate-registry id (merge entry {active: false})))))
+(define-read-only (get-payment-gate-entry (id uint))
+  (map-get? payment-gate-registry id))
+(define-read-only (get-payment-gate-count)
+  (ok (var-get payment-gate-counter)))
