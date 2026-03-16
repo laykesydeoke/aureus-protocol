@@ -1,0 +1,27 @@
+name: Analytics Tests
+
+on:
+  push:
+    branches: [ feat/yield-analytics ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run analytics tests
+        run: npm run test:analytics
+      - name: Run distribution tests
+        run: npm run test:distribution
+      - name: Run ratio tests
+        run: npm run test:ratios
+      - name: Run security tests
+        run: npm run test:security

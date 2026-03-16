@@ -18,6 +18,10 @@ Aureus Protocol is a professional-grade digital asset optimization platform desi
 - **Institutional-grade Bitcoin-backed asset deposits and withdrawals**
 - **Automated value optimization calculation and distribution**
 - **Comprehensive security controls with emergency pause**
+- **On-chain yield analytics snapshot**
+- **User yield ratio calculations (basis points)**
+- **Protocol adapter analytics and rate comparison**
+- **Multi-user proportional yield distribution**
 - **Detailed transaction history and audit trails**
 - **Enhanced precision calculations using Clarity 4**
 
