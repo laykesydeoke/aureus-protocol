@@ -1039,3 +1039,9 @@
 ;; rollover-mgr module
 (define-map rollover-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var rollover-mgr-counter uint u0)
+(define-public (create-rollover-mgr (val uint))
+  (let ((id (+ (var-get rollover-mgr-counter) u1)))
+    (asserts! (> val u0) (err u830))
+    (map-set rollover-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set rollover-mgr-counter id)
+    (ok id)))
