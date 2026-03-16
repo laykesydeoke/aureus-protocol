@@ -183,3 +183,16 @@ npm run test:governance
 npm run test:governance-edge
 npm run test:governance-admin
 ```
+
+## Yield Optimization
+
+Dynamic yield routing maximizes returns by comparing protocol rates:
+
+- **Auto-Rebalancing**: Moves deposits when better yields are found
+- **Configurable Threshold**: Set minimum rate difference to trigger rebalancing
+- **Optimization Toggle**: Enable/disable auto-optimization for stability
+
+```bash
+npm run test:optimization
+npm run test:rebalance
+```
