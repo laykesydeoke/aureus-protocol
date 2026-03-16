@@ -1227,3 +1227,7 @@
   (match (map-get? refund-proc-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-refund-proc-owner (id uint))
+  (match (map-get? refund-proc-registry id)
+    entry (ok (get owner entry))
+    (err u881)))
