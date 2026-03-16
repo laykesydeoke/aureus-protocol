@@ -388,6 +388,19 @@ footer {
     .footer-grid { flex-direction: column; gap: 1.5rem; }
 }
 
+/* Governance info section */
+#governance-info {
+    background: #0e1526;
+    border-top: 1px solid #1e2a40;
+    padding: 1.5rem 3rem;
+}
+
+#governance-info h2 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
+
 /* Tier rewards section */
 .tier-section {
     padding: 2rem 3rem;
