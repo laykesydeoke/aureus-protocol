@@ -20,7 +20,10 @@
     "test:governance-admin": "vitest run tests/admin_config_test.ts tests/governance_audit_test.ts tests/governance_flow_test.ts",
     "test:optimization": "vitest run tests/optimization_params_test.ts tests/rebalance_threshold_test.ts tests/optimization_toggle_test.ts",
     "test:rebalance": "vitest run tests/auto_rebalance_test.ts tests/yield_rebalance_full_test.ts tests/yield_routing_test.ts",
-    "test:opt-edge": "vitest run tests/optimization_edge_test.ts tests/optimization_invariant_test.ts tests/optimization_auth_test.ts"
+    "test:opt-edge": "vitest run tests/optimization_edge_test.ts tests/optimization_invariant_test.ts tests/optimization_auth_test.ts",
+    "test:reporting": "vitest run tests/portfolio_report_test.ts tests/snapshot_test.ts tests/snapshot_retrieval_test.ts",
+    "test:snapshots": "vitest run tests/multi_snapshot_test.ts tests/snapshot_integrity_test.ts tests/snapshot_data_test.ts",
+    "test:compliance": "vitest run tests/audit_trail_test.ts tests/report_export_test.ts tests/institutional_summary_test.ts"
   },
   "author": "",
   "license": "ISC",
