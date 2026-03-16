@@ -562,3 +562,16 @@ footer {
     font-size: 1rem;
     margin-bottom: 0.8rem;
 }
+
+/* Performance section */
+#performance {
+    background: #0b1015;
+    border-top: 1px solid #182028;
+    padding: 1.5rem 3rem;
+}
+
+#performance h2 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
