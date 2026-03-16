@@ -973,3 +973,9 @@
 ;; plan-mgr module
 (define-map plan-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var plan-mgr-counter uint u0)
+(define-public (create-plan-mgr (val uint))
+  (let ((id (+ (var-get plan-mgr-counter) u1)))
+    (asserts! (> val u0) (err u810))
+    (map-set plan-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set plan-mgr-counter id)
+    (ok id)))
