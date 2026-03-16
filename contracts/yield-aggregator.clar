@@ -1198,3 +1198,5 @@
   (match (map-get? receipt-log-registry id)
     entry (ok (get owner entry))
     (err u871)))
+(define-read-only (get-receipt-log-value (id uint))
+  (default-to u0 (get value (map-get? receipt-log-registry id))))
