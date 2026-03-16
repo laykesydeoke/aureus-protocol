@@ -37,7 +37,9 @@
     "test:perf-integration": "vitest run tests/perf_integration_test.ts tests/perf_full_test.ts tests/perf_snapshot_test.ts",
     "test:perf-edge": "vitest run tests/perf_edge_test.ts tests/perf_invariant_test.ts tests/perf_emergency_test.ts",
     "test:strategies": "vitest run tests/vstrat_default_test.ts tests/vstrat_add_test.ts tests/vstrat_full_test.ts",
-    "test:strat-edge": "vitest run tests/vstrat_edge_test.ts tests/vstrat_invariant_test.ts tests/vstrat_multi_test.ts"
+    "test:strat-edge": "vitest run tests/vstrat_edge_test.ts tests/vstrat_invariant_test.ts tests/vstrat_multi_test.ts",
+    "test:fees": "vitest run tests/fee_mgmt_t1.ts tests/fee_mgmt_t2.ts tests/fee_mgmt_t3.ts",
+    "test:fee-edge": "vitest run tests/fee_mgmt_t15.ts tests/fee_mgmt_t16.ts tests/fee_mgmt_t17.ts"
   },
   "author": "",
   "license": "ISC",
