@@ -1149,3 +1149,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u862))
     (asserts! (get active entry) (err u863))
     (ok (map-set invoice-gen-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-invoice-gen (id uint))
+  (let ((entry (unwrap! (map-get? invoice-gen-registry id) (err u861))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u862))
+    (ok (map-set invoice-gen-registry id (merge entry {active: false})))))
