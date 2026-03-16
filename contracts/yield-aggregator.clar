@@ -345,3 +345,28 @@
 
 (define-read-only (get-snapshot (id uint))
   (map-get? portfolio-snapshots id))
+
+;; Risk management: exposure limits and circuit breakers
+(define-data-var max-single-deposit uint u1000000000)
+(define-data-var daily-withdraw-limit uint u500000000)
+(define-data-var risk-level uint u1)
+
+(define-read-only (get-risk-params)
+  {
+    max-single-deposit: (var-get max-single-deposit),
+    daily-withdraw-limit: (var-get daily-withdraw-limit),
+    risk-level: (var-get risk-level)
+  })
+
+(define-public (set-risk-level (level uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (asserts! (<= level u3) (err u108))
+    (var-set risk-level level)
+    (ok true)))
+
+(define-public (set-max-single-deposit (amount uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set max-single-deposit amount)
+    (ok true)))
