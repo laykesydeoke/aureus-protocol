@@ -984,3 +984,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u812))
     (asserts! (get active entry) (err u813))
     (ok (map-set plan-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-plan-mgr (id uint))
+  (let ((entry (unwrap! (map-get? plan-mgr-registry id) (err u811))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u812))
+    (ok (map-set plan-mgr-registry id (merge entry {active: false})))))
