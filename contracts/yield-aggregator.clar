@@ -1186,3 +1186,7 @@
   (let ((entry (unwrap! (map-get? receipt-log-registry id) (err u871))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u872))
     (ok (map-set receipt-log-registry id (merge entry {active: false})))))
+(define-read-only (get-receipt-log-entry (id uint))
+  (map-get? receipt-log-registry id))
+(define-read-only (get-receipt-log-count)
+  (ok (var-get receipt-log-counter)))
