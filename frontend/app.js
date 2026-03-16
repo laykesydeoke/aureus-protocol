@@ -391,3 +391,5 @@ async function load_gov2() { const r = await callReadOnly("yield-aggregator", "g
 async function load_treasury() { const r = await callReadOnly("yield-aggregator", "get-treasury-state", []); if (r) document.getElementById("treasury-out").textContent = JSON.stringify(r); }
 
 async function load_booster() { const r = await callReadOnly("yield-aggregator", "get-booster-params", []); if (r) document.getElementById("booster-out").textContent = JSON.stringify(r); }
+
+async function load_analytics-v2() { const r = await callReadOnly("yield-aggregator", "get-analytics-v2", []); if (r) document.getElementById("analytics-v2-out").textContent = JSON.stringify(r); }
