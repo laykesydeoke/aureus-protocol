@@ -959,3 +959,7 @@
   (map-get? carrier-api-registry id))
 (define-read-only (get-carrier-api-count)
   (ok (var-get carrier-api-counter)))
+(define-read-only (is-carrier-api-active (id uint))
+  (match (map-get? carrier-api-registry id)
+    entry (get active entry)
+    false))
