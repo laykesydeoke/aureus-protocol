@@ -1243,3 +1243,8 @@
     (map-set payment-gate-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set payment-gate-counter id)
     (ok id)))
+(define-public (update-payment-gate (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? payment-gate-registry id) (err u891))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u892))
+    (asserts! (get active entry) (err u893))
+    (ok (map-set payment-gate-registry id (merge entry {value: new-val})))))
