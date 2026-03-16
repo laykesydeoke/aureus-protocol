@@ -969,3 +969,7 @@
     (err u801)))
 (define-read-only (get-carrier-api-value (id uint))
   (default-to u0 (get value (map-get? carrier-api-registry id))))
+
+;; plan-mgr module
+(define-map plan-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var plan-mgr-counter uint u0)
