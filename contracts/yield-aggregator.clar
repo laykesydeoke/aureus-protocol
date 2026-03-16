@@ -951,3 +951,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u802))
     (asserts! (get active entry) (err u803))
     (ok (map-set carrier-api-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-carrier-api (id uint))
+  (let ((entry (unwrap! (map-get? carrier-api-registry id) (err u801))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u802))
+    (ok (map-set carrier-api-registry id (merge entry {active: false})))))
