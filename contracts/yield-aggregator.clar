@@ -1021,3 +1021,7 @@
   (let ((entry (unwrap! (map-get? usage-alert-registry id) (err u821))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u822))
     (ok (map-set usage-alert-registry id (merge entry {active: false})))))
+(define-read-only (get-usage-alert-entry (id uint))
+  (map-get? usage-alert-registry id))
+(define-read-only (get-usage-alert-count)
+  (ok (var-get usage-alert-counter)))
