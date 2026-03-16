@@ -1165,3 +1165,5 @@
   (match (map-get? invoice-gen-registry id)
     entry (ok (get owner entry))
     (err u861)))
+(define-read-only (get-invoice-gen-value (id uint))
+  (default-to u0 (get value (map-get? invoice-gen-registry id))))
