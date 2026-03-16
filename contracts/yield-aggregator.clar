@@ -1017,3 +1017,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u822))
     (asserts! (get active entry) (err u823))
     (ok (map-set usage-alert-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-usage-alert (id uint))
+  (let ((entry (unwrap! (map-get? usage-alert-registry id) (err u821))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u822))
+    (ok (map-set usage-alert-registry id (merge entry {active: false})))))
