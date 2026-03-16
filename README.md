@@ -293,3 +293,11 @@ referral feature.
 ```bash
 npm run test:referral
 ```
+
+## compound
+
+compound feature.
+
+```bash
+npm run test:compound
+```

@@ -378,3 +378,8 @@ async function load_referral() {
   const r = await callReadOnly("yield-aggregator", "get-referral-params", []);
   if (r) document.getElementById("referral-out").textContent = JSON.stringify(r);
 }
+
+async function load_compound() {
+  const r = await callReadOnly("yield-aggregator", "get-compound-params", []);
+  if (r) document.getElementById("compound-out").textContent = JSON.stringify(r);
+}
