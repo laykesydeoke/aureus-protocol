@@ -992,3 +992,7 @@
   (map-get? plan-mgr-registry id))
 (define-read-only (get-plan-mgr-count)
   (ok (var-get plan-mgr-counter)))
+(define-read-only (is-plan-mgr-active (id uint))
+  (match (map-get? plan-mgr-registry id)
+    entry (get active entry)
+    false))
