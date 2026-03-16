@@ -439,3 +439,29 @@
 
 (define-read-only (get-protocol-uptime)
   (- stacks-block-height (var-get last-pause-block)))
+
+;; Vault yield strategies
+(define-map vault-strategies uint { name: (string-ascii 32), target-apy: uint, active: bool, strategy-type: uint })
+(define-data-var strategy-count uint u3)
+(define-data-var active-strategy uint u1)
+
+(define-read-only (get-strategy (id uint))
+  (map-get? vault-strategies id))
+
+(define-read-only (get-strategy-params)
+  { strategy-count: (var-get strategy-count), active-strategy: (var-get active-strategy) })
+
+(define-public (add-vault-strategy (name (string-ascii 32)) (target-apy uint) (strategy-type uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (let ((id (+ (var-get strategy-count) u1)))
+      (map-set vault-strategies id { name: name, target-apy: target-apy, active: true, strategy-type: strategy-type })
+      (var-set strategy-count id)
+      (ok id))))
+
+(define-public (set-active-strategy (id uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (asserts! (<= id (var-get strategy-count)) (err u110))
+    (var-set active-strategy id)
+    (ok true)))
