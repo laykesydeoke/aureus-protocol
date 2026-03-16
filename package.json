@@ -14,7 +14,10 @@
     "test:security": "vitest run tests/emergency_pause_test.ts",
     "test:rewards": "vitest run tests/deposit_count_test.ts tests/user_tier_test.ts tests/tier_bonus_test.ts",
     "test:loyalty": "vitest run tests/loyalty_rewards_test.ts tests/first_deposit_test.ts tests/tier_analytics_test.ts",
-    "test:reward-edge": "vitest run tests/reward_edge_test.ts tests/reward_invariant_test.ts"
+    "test:reward-edge": "vitest run tests/reward_edge_test.ts tests/reward_invariant_test.ts",
+    "test:governance": "vitest run tests/governance_params_test.ts tests/min_deposit_test.ts tests/governance_access_test.ts",
+    "test:governance-edge": "vitest run tests/governance_edge_test.ts tests/governance_invariant_test.ts",
+    "test:governance-admin": "vitest run tests/admin_config_test.ts tests/governance_audit_test.ts tests/governance_flow_test.ts"
   },
   "author": "",
   "license": "ISC",
