@@ -11,7 +11,10 @@
     "test:analytics": "vitest run tests/yield_analytics_test.ts tests/adapter_analytics_test.ts tests/deposit_analytics_test.ts",
     "test:distribution": "vitest run tests/yield_distribution_test.ts tests/withdraw_analytics_test.ts tests/multi_user_analytics_test.ts",
     "test:ratios": "vitest run tests/yield_ratio_test.ts tests/protocol_rate_test.ts",
-    "test:security": "vitest run tests/emergency_pause_test.ts"
+    "test:security": "vitest run tests/emergency_pause_test.ts",
+    "test:rewards": "vitest run tests/deposit_count_test.ts tests/user_tier_test.ts tests/tier_bonus_test.ts",
+    "test:loyalty": "vitest run tests/loyalty_rewards_test.ts tests/first_deposit_test.ts tests/tier_analytics_test.ts",
+    "test:reward-edge": "vitest run tests/reward_edge_test.ts tests/reward_invariant_test.ts"
   },
   "author": "",
   "license": "ISC",
