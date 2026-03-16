@@ -307,3 +307,14 @@ function loadOptimizationParams() {
         }
     }).catch(function () {});
 }
+
+function loadPortfolioReport() {
+    callReadOnly('yield-aggregator', 'get-portfolio-report', []).then(function (data) {
+        var snapCount = document.getElementById('reportSnapshotCount');
+        var reportBlock = document.getElementById('reportBlock');
+        if (data && data.result) {
+            if (snapCount) snapCount.textContent = data.result['snapshot-count'] || '0';
+            if (reportBlock) reportBlock.textContent = data.result['report-block'] || '--';
+        }
+    }).catch(function () {});
+}
