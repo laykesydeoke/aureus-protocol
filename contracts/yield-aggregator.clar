@@ -1134,3 +1134,7 @@
     (err u851)))
 (define-read-only (get-discount-calc-value (id uint))
   (default-to u0 (get value (map-get? discount-calc-registry id))))
+
+;; invoice-gen module
+(define-map invoice-gen-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var invoice-gen-counter uint u0)
