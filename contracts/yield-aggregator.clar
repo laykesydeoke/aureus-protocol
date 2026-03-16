@@ -1177,3 +1177,8 @@
     (map-set receipt-log-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set receipt-log-counter id)
     (ok id)))
+(define-public (update-receipt-log (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? receipt-log-registry id) (err u871))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u872))
+    (asserts! (get active entry) (err u873))
+    (ok (map-set receipt-log-registry id (merge entry {value: new-val})))))
