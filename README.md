@@ -237,3 +237,17 @@ Aureus Protocol supports registering and managing multiple token assets:
 npm run test:assets
 npm run test:asset-flow
 ```
+
+## Emergency Controls
+
+Enhanced emergency pause with full audit logging:
+
+- **Pause Logging**: Records block height of each pause event
+- **Pause Counter**: Tracks total number of emergency pauses
+- **Instant Resume**: Quick recovery after incident resolution
+
+```bash
+npm run test:emergency
+npm run test:pause
+npm run test:emergency-access
+```
