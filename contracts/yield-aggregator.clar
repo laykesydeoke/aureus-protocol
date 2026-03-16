@@ -1002,3 +1002,7 @@
     (err u811)))
 (define-read-only (get-plan-mgr-value (id uint))
   (default-to u0 (get value (map-get? plan-mgr-registry id))))
+
+;; usage-alert module
+(define-map usage-alert-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var usage-alert-counter uint u0)
