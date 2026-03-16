@@ -26,7 +26,10 @@
     "test:compliance": "vitest run tests/audit_trail_test.ts tests/report_export_test.ts tests/institutional_summary_test.ts",
     "test:risk": "vitest run tests/risk_params_test.ts tests/risk_level_test.ts tests/risk_access_test.ts",
     "test:risk-limits": "vitest run tests/max_deposit_limit_test.ts tests/exposure_limit_test.ts tests/risk_edge_test.ts",
-    "test:circuit": "vitest run tests/circuit_breaker_test.ts tests/risk_full_flow_test.ts tests/risk_integration_test.ts"
+    "test:circuit": "vitest run tests/circuit_breaker_test.ts tests/risk_full_flow_test.ts tests/risk_integration_test.ts",
+    "test:assets": "vitest run tests/asset_support_test.ts tests/add_asset_test.ts tests/asset_check_test.ts",
+    "test:asset-access": "vitest run tests/asset_access_test.ts tests/asset_remove_access_test.ts",
+    "test:asset-flow": "vitest run tests/multi_asset_flow_test.ts tests/multi_asset_summary_test.ts tests/asset_integration_test.ts"
   },
   "author": "",
   "license": "ISC",
