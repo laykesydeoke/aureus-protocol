@@ -1116,3 +1116,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u852))
     (asserts! (get active entry) (err u853))
     (ok (map-set discount-calc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-discount-calc (id uint))
+  (let ((entry (unwrap! (map-get? discount-calc-registry id) (err u851))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u852))
+    (ok (map-set discount-calc-registry id (merge entry {active: false})))))
