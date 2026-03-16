@@ -2,6 +2,17 @@ var API_URL = 'https://api.testnet.hiro.so';
 var CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
 var userAddress = null;
 
+function loadGovernanceInfo() {
+    callReadOnly('yield-aggregator', 'get-governance-params', []).then(function (data) {
+        var minDep = document.getElementById('govMinDeposit');
+        var govActions = document.getElementById('govActionCount');
+        if (data && data.result) {
+            if (minDep) minDep.textContent = data.result['min-deposit'] || '--';
+            if (govActions) govActions.textContent = data.result['governance-actions'] || '--';
+        }
+    }).catch(function () {});
+}
+
 function loadUserTier(address) {
     if (!address) return;
     Promise.all([

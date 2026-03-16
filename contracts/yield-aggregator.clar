@@ -32,6 +32,9 @@
 (define-data-var total-deposits uint u0)
 (define-data-var total-yield-earned uint u0)
 (define-data-var emergency-pause bool false)
+(define-data-var governance-action-count uint u0)
+(define-data-var min-deposit-amount uint u1000)
+(define-data-var max-withdrawal-pct uint u100)
 
 ;; data maps
 (define-map user-deposits principal uint)
@@ -256,6 +259,27 @@
 
 (define-read-only (get-user-first-deposit-block (user principal))
   (map-get? user-first-deposit-block user)
+)
+
+(define-read-only (get-governance-params)
+  {
+    min-deposit: (var-get min-deposit-amount),
+    max-withdrawal-pct: (var-get max-withdrawal-pct),
+    governance-actions: (var-get governance-action-count)
+  }
+)
+
+(define-read-only (get-min-deposit)
+  (var-get min-deposit-amount)
+)
+
+(define-public (set-min-deposit (amount uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (var-set min-deposit-amount amount)
+    (var-set governance-action-count (+ (var-get governance-action-count) u1))
+    (ok true)
+  )
 )
 
 ;; private functions
