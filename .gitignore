@@ -11,3 +11,6 @@ coverage/
 test-results/
 analytics-cache/
 telemetry-exports/
+tier-cache/
+reward-snapshots/
+deposit-history-exports/

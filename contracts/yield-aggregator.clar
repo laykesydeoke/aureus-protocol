@@ -37,6 +37,13 @@
 (define-map user-deposits principal uint)
 (define-map user-yield-earned principal uint)
 (define-map deposit-history principal (list 100 {amount: uint, timestamp: uint, block-height: uint}))
+(define-map user-deposit-count principal uint)
+(define-map user-first-deposit-block principal uint)
+
+;; Deposit reward tiers by deposit count
+;; Tier 1: 1-4 deposits = 0 bonus
+;; Tier 2: 5-9 deposits = 50 bps bonus
+;; Tier 3: 10+ deposits = 100 bps bonus
 
 ;; public functions
 
@@ -72,6 +79,12 @@
             (unwrap-panic (as-max-len?
               (append current-history {amount: amount, timestamp: stacks-block-height, block-height: stacks-block-height})
               u100))))
+        ;; Update deposit count and first deposit block
+        (let ((prev-count (default-to u0 (map-get? user-deposit-count tx-sender))))
+          (map-set user-deposit-count tx-sender (+ prev-count u1))
+          (if (is-eq prev-count u0)
+            (map-set user-first-deposit-block tx-sender stacks-block-height)
+            true))
         (print {event: "deposit", user: tx-sender, amount: amount, total-deposits: (var-get total-deposits)})
         (ok true)
       )
@@ -215,6 +228,34 @@
       (some (/ (* user-dep u10000) total-dep))
       none)
   )
+)
+
+(define-read-only (get-user-deposit-count (user principal))
+  (default-to u0 (map-get? user-deposit-count user))
+)
+
+(define-read-only (get-user-tier (user principal))
+  (let ((count (default-to u0 (map-get? user-deposit-count user))))
+    (if (>= count u10)
+      u3
+      (if (>= count u5)
+        u2
+        u1))
+  )
+)
+
+(define-read-only (get-user-tier-bonus (user principal))
+  (let ((tier (get-user-tier user)))
+    (if (is-eq tier u3)
+      u100
+      (if (is-eq tier u2)
+        u50
+        u0))
+  )
+)
+
+(define-read-only (get-user-first-deposit-block (user principal))
+  (map-get? user-first-deposit-block user)
 )
 
 ;; private functions
