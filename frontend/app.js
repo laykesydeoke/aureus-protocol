@@ -385,3 +385,5 @@ async function load_compound() {
 }
 
 async function load_insurance() { const r = await callReadOnly("yield-aggregator", "get-insurance-reserve", []); if (r) document.getElementById("insurance-out").textContent = JSON.stringify(r); }
+
+async function load_gov2() { const r = await callReadOnly("yield-aggregator", "get-gov2-params", []); if (r) document.getElementById("gov2-out").textContent = JSON.stringify(r); }
