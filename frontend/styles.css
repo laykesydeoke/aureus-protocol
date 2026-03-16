@@ -549,3 +549,16 @@ footer {
     font-size: 1rem;
     margin-bottom: 0.8rem;
 }
+
+/* Emergency controls section */
+#emergency {
+    background: #100a0a;
+    border-top: 1px solid #2a1a1a;
+    padding: 1.5rem 3rem;
+}
+
+#emergency h2 {
+    color: #ef4444;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
