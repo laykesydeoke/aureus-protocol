@@ -1153,3 +1153,7 @@
   (let ((entry (unwrap! (map-get? invoice-gen-registry id) (err u861))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u862))
     (ok (map-set invoice-gen-registry id (merge entry {active: false})))))
+(define-read-only (get-invoice-gen-entry (id uint))
+  (map-get? invoice-gen-registry id))
+(define-read-only (get-invoice-gen-count)
+  (ok (var-get invoice-gen-counter)))
