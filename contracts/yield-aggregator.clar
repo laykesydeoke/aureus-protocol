@@ -465,3 +465,32 @@
     (asserts! (<= id (var-get strategy-count)) (err u110))
     (var-set active-strategy id)
     (ok true)))
+
+;; Fee management system
+(define-data-var protocol-fee-bps uint u30)
+(define-data-var fee-recipient principal (var-get contract-owner))
+(define-data-var total-fees-collected uint u0)
+(define-data-var fee-distribution-count uint u0)
+
+(define-read-only (get-fee-params)
+  { fee-bps: (var-get protocol-fee-bps), total-collected: (var-get total-fees-collected) })
+
+(define-public (set-protocol-fee (fee uint))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (asserts! (<= fee u300) (err u120))
+    (var-set protocol-fee-bps fee)
+    (ok true)))
+
+(define-public (set-fee-recipient (recipient principal))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set fee-recipient recipient)
+    (ok true)))
+
+(define-public (collect-fees (amount uint))
+  (begin
+    (asserts! (> amount u0) (err u121))
+    (var-set total-fees-collected (+ (var-get total-fees-collected) amount))
+    (var-set fee-distribution-count (+ (var-get fee-distribution-count) u1))
+    (ok true)))
