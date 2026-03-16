@@ -197,6 +197,26 @@
   (ok (default-to (list) (map-get? deposit-history user)))
 )
 
+(define-read-only (get-yield-analytics)
+  {
+    total-deposits: (var-get total-deposits),
+    total-yield-earned: (var-get total-yield-earned),
+    is-paused: (var-get emergency-pause),
+    is-initialized: (var-get initialized)
+  }
+)
+
+(define-read-only (get-user-yield-ratio (user principal))
+  (let (
+    (user-dep (default-to u0 (map-get? user-deposits user)))
+    (total-dep (var-get total-deposits))
+  )
+    (if (> total-dep u0)
+      (some (/ (* user-dep u10000) total-dep))
+      none)
+  )
+)
+
 ;; private functions
 
 ;; Calculate proportional yield for a user

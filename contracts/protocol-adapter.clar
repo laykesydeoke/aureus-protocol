@@ -291,6 +291,15 @@
   })
 )
 
+(define-read-only (get-adapter-analytics)
+  {
+    active-protocol: (var-get active-protocol),
+    is-paused: (var-get adapter-paused),
+    is-initialized: (var-get adapter-initialized),
+    optimal-protocol: (get-optimal-protocol)
+  }
+)
+
 ;; private functions
 
 ;; Find maximum value in a list

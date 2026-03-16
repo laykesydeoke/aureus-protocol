@@ -387,3 +387,41 @@ footer {
     .vault-actions { flex-direction: column; }
     .footer-grid { flex-direction: column; gap: 1.5rem; }
 }
+
+/* Analytics section */
+.analytics-section {
+    padding: 2rem 3rem;
+    background: #0d1320;
+    border-top: 1px solid #1a2a3a;
+}
+
+.analytics-section h2 {
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+}
+
+.analytics-row {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.analytic-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.analytic-label {
+    font-size: 0.75rem;
+    color: #8a9bb0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.analytic-val {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+}
