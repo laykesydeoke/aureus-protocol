@@ -1237,3 +1237,9 @@
 ;; payment-gate module
 (define-map payment-gate-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var payment-gate-counter uint u0)
+(define-public (create-payment-gate (val uint))
+  (let ((id (+ (var-get payment-gate-counter) u1)))
+    (asserts! (> val u0) (err u890))
+    (map-set payment-gate-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set payment-gate-counter id)
+    (ok id)))
