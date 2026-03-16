@@ -29,3 +29,6 @@ snapshots/
 compliance-exports/
 portfolio-history/
 *.report.json
+risk-logs/
+exposure-reports/
+circuit-breaker-events/
