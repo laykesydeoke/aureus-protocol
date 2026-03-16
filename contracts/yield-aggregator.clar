@@ -1204,3 +1204,9 @@
 ;; refund-proc module
 (define-map refund-proc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var refund-proc-counter uint u0)
+(define-public (create-refund-proc (val uint))
+  (let ((id (+ (var-get refund-proc-counter) u1)))
+    (asserts! (> val u0) (err u880))
+    (map-set refund-proc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set refund-proc-counter id)
+    (ok id)))
