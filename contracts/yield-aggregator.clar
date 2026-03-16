@@ -1045,3 +1045,8 @@
     (map-set rollover-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set rollover-mgr-counter id)
     (ok id)))
+(define-public (update-rollover-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? rollover-mgr-registry id) (err u831))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u832))
+    (asserts! (get active entry) (err u833))
+    (ok (map-set rollover-mgr-registry id (merge entry {value: new-val})))))
