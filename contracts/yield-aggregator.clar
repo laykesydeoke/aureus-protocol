@@ -1120,3 +1120,7 @@
   (let ((entry (unwrap! (map-get? discount-calc-registry id) (err u851))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u852))
     (ok (map-set discount-calc-registry id (merge entry {active: false})))))
+(define-read-only (get-discount-calc-entry (id uint))
+  (map-get? discount-calc-registry id))
+(define-read-only (get-discount-calc-count)
+  (ok (var-get discount-calc-counter)))
