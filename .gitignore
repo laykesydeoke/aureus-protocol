@@ -32,3 +32,5 @@ portfolio-history/
 risk-logs/
 exposure-reports/
 circuit-breaker-events/
+asset-registry/
+asset-snapshots/
