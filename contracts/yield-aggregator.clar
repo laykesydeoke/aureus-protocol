@@ -1012,3 +1012,8 @@
     (map-set usage-alert-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set usage-alert-counter id)
     (ok id)))
+(define-public (update-usage-alert (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? usage-alert-registry id) (err u821))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u822))
+    (asserts! (get active entry) (err u823))
+    (ok (map-set usage-alert-registry id (merge entry {value: new-val})))))
