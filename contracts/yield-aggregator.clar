@@ -1157,3 +1157,7 @@
   (map-get? invoice-gen-registry id))
 (define-read-only (get-invoice-gen-count)
   (ok (var-get invoice-gen-counter)))
+(define-read-only (is-invoice-gen-active (id uint))
+  (match (map-get? invoice-gen-registry id)
+    entry (get active entry)
+    false))
