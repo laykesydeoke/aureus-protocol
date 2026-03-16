@@ -373,3 +373,8 @@ async function loadFeeParams() {
   const r = await callReadOnly("yield-aggregator", "get-fee-params", []);
   if (r) document.getElementById("fee-data").textContent = JSON.stringify(r);
 }
+
+async function load_referral() {
+  const r = await callReadOnly("yield-aggregator", "get-referral-params", []);
+  if (r) document.getElementById("referral-out").textContent = JSON.stringify(r);
+}
