@@ -494,3 +494,21 @@
     (var-set total-fees-collected (+ (var-get total-fees-collected) amount))
     (var-set fee-distribution-count (+ (var-get fee-distribution-count) u1))
     (ok true)))
+
+;; Referral tracking system
+(define-map referrals principal { referrer: principal, reward-earned: uint, referred-at: uint })
+(define-data-var referral-count uint u0)
+(define-data-var referral-bonus-bps uint u25)
+
+(define-read-only (get-referral-params)
+  { referral-count: (var-get referral-count), bonus-bps: (var-get referral-bonus-bps) })
+
+(define-read-only (get-referral (user principal))
+  (map-get? referrals user))
+
+(define-public (register-referral (referrer principal))
+  (begin
+    (asserts\! (not (is-eq tx-sender referrer)) (err u130))
+    (map-set referrals tx-sender { referrer: referrer, reward-earned: u0, referred-at: stacks-block-height })
+    (var-set referral-count (+ (var-get referral-count) u1))
+    (ok true)))

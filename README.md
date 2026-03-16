@@ -285,3 +285,11 @@ Protocol fee collection:
 ```bash
 npm run test:fees
 ```
+
+## referral
+
+referral feature.
+
+```bash
+npm run test:referral
+```
