@@ -17,7 +17,10 @@
     "test:reward-edge": "vitest run tests/reward_edge_test.ts tests/reward_invariant_test.ts",
     "test:governance": "vitest run tests/governance_params_test.ts tests/min_deposit_test.ts tests/governance_access_test.ts",
     "test:governance-edge": "vitest run tests/governance_edge_test.ts tests/governance_invariant_test.ts",
-    "test:governance-admin": "vitest run tests/admin_config_test.ts tests/governance_audit_test.ts tests/governance_flow_test.ts"
+    "test:governance-admin": "vitest run tests/admin_config_test.ts tests/governance_audit_test.ts tests/governance_flow_test.ts",
+    "test:optimization": "vitest run tests/optimization_params_test.ts tests/rebalance_threshold_test.ts tests/optimization_toggle_test.ts",
+    "test:rebalance": "vitest run tests/auto_rebalance_test.ts tests/yield_rebalance_full_test.ts tests/yield_routing_test.ts",
+    "test:opt-edge": "vitest run tests/optimization_edge_test.ts tests/optimization_invariant_test.ts tests/optimization_auth_test.ts"
   },
   "author": "",
   "license": "ISC",
