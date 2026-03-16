@@ -1066,3 +1066,5 @@
   (match (map-get? rollover-mgr-registry id)
     entry (ok (get owner entry))
     (err u831)))
+(define-read-only (get-rollover-mgr-value (id uint))
+  (default-to u0 (get value (map-get? rollover-mgr-registry id))))
