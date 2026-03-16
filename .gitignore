@@ -14,3 +14,9 @@ telemetry-exports/
 tier-cache/
 reward-snapshots/
 deposit-history-exports/
+governance-exports/
+governance-logs/
+admin-actions/
+param-snapshots/
+audit-trail/
+*.governance.json
