@@ -1091,3 +1091,7 @@
   (map-get? promo-engine-registry id))
 (define-read-only (get-promo-engine-count)
   (ok (var-get promo-engine-counter)))
+(define-read-only (is-promo-engine-active (id uint))
+  (match (map-get? promo-engine-registry id)
+    entry (get active entry)
+    false))
