@@ -623,3 +623,28 @@
     (map-set yield-boosters user { multiplier: multiplier, expires-at: (+ stacks-block-height duration), tier: u1 })
     (var-set booster-count (+ (var-get booster-count) u1))
     (ok true)))
+
+;; Advanced analytics v2
+(define-data-var daily-volume-tracker uint u0)
+(define-data-var weekly-volume-tracker uint u0)
+(define-data-var peak-tvl uint u0)
+(define-data-var analytics-epoch uint u0)
+
+(define-read-only (get-analytics-v2)
+  {
+    daily-volume: (var-get daily-volume-tracker),
+    weekly-volume: (var-get weekly-volume-tracker),
+    peak-tvl: (var-get peak-tvl),
+    epoch: (var-get analytics-epoch),
+    current-tvl: (var-get total-deposits)
+  })
+
+(define-public (update-analytics (daily uint) (weekly uint))
+  (begin
+    (asserts\! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set daily-volume-tracker daily)
+    (var-set weekly-volume-tracker weekly)
+    (when (> (var-get total-deposits) (var-get peak-tvl))
+      (var-set peak-tvl (var-get total-deposits)))
+    (var-set analytics-epoch (+ (var-get analytics-epoch) u1))
+    (ok true)))
