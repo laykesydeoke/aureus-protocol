@@ -1068,3 +1068,7 @@
     (err u831)))
 (define-read-only (get-rollover-mgr-value (id uint))
   (default-to u0 (get value (map-get? rollover-mgr-registry id))))
+
+;; promo-engine module
+(define-map promo-engine-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var promo-engine-counter uint u0)
