@@ -1054,3 +1054,7 @@
   (let ((entry (unwrap! (map-get? rollover-mgr-registry id) (err u831))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u832))
     (ok (map-set rollover-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-rollover-mgr-entry (id uint))
+  (map-get? rollover-mgr-registry id))
+(define-read-only (get-rollover-mgr-count)
+  (ok (var-get rollover-mgr-counter)))
