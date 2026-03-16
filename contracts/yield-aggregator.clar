@@ -1219,3 +1219,7 @@
   (let ((entry (unwrap! (map-get? refund-proc-registry id) (err u881))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u882))
     (ok (map-set refund-proc-registry id (merge entry {active: false})))))
+(define-read-only (get-refund-proc-entry (id uint))
+  (map-get? refund-proc-registry id))
+(define-read-only (get-refund-proc-count)
+  (ok (var-get refund-proc-counter)))
