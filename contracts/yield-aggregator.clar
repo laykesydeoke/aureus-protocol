@@ -963,3 +963,7 @@
   (match (map-get? carrier-api-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-carrier-api-owner (id uint))
+  (match (map-get? carrier-api-registry id)
+    entry (ok (get owner entry))
+    (err u801)))
