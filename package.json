@@ -29,7 +29,10 @@
     "test:circuit": "vitest run tests/circuit_breaker_test.ts tests/risk_full_flow_test.ts tests/risk_integration_test.ts",
     "test:assets": "vitest run tests/asset_support_test.ts tests/add_asset_test.ts tests/asset_check_test.ts",
     "test:asset-access": "vitest run tests/asset_access_test.ts tests/asset_remove_access_test.ts",
-    "test:asset-flow": "vitest run tests/multi_asset_flow_test.ts tests/multi_asset_summary_test.ts tests/asset_integration_test.ts"
+    "test:asset-flow": "vitest run tests/multi_asset_flow_test.ts tests/multi_asset_summary_test.ts tests/asset_integration_test.ts",
+    "test:emergency": "vitest run tests/emergency_state_test.ts tests/emergency_pause_log_test.ts tests/emergency_resume_test.ts",
+    "test:pause": "vitest run tests/pause_count_test.ts tests/multi_pause_test.ts tests/emergency_full_cycle_test.ts",
+    "test:emergency-access": "vitest run tests/emergency_access_test.ts tests/resume_access_test.ts tests/emergency_summary_test.ts"
   },
   "author": "",
   "license": "ISC",
