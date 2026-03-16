@@ -23,7 +23,10 @@
     "test:opt-edge": "vitest run tests/optimization_edge_test.ts tests/optimization_invariant_test.ts tests/optimization_auth_test.ts",
     "test:reporting": "vitest run tests/portfolio_report_test.ts tests/snapshot_test.ts tests/snapshot_retrieval_test.ts",
     "test:snapshots": "vitest run tests/multi_snapshot_test.ts tests/snapshot_integrity_test.ts tests/snapshot_data_test.ts",
-    "test:compliance": "vitest run tests/audit_trail_test.ts tests/report_export_test.ts tests/institutional_summary_test.ts"
+    "test:compliance": "vitest run tests/audit_trail_test.ts tests/report_export_test.ts tests/institutional_summary_test.ts",
+    "test:risk": "vitest run tests/risk_params_test.ts tests/risk_level_test.ts tests/risk_access_test.ts",
+    "test:risk-limits": "vitest run tests/max_deposit_limit_test.ts tests/exposure_limit_test.ts tests/risk_edge_test.ts",
+    "test:circuit": "vitest run tests/circuit_breaker_test.ts tests/risk_full_flow_test.ts tests/risk_integration_test.ts"
   },
   "author": "",
   "license": "ISC",

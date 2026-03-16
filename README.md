@@ -210,3 +210,17 @@ npm run test:reporting
 npm run test:snapshots
 npm run test:compliance
 ```
+
+## Risk Management
+
+Layered risk controls protect protocol and users:
+
+- **Risk Levels**: 0-3 from minimal to maximum protection
+- **Exposure Limits**: Max single deposit cap
+- **Circuit Breakers**: Emergency pause for full halt
+
+```bash
+npm run test:risk
+npm run test:risk-limits
+npm run test:circuit
+```
