@@ -1144,3 +1144,8 @@
     (map-set invoice-gen-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set invoice-gen-counter id)
     (ok id)))
+(define-public (update-invoice-gen (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? invoice-gen-registry id) (err u861))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u862))
+    (asserts! (get active entry) (err u863))
+    (ok (map-set invoice-gen-registry id (merge entry {value: new-val})))))
