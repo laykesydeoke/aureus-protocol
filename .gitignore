@@ -37,3 +37,6 @@ asset-snapshots/
 emergency-logs/
 pause-events/
 incident-reports/
+metrics-exports/
+performance-logs/
+uptime-reports/

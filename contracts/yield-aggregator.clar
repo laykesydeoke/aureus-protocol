@@ -420,3 +420,22 @@
     (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
     (var-set emergency-pause false)
     (ok true)))
+
+;; Performance metrics: track protocol performance
+(define-data-var total-transactions uint u0)
+(define-data-var total-deposits-count uint u0)
+(define-data-var total-withdrawals-count uint u0)
+
+(define-read-only (get-performance-metrics)
+  {
+    total-transactions: (var-get total-transactions),
+    total-deposits-count: (var-get total-deposits-count),
+    total-withdrawals-count: (var-get total-withdrawals-count),
+    total-value-locked: (var-get total-deposits),
+    avg-yield-bps: (if (> (var-get total-deposits-count) u0)
+      (/ (* (var-get total-yield-earned) u10000) (var-get total-deposits))
+      u0)
+  })
+
+(define-read-only (get-protocol-uptime)
+  (- stacks-block-height (var-get last-pause-block)))
