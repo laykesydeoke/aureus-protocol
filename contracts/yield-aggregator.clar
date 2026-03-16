@@ -320,3 +320,28 @@
     (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
     (var-set optimization-enabled enabled)
     (ok true)))
+
+;; Institutional reporting: portfolio snapshots
+(define-map portfolio-snapshots uint { total-deposits: uint, total-yield: uint, snapshot-block: uint })
+(define-data-var snapshot-count uint u0)
+
+(define-read-only (get-portfolio-report)
+  {
+    total-deposits: (var-get total-deposits),
+    total-yield-earned: (var-get total-yield-earned),
+    snapshot-count: (var-get snapshot-count),
+    report-block: stacks-block-height
+  })
+
+(define-public (take-portfolio-snapshot)
+  (let ((count (var-get snapshot-count)))
+    (map-set portfolio-snapshots count {
+      total-deposits: (var-get total-deposits),
+      total-yield: (var-get total-yield-earned),
+      snapshot-block: stacks-block-height
+    })
+    (var-set snapshot-count (+ count u1))
+    (ok count)))
+
+(define-read-only (get-snapshot (id uint))
+  (map-get? portfolio-snapshots id))

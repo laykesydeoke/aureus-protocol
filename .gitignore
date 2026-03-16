@@ -24,3 +24,8 @@ optimization-logs/
 rebalance-history/
 yield-snapshots/
 *.optimization.json
+reports/
+snapshots/
+compliance-exports/
+portfolio-history/
+*.report.json
