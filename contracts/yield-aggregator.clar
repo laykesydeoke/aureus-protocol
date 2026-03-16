@@ -1200,3 +1200,7 @@
     (err u871)))
 (define-read-only (get-receipt-log-value (id uint))
   (default-to u0 (get value (map-get? receipt-log-registry id))))
+
+;; refund-proc module
+(define-map refund-proc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var refund-proc-counter uint u0)
