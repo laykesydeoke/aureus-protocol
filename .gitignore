@@ -20,3 +20,7 @@ admin-actions/
 param-snapshots/
 audit-trail/
 *.governance.json
+optimization-logs/
+rebalance-history/
+yield-snapshots/
+*.optimization.json
