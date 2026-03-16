@@ -350,3 +350,16 @@ function loadEmergencyState() {
         }
     }).catch(function () {});
 }
+
+function loadPerformanceMetrics() {
+    Promise.all([
+        callReadOnly('yield-aggregator', 'get-performance-metrics', []),
+        callReadOnly('yield-aggregator', 'get-protocol-uptime', [])
+    ]).then(function (results) {
+        var txCount = document.getElementById('perfTxCount');
+        var uptime = document.getElementById('perfUptime');
+        var metrics = results[0] && results[0].result ? results[0].result : {};
+        if (txCount) txCount.textContent = metrics['total-transactions'] || '0';
+        if (uptime) uptime.textContent = results[1] && results[1].result ? parseInt(results[1].result, 16) + ' blocks' : '--';
+    }).catch(function () {});
+}
