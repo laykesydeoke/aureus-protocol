@@ -1105,3 +1105,9 @@
 ;; discount-calc module
 (define-map discount-calc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var discount-calc-counter uint u0)
+(define-public (create-discount-calc (val uint))
+  (let ((id (+ (var-get discount-calc-counter) u1)))
+    (asserts! (> val u0) (err u850))
+    (map-set discount-calc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set discount-calc-counter id)
+    (ok id)))
