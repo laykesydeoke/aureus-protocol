@@ -1083,3 +1083,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u842))
     (asserts! (get active entry) (err u843))
     (ok (map-set promo-engine-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-promo-engine (id uint))
+  (let ((entry (unwrap! (map-get? promo-engine-registry id) (err u841))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u842))
+    (ok (map-set promo-engine-registry id (merge entry {active: false})))))
