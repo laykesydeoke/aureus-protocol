@@ -296,3 +296,14 @@ function callReadOnly(contract, fnName, args) {
         })
     }).then(function (r) { return r.json(); });
 }
+
+function loadOptimizationParams() {
+    callReadOnly('yield-aggregator', 'get-optimization-params', []).then(function (data) {
+        var el = document.getElementById('optRebalanceThreshold');
+        var enabled = document.getElementById('optEnabled');
+        if (data && data.result) {
+            if (el) el.textContent = data.result['rebalance-threshold'] || '--';
+            if (enabled) enabled.textContent = data.result['optimization-enabled'] ? 'Active' : 'Paused';
+        }
+    }).catch(function () {});
+}
