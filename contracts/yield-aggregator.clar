@@ -393,3 +393,30 @@
 
 (define-read-only (get-asset-count)
   (var-get asset-count))
+
+;; Enhanced emergency controls
+(define-data-var emergency-contact principal CONTRACT_OWNER)
+(define-data-var last-pause-block uint u0)
+(define-data-var pause-count uint u0)
+
+(define-read-only (get-emergency-state)
+  {
+    is-paused: (var-get emergency-pause),
+    last-pause-block: (var-get last-pause-block),
+    pause-count: (var-get pause-count),
+    emergency-contact: (var-get emergency-contact)
+  })
+
+(define-public (emergency-pause-with-log)
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set emergency-pause true)
+    (var-set last-pause-block stacks-block-height)
+    (var-set pause-count (+ (var-get pause-count) u1))
+    (ok true)))
+
+(define-public (emergency-resume)
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (var-set emergency-pause false)
+    (ok true)))

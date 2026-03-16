@@ -34,3 +34,6 @@ exposure-reports/
 circuit-breaker-events/
 asset-registry/
 asset-snapshots/
+emergency-logs/
+pause-events/
+incident-reports/

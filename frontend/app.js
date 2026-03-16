@@ -338,3 +338,15 @@ function loadAssetCount() {
         }
     }).catch(function () {});
 }
+
+function loadEmergencyState() {
+    callReadOnly('yield-aggregator', 'get-emergency-state', []).then(function (data) {
+        var status = document.getElementById('emergencyStatus');
+        var pauseCount = document.getElementById('emergencyPauseCount');
+        if (data && data.result) {
+            var isPaused = data.result['is-paused'];
+            if (status) { status.textContent = isPaused ? 'PAUSED' : 'Active'; status.style.color = isPaused ? '#ef4444' : '#10b981'; }
+            if (pauseCount) pauseCount.textContent = data.result['pause-count'] || '0';
+        }
+    }).catch(function () {});
+}
