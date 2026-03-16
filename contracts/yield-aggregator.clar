@@ -1058,3 +1058,7 @@
   (map-get? rollover-mgr-registry id))
 (define-read-only (get-rollover-mgr-count)
   (ok (var-get rollover-mgr-counter)))
+(define-read-only (is-rollover-mgr-active (id uint))
+  (match (map-get? rollover-mgr-registry id)
+    entry (get active entry)
+    false))
