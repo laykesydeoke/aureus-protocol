@@ -169,3 +169,17 @@ Open source - suitable for Code4STX submission and community development.
 ---
 
 **Aureus Protocol** - Where digital gold meets intelligent optimization. Built with Clarity 4 and modern Stacks tooling for institutional-grade DeFi applications.
+## Protocol Governance
+
+Aureus Protocol includes on-chain governance controls managed by the contract owner:
+
+- **Min Deposit**: Configurable minimum deposit threshold
+- **Max Withdrawal %**: Governance-controlled withdrawal limits
+- **Action Audit**: All governance actions are logged on-chain
+
+Run governance tests:
+```bash
+npm run test:governance
+npm run test:governance-edge
+npm run test:governance-admin
+```
