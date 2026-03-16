@@ -1095,3 +1095,7 @@
   (match (map-get? promo-engine-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-promo-engine-owner (id uint))
+  (match (map-get? promo-engine-registry id)
+    entry (ok (get owner entry))
+    (err u841)))
