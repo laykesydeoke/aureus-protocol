@@ -1182,3 +1182,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u872))
     (asserts! (get active entry) (err u873))
     (ok (map-set receipt-log-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-receipt-log (id uint))
+  (let ((entry (unwrap! (map-get? receipt-log-registry id) (err u871))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u872))
+    (ok (map-set receipt-log-registry id (merge entry {active: false})))))
