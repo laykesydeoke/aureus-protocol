@@ -1035,3 +1035,7 @@
     (err u821)))
 (define-read-only (get-usage-alert-value (id uint))
   (default-to u0 (get value (map-get? usage-alert-registry id))))
+
+;; rollover-mgr module
+(define-map rollover-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var rollover-mgr-counter uint u0)
