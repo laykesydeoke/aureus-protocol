@@ -946,3 +946,8 @@
     (map-set carrier-api-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set carrier-api-counter id)
     (ok id)))
+(define-public (update-carrier-api (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? carrier-api-registry id) (err u801))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u802))
+    (asserts! (get active entry) (err u803))
+    (ok (map-set carrier-api-registry id (merge entry {value: new-val})))))
