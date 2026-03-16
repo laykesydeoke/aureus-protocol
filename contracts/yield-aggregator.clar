@@ -1231,3 +1231,5 @@
   (match (map-get? refund-proc-registry id)
     entry (ok (get owner entry))
     (err u881)))
+(define-read-only (get-refund-proc-value (id uint))
+  (default-to u0 (get value (map-get? refund-proc-registry id))))
