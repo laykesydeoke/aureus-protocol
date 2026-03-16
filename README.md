@@ -251,3 +251,17 @@ npm run test:emergency
 npm run test:pause
 npm run test:emergency-access
 ```
+
+## Performance Metrics
+
+Comprehensive protocol performance monitoring:
+
+- **Transaction Tracking**: Total deposit and withdrawal counts
+- **TVL Monitoring**: Real-time value locked reporting
+- **Protocol Uptime**: Blocks since last emergency pause
+- **Avg Yield BPS**: Calculated average yield rate
+
+```bash
+npm run test:perf
+npm run test:perf-integration
+```
