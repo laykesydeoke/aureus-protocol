@@ -7,7 +7,11 @@
   "scripts": {
     "test": "vitest run",
     "test:report": "vitest run -- --coverage --costs",
-    "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\""
+    "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\"",
+    "test:analytics": "vitest run tests/yield_analytics_test.ts tests/adapter_analytics_test.ts tests/deposit_analytics_test.ts",
+    "test:distribution": "vitest run tests/yield_distribution_test.ts tests/withdraw_analytics_test.ts tests/multi_user_analytics_test.ts",
+    "test:ratios": "vitest run tests/yield_ratio_test.ts tests/protocol_rate_test.ts",
+    "test:security": "vitest run tests/emergency_pause_test.ts"
   },
   "author": "",
   "license": "ISC",
