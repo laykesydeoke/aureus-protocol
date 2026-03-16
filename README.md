@@ -22,6 +22,10 @@ Aureus Protocol is a professional-grade digital asset optimization platform desi
 - **User yield ratio calculations (basis points)**
 - **Protocol adapter analytics and rate comparison**
 - **Multi-user proportional yield distribution**
+- **Deposit rewards tier system (Bronze/Silver/Gold)**
+- **Deposit count tracking per user**
+- **Tier-based bonus yield (0/50/100 bps)**
+- **First deposit block tracking for tenure rewards**
 - **Detailed transaction history and audit trails**
 - **Enhanced precision calculations using Clarity 4**
 
