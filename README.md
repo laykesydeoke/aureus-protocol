@@ -301,3 +301,11 @@ compound feature.
 ```bash
 npm run test:compound
 ```
+
+## insurance
+
+insurance feature.
+
+```bash
+npm run test:insurance
+```

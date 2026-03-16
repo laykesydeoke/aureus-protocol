@@ -535,3 +535,24 @@
   (begin
     (var-set total-compounds (+ (var-get total-compounds) u1))
     (ok true)))
+
+;; Insurance reserve fund
+(define-data-var insurance-reserve uint u0)
+(define-data-var insurance-coverage-pct uint u80)
+(define-data-var insurance-active bool true)
+
+(define-read-only (get-insurance-reserve)
+  { reserve: (var-get insurance-reserve), coverage-pct: (var-get insurance-coverage-pct), active: (var-get insurance-active) })
+
+(define-public (fund-insurance (amount uint))
+  (begin
+    (asserts\! (> amount u0) (err u150))
+    (var-set insurance-reserve (+ (var-get insurance-reserve) amount))
+    (ok true)))
+
+(define-public (set-coverage-pct (pct uint))
+  (begin
+    (asserts\! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (asserts\! (<= pct u100) (err u151))
+    (var-set insurance-coverage-pct pct)
+    (ok true)))
