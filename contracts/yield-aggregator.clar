@@ -1006,3 +1006,9 @@
 ;; usage-alert module
 (define-map usage-alert-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var usage-alert-counter uint u0)
+(define-public (create-usage-alert (val uint))
+  (let ((id (+ (var-get usage-alert-counter) u1)))
+    (asserts! (> val u0) (err u820))
+    (map-set usage-alert-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set usage-alert-counter id)
+    (ok id)))
