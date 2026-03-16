@@ -604,3 +604,22 @@
       (map-set treasury-log id { amount: amount, purpose: purpose, logged-at: stacks-block-height })
       (var-set treasury-log-count id)
       (ok id))))
+
+;; Yield booster mechanism
+(define-map yield-boosters principal { multiplier: uint, expires-at: uint, tier: uint })
+(define-data-var booster-count uint u0)
+(define-data-var max-booster-multiplier uint u300)
+
+(define-read-only (get-booster-params)
+  { booster-count: (var-get booster-count), max-multiplier: (var-get max-booster-multiplier) })
+
+(define-read-only (get-booster (user principal))
+  (map-get? yield-boosters user))
+
+(define-public (grant-yield-booster (user principal) (multiplier uint) (duration uint))
+  (begin
+    (asserts\! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (asserts\! (<= multiplier (var-get max-booster-multiplier)) (err u180))
+    (map-set yield-boosters user { multiplier: multiplier, expires-at: (+ stacks-block-height duration), tier: u1 })
+    (var-set booster-count (+ (var-get booster-count) u1))
+    (ok true)))
