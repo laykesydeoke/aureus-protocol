@@ -1062,3 +1062,7 @@
   (match (map-get? rollover-mgr-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-rollover-mgr-owner (id uint))
+  (match (map-get? rollover-mgr-registry id)
+    entry (ok (get owner entry))
+    (err u831)))
