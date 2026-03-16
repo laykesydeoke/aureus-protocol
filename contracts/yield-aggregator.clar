@@ -1260,3 +1260,7 @@
   (match (map-get? payment-gate-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-payment-gate-owner (id uint))
+  (match (map-get? payment-gate-registry id)
+    entry (ok (get owner entry))
+    (err u891)))
