@@ -323,3 +323,9 @@ npm run test:gov2
 ```bash
 npm run test:treasury
 ```
+
+## booster
+
+```bash
+npm run test:booster
+```

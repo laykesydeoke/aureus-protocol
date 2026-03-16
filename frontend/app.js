@@ -389,3 +389,5 @@ async function load_insurance() { const r = await callReadOnly("yield-aggregator
 async function load_gov2() { const r = await callReadOnly("yield-aggregator", "get-gov2-params", []); if (r) document.getElementById("gov2-out").textContent = JSON.stringify(r); }
 
 async function load_treasury() { const r = await callReadOnly("yield-aggregator", "get-treasury-state", []); if (r) document.getElementById("treasury-out").textContent = JSON.stringify(r); }
+
+async function load_booster() { const r = await callReadOnly("yield-aggregator", "get-booster-params", []); if (r) document.getElementById("booster-out").textContent = JSON.stringify(r); }
