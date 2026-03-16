@@ -2,6 +2,24 @@ var API_URL = 'https://api.testnet.hiro.so';
 var CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
 var userAddress = null;
 
+function loadUserTier(address) {
+    if (!address) return;
+    Promise.all([
+        callReadOnly('yield-aggregator', 'get-user-tier', ['0x0616' + address]),
+        callReadOnly('yield-aggregator', 'get-user-tier-bonus', ['0x0616' + address]),
+        callReadOnly('yield-aggregator', 'get-user-deposit-count', ['0x0616' + address])
+    ]).then(function (results) {
+        var tierEl = document.getElementById('userTier');
+        var bonusEl = document.getElementById('userTierBonus');
+        var countEl = document.getElementById('userDepositCount');
+        var tierMap = { 1: 'Bronze', 2: 'Silver', 3: 'Gold' };
+        var tierNum = parseInt(results[0] && results[0].result ? results[0].result : '1', 16) || 1;
+        if (tierEl) tierEl.textContent = tierMap[tierNum] || 'Bronze';
+        if (bonusEl) bonusEl.textContent = (parseInt(results[1] && results[1].result ? results[1].result : '0', 16) || 0) + ' bps';
+        if (countEl) countEl.textContent = parseInt(results[2] && results[2].result ? results[2].result : '0', 16) || '0';
+    }).catch(function () {});
+}
+
 function loadYieldAnalytics() {
     Promise.all([
         callReadOnly('yield-aggregator', 'get-yield-analytics', []),
