@@ -363,3 +363,8 @@ function loadPerformanceMetrics() {
         if (uptime) uptime.textContent = results[1] && results[1].result ? parseInt(results[1].result, 16) + ' blocks' : '--';
     }).catch(function () {});
 }
+
+async function loadStrategyParams() {
+  const r = await callReadOnly("yield-aggregator", "get-strategy-params", []);
+  if (r) document.getElementById("strategy-data").textContent = JSON.stringify(r);
+}
