@@ -383,3 +383,5 @@ async function load_compound() {
   const r = await callReadOnly("yield-aggregator", "get-compound-params", []);
   if (r) document.getElementById("compound-out").textContent = JSON.stringify(r);
 }
+
+async function load_insurance() { const r = await callReadOnly("yield-aggregator", "get-insurance-reserve", []); if (r) document.getElementById("insurance-out").textContent = JSON.stringify(r); }
