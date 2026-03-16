@@ -1033,3 +1033,5 @@
   (match (map-get? usage-alert-registry id)
     entry (ok (get owner entry))
     (err u821)))
+(define-read-only (get-usage-alert-value (id uint))
+  (default-to u0 (get value (map-get? usage-alert-registry id))))
