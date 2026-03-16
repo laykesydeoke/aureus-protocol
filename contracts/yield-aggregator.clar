@@ -1029,3 +1029,7 @@
   (match (map-get? usage-alert-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-usage-alert-owner (id uint))
+  (match (map-get? usage-alert-registry id)
+    entry (ok (get owner entry))
+    (err u821)))
