@@ -370,3 +370,26 @@
     (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
     (var-set max-single-deposit amount)
     (ok true)))
+
+;; Multi-asset support: track supported assets
+(define-map supported-assets principal bool)
+(define-data-var asset-count uint u1)
+
+(define-read-only (is-supported-asset (asset principal))
+  (default-to false (map-get? supported-assets asset)))
+
+(define-public (add-supported-asset (asset principal))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (map-set supported-assets asset true)
+    (var-set asset-count (+ (var-get asset-count) u1))
+    (ok true)))
+
+(define-public (remove-supported-asset (asset principal))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (map-set supported-assets asset false)
+    (ok true)))
+
+(define-read-only (get-asset-count)
+  (var-get asset-count))
