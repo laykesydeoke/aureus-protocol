@@ -581,3 +581,26 @@
       (map-set governance-proposals id (merge proposal { votes-for: (+ (get votes-for proposal) u1) }))
       (map-set governance-proposals id (merge proposal { votes-against: (+ (get votes-against proposal) u1) })))
     (ok true)))
+
+;; Protocol treasury
+(define-data-var aureus-treasury uint u0)
+(define-data-var treasury-fee-rate uint u20)
+(define-map treasury-log uint { amount: uint, purpose: (string-ascii 64), logged-at: uint })
+(define-data-var treasury-log-count uint u0)
+
+(define-read-only (get-treasury-state)
+  { treasury: (var-get aureus-treasury), fee-rate: (var-get treasury-fee-rate) })
+
+(define-public (deposit-to-treasury (amount uint))
+  (begin
+    (asserts\! (> amount u0) (err u170))
+    (var-set aureus-treasury (+ (var-get aureus-treasury) amount))
+    (ok true)))
+
+(define-public (log-treasury-action (purpose (string-ascii 64)) (amount uint))
+  (begin
+    (asserts\! (is-eq tx-sender (var-get contract-owner)) (err u100))
+    (let ((id (+ (var-get treasury-log-count) u1)))
+      (map-set treasury-log id { amount: amount, purpose: purpose, logged-at: stacks-block-height })
+      (var-set treasury-log-count id)
+      (ok id))))
