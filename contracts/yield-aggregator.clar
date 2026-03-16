@@ -940,3 +940,9 @@
 ;; carrier-api module
 (define-map carrier-api-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var carrier-api-counter uint u0)
+(define-public (create-carrier-api (val uint))
+  (let ((id (+ (var-get carrier-api-counter) u1)))
+    (asserts! (> val u0) (err u800))
+    (map-set carrier-api-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set carrier-api-counter id)
+    (ok id)))
