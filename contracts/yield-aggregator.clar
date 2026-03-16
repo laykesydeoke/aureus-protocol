@@ -512,3 +512,26 @@
     (map-set referrals tx-sender { referrer: referrer, reward-earned: u0, referred-at: stacks-block-height })
     (var-set referral-count (+ (var-get referral-count) u1))
     (ok true)))
+
+;; Auto-compounding yield
+(define-data-var auto-compound-enabled bool true)
+(define-data-var compound-frequency uint u100)
+(define-data-var total-compounds uint u0)
+(define-map compound-schedules principal { last-compound: uint, frequency: uint, active: bool })
+
+(define-read-only (get-compound-params)
+  { enabled: (var-get auto-compound-enabled), frequency: (var-get compound-frequency), total: (var-get total-compounds) })
+
+(define-read-only (get-compound-schedule (user principal))
+  (map-get? compound-schedules user))
+
+(define-public (enable-auto-compound (frequency uint))
+  (begin
+    (asserts\! (> frequency u0) (err u140))
+    (map-set compound-schedules tx-sender { last-compound: stacks-block-height, frequency: frequency, active: true })
+    (ok true)))
+
+(define-public (execute-compound)
+  (begin
+    (var-set total-compounds (+ (var-get total-compounds) u1))
+    (ok true)))
