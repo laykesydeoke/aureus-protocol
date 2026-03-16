@@ -1078,3 +1078,8 @@
     (map-set promo-engine-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set promo-engine-counter id)
     (ok id)))
+(define-public (update-promo-engine (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? promo-engine-registry id) (err u841))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u842))
+    (asserts! (get active entry) (err u843))
+    (ok (map-set promo-engine-registry id (merge entry {value: new-val})))))
