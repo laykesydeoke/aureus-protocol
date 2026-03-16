@@ -388,6 +388,65 @@ footer {
     .footer-grid { flex-direction: column; gap: 1.5rem; }
 }
 
+/* Tier rewards section */
+.tier-section {
+    padding: 2rem 3rem;
+    background: #0a0e1a;
+    border-top: 1px solid #1a2040;
+}
+
+.tier-section h2 {
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+}
+
+.tier-grid {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.tier-card {
+    background: #0d1525;
+    border: 1px solid #1e2e4a;
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    min-width: 140px;
+    text-align: center;
+}
+
+.tier-card h3 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.tier-card p {
+    font-size: 0.8rem;
+    color: #8a9bb0;
+    margin-bottom: 0.5rem;
+}
+
+.tier-bonus {
+    font-size: 0.9rem;
+    color: #00e680;
+    font-weight: 700;
+}
+
+.user-tier-info {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: #c0ccd8;
+}
+
+.user-tier-info strong {
+    color: var(--gold);
+}
+
 /* Analytics section */
 .analytics-section {
     padding: 2rem 3rem;
