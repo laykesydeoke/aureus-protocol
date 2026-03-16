@@ -497,3 +497,16 @@ footer {
     font-weight: 700;
     color: var(--gold);
 }
+
+/* Optimization section */
+#optimization {
+    background: #0b1220;
+    border-top: 1px solid #1a2840;
+    padding: 1.5rem 3rem;
+}
+
+#optimization h2 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
