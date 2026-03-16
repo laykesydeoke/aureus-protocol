@@ -1233,3 +1233,7 @@
     (err u881)))
 (define-read-only (get-refund-proc-value (id uint))
   (default-to u0 (get value (map-get? refund-proc-registry id))))
+
+;; payment-gate module
+(define-map payment-gate-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var payment-gate-counter uint u0)
