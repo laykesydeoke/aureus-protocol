@@ -224,3 +224,16 @@ npm run test:risk
 npm run test:risk-limits
 npm run test:circuit
 ```
+
+## Multi-Asset Support
+
+Aureus Protocol supports registering and managing multiple token assets:
+
+- **Asset Registry**: Track which assets are accepted
+- **Owner-Controlled**: Only contract owner can add/remove assets
+- **Public Queries**: Anyone can check if an asset is supported
+
+```bash
+npm run test:assets
+npm run test:asset-flow
+```
