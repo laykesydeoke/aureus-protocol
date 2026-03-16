@@ -1128,3 +1128,7 @@
   (match (map-get? discount-calc-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-discount-calc-owner (id uint))
+  (match (map-get? discount-calc-registry id)
+    entry (ok (get owner entry))
+    (err u851)))
