@@ -329,3 +329,12 @@ function loadRiskParams() {
         }
     }).catch(function () {});
 }
+
+function loadAssetCount() {
+    callReadOnly('yield-aggregator', 'get-asset-count', []).then(function (data) {
+        var el = document.getElementById('assetCount');
+        if (el && data && data.result) {
+            el.textContent = parseInt(data.result, 16) || '1';
+        }
+    }).catch(function () {});
+}
