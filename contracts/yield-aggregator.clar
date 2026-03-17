@@ -1497,3 +1497,7 @@
     (err u961)))
 (define-read-only (get-token-auth-value (id uint))
   (default-to u0 (get value (map-get? token-auth-registry id))))
+
+;; rbac-ctrl module
+(define-map rbac-ctrl-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var rbac-ctrl-counter uint u0)
