@@ -1446,3 +1446,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u952))
     (asserts! (get active entry) (err u953))
     (ok (map-set session-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-session-mgr (id uint))
+  (let ((entry (unwrap! (map-get? session-mgr-registry id) (err u951))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u952))
+    (ok (map-set session-mgr-registry id (merge entry {active: false})))))
