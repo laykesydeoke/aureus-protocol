@@ -685,3 +685,13 @@
   (and (<= apy MAX-APY) (<= stype u5)))
 (define-read-only (get-strategy-validation-params)
   { max-apy: MAX-APY, max-strategies: MAX-STRATEGY-COUNT, enabled: (var-get strategy-validation-enabled) })
+
+;; Fee boundary enforcement
+(define-constant ABSOLUTE-MAX-FEE u500)
+(define-constant MIN-FEE u1)
+(define-data-var fee-change-cooldown uint u144)
+(define-data-var last-fee-change uint u0)
+(define-read-only (can-change-fee)
+  (> (- stacks-block-height (var-get last-fee-change)) (var-get fee-change-cooldown)))
+(define-read-only (get-fee-bounds)
+  { min: MIN-FEE, max: ABSOLUTE-MAX-FEE, cooldown: (var-get fee-change-cooldown), last-change: (var-get last-fee-change) })
