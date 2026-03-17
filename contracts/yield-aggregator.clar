@@ -1431,3 +1431,7 @@
     (err u941)))
 (define-read-only (get-pool-conn-value (id uint))
   (default-to u0 (get value (map-get? pool-conn-registry id))))
+
+;; session-mgr module
+(define-map session-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var session-mgr-counter uint u0)
