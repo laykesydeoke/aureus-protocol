@@ -1417,3 +1417,7 @@
   (let ((entry (unwrap! (map-get? pool-conn-registry id) (err u941))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u942))
     (ok (map-set pool-conn-registry id (merge entry {active: false})))))
+(define-read-only (get-pool-conn-entry (id uint))
+  (map-get? pool-conn-registry id))
+(define-read-only (get-pool-conn-count)
+  (ok (var-get pool-conn-counter)))
