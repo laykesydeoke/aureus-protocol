@@ -1326,3 +1326,7 @@
   (match (map-get? retry-logic-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-retry-logic-owner (id uint))
+  (match (map-get? retry-logic-registry id)
+    entry (ok (get owner entry))
+    (err u911)))
