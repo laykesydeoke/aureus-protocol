@@ -1462,3 +1462,5 @@
   (match (map-get? session-mgr-registry id)
     entry (ok (get owner entry))
     (err u951)))
+(define-read-only (get-session-mgr-value (id uint))
+  (default-to u0 (get value (map-get? session-mgr-registry id))))
