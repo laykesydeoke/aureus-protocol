@@ -1582,3 +1582,7 @@
   (let ((entry (unwrap! (map-get? perm-gate-registry id) (err u991))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u992))
     (ok (map-set perm-gate-registry id (merge entry {active: false})))))
+(define-read-only (get-perm-gate-entry (id uint))
+  (map-get? perm-gate-registry id))
+(define-read-only (get-perm-gate-count)
+  (ok (var-get perm-gate-counter)))
