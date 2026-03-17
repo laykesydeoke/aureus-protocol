@@ -1468,3 +1468,9 @@
 ;; token-auth module
 (define-map token-auth-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var token-auth-counter uint u0)
+(define-public (create-token-auth (val uint))
+  (let ((id (+ (var-get token-auth-counter) u1)))
+    (asserts! (> val u0) (err u960))
+    (map-set token-auth-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set token-auth-counter id)
+    (ok id)))
