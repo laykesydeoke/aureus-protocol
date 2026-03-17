@@ -1365,3 +1365,7 @@
     (err u921)))
 (define-read-only (get-circuit-brk-value (id uint))
   (default-to u0 (get value (map-get? circuit-brk-registry id))))
+
+;; timeout-mgr module
+(define-map timeout-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var timeout-mgr-counter uint u0)
