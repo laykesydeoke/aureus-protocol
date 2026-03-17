@@ -1512,3 +1512,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u972))
     (asserts! (get active entry) (err u973))
     (ok (map-set rbac-ctrl-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-rbac-ctrl (id uint))
+  (let ((entry (unwrap! (map-get? rbac-ctrl-registry id) (err u971))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u972))
+    (ok (map-set rbac-ctrl-registry id (merge entry {active: false})))))
