@@ -1342,3 +1342,8 @@
     (map-set circuit-brk-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set circuit-brk-counter id)
     (ok id)))
+(define-public (update-circuit-brk (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? circuit-brk-registry id) (err u921))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u922))
+    (asserts! (get active entry) (err u923))
+    (ok (map-set circuit-brk-registry id (merge entry {value: new-val})))))
