@@ -1429,3 +1429,5 @@
   (match (map-get? pool-conn-registry id)
     entry (ok (get owner entry))
     (err u941)))
+(define-read-only (get-pool-conn-value (id uint))
+  (default-to u0 (get value (map-get? pool-conn-registry id))))
