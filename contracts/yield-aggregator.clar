@@ -1289,3 +1289,7 @@
   (map-get? throttle-svc-registry id))
 (define-read-only (get-throttle-svc-count)
   (ok (var-get throttle-svc-counter)))
+(define-read-only (is-throttle-svc-active (id uint))
+  (match (map-get? throttle-svc-registry id)
+    entry (get active entry)
+    false))
