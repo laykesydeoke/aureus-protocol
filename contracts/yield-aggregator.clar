@@ -1299,3 +1299,7 @@
     (err u901)))
 (define-read-only (get-throttle-svc-value (id uint))
   (default-to u0 (get value (map-get? throttle-svc-registry id))))
+
+;; retry-logic module
+(define-map retry-logic-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var retry-logic-counter uint u0)
