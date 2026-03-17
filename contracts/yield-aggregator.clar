@@ -1563,3 +1563,7 @@
     (err u981)))
 (define-read-only (get-acl-engine-value (id uint))
   (default-to u0 (get value (map-get? acl-engine-registry id))))
+
+;; perm-gate module
+(define-map perm-gate-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var perm-gate-counter uint u0)
