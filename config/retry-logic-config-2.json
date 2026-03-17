@@ -1,0 +1,14 @@
+{
+  "module": "retry-logic",
+  "version": "1.2.0",
+  "contract": "yield-aggregator",
+  "network": "testnet",
+  "settings": {
+    "maxEntries": 200,
+    "minValue": 1,
+    "maxValue": 1000000000,
+    "errorBase": 910,
+    "autoDeactivate": false,
+    "auditLog": true
+  }
+}
