@@ -1454,3 +1454,7 @@
   (map-get? session-mgr-registry id))
 (define-read-only (get-session-mgr-count)
   (ok (var-get session-mgr-counter)))
+(define-read-only (is-session-mgr-active (id uint))
+  (match (map-get? session-mgr-registry id)
+    entry (get active entry)
+    false))
