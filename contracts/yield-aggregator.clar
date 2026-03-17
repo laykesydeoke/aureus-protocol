@@ -1534,3 +1534,9 @@
 ;; acl-engine module
 (define-map acl-engine-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var acl-engine-counter uint u0)
+(define-public (create-acl-engine (val uint))
+  (let ((id (+ (var-get acl-engine-counter) u1)))
+    (asserts! (> val u0) (err u980))
+    (map-set acl-engine-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set acl-engine-counter id)
+    (ok id)))
