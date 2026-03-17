@@ -1309,3 +1309,8 @@
     (map-set retry-logic-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set retry-logic-counter id)
     (ok id)))
+(define-public (update-retry-logic (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? retry-logic-registry id) (err u911))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u912))
+    (asserts! (get active entry) (err u913))
+    (ok (map-set retry-logic-registry id (merge entry {value: new-val})))))
