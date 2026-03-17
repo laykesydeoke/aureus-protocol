@@ -1351,3 +1351,7 @@
   (let ((entry (unwrap! (map-get? circuit-brk-registry id) (err u921))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u922))
     (ok (map-set circuit-brk-registry id (merge entry {active: false})))))
+(define-read-only (get-circuit-brk-entry (id uint))
+  (map-get? circuit-brk-registry id))
+(define-read-only (get-circuit-brk-count)
+  (ok (var-get circuit-brk-counter)))
