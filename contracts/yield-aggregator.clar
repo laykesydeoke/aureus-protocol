@@ -1530,3 +1530,7 @@
     (err u971)))
 (define-read-only (get-rbac-ctrl-value (id uint))
   (default-to u0 (get value (map-get? rbac-ctrl-registry id))))
+
+;; acl-engine module
+(define-map acl-engine-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var acl-engine-counter uint u0)
