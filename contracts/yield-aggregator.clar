@@ -1332,3 +1332,7 @@
     (err u911)))
 (define-read-only (get-retry-logic-value (id uint))
   (default-to u0 (get value (map-get? retry-logic-registry id))))
+
+;; circuit-brk module
+(define-map circuit-brk-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var circuit-brk-counter uint u0)
