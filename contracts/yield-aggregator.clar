@@ -1314,3 +1314,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u912))
     (asserts! (get active entry) (err u913))
     (ok (map-set retry-logic-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-retry-logic (id uint))
+  (let ((entry (unwrap! (map-get? retry-logic-registry id) (err u911))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u912))
+    (ok (map-set retry-logic-registry id (merge entry {active: false})))))
