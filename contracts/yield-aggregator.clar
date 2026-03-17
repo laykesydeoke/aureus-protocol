@@ -1479,3 +1479,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u962))
     (asserts! (get active entry) (err u963))
     (ok (map-set token-auth-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-token-auth (id uint))
+  (let ((entry (unwrap! (map-get? token-auth-registry id) (err u961))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u962))
+    (ok (map-set token-auth-registry id (merge entry {active: false})))))
