@@ -1388,3 +1388,7 @@
   (map-get? timeout-mgr-registry id))
 (define-read-only (get-timeout-mgr-count)
   (ok (var-get timeout-mgr-counter)))
+(define-read-only (is-timeout-mgr-active (id uint))
+  (match (map-get? timeout-mgr-registry id)
+    entry (get active entry)
+    false))
