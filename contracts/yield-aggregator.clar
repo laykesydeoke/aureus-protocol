@@ -1330,3 +1330,5 @@
   (match (map-get? retry-logic-registry id)
     entry (ok (get owner entry))
     (err u911)))
+(define-read-only (get-retry-logic-value (id uint))
+  (default-to u0 (get value (map-get? retry-logic-registry id))))
