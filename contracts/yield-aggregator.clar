@@ -1384,3 +1384,7 @@
   (let ((entry (unwrap! (map-get? timeout-mgr-registry id) (err u931))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u932))
     (ok (map-set timeout-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-timeout-mgr-entry (id uint))
+  (map-get? timeout-mgr-registry id))
+(define-read-only (get-timeout-mgr-count)
+  (ok (var-get timeout-mgr-counter)))
