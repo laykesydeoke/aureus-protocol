@@ -1303,3 +1303,9 @@
 ;; retry-logic module
 (define-map retry-logic-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var retry-logic-counter uint u0)
+(define-public (create-retry-logic (val uint))
+  (let ((id (+ (var-get retry-logic-counter) u1)))
+    (asserts! (> val u0) (err u910))
+    (map-set retry-logic-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set retry-logic-counter id)
+    (ok id)))
