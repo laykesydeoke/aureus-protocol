@@ -1276,3 +1276,8 @@
     (map-set throttle-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set throttle-svc-counter id)
     (ok id)))
+(define-public (update-throttle-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? throttle-svc-registry id) (err u901))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u902))
+    (asserts! (get active entry) (err u903))
+    (ok (map-set throttle-svc-registry id (merge entry {value: new-val})))))
