@@ -1421,3 +1421,7 @@
   (map-get? pool-conn-registry id))
 (define-read-only (get-pool-conn-count)
   (ok (var-get pool-conn-counter)))
+(define-read-only (is-pool-conn-active (id uint))
+  (match (map-get? pool-conn-registry id)
+    entry (get active entry)
+    false))
