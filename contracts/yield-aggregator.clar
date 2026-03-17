@@ -1487,3 +1487,7 @@
   (map-get? token-auth-registry id))
 (define-read-only (get-token-auth-count)
   (ok (var-get token-auth-counter)))
+(define-read-only (is-token-auth-active (id uint))
+  (match (map-get? token-auth-registry id)
+    entry (get active entry)
+    false))
