@@ -1270,3 +1270,9 @@
 ;; throttle-svc module
 (define-map throttle-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var throttle-svc-counter uint u0)
+(define-public (create-throttle-svc (val uint))
+  (let ((id (+ (var-get throttle-svc-counter) u1)))
+    (asserts! (> val u0) (err u900))
+    (map-set throttle-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set throttle-svc-counter id)
+    (ok id)))
