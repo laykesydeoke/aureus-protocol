@@ -1297,3 +1297,5 @@
   (match (map-get? throttle-svc-registry id)
     entry (ok (get owner entry))
     (err u901)))
+(define-read-only (get-throttle-svc-value (id uint))
+  (default-to u0 (get value (map-get? throttle-svc-registry id))))
