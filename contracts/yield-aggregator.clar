@@ -1441,3 +1441,8 @@
     (map-set session-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set session-mgr-counter id)
     (ok id)))
+(define-public (update-session-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? session-mgr-registry id) (err u951))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u952))
+    (asserts! (get active entry) (err u953))
+    (ok (map-set session-mgr-registry id (merge entry {value: new-val})))))
