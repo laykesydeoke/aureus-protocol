@@ -1355,3 +1355,7 @@
   (map-get? circuit-brk-registry id))
 (define-read-only (get-circuit-brk-count)
   (ok (var-get circuit-brk-counter)))
+(define-read-only (is-circuit-brk-active (id uint))
+  (match (map-get? circuit-brk-registry id)
+    entry (get active entry)
+    false))
