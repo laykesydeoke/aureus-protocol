@@ -1557,3 +1557,7 @@
   (match (map-get? acl-engine-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-acl-engine-owner (id uint))
+  (match (map-get? acl-engine-registry id)
+    entry (ok (get owner entry))
+    (err u981)))
