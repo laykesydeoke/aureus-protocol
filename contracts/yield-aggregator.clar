@@ -1398,3 +1398,7 @@
     (err u931)))
 (define-read-only (get-timeout-mgr-value (id uint))
   (default-to u0 (get value (map-get? timeout-mgr-registry id))))
+
+;; pool-conn module
+(define-map pool-conn-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var pool-conn-counter uint u0)
