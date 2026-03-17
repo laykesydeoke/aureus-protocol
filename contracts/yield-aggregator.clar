@@ -1450,3 +1450,7 @@
   (let ((entry (unwrap! (map-get? session-mgr-registry id) (err u951))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u952))
     (ok (map-set session-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-session-mgr-entry (id uint))
+  (map-get? session-mgr-registry id))
+(define-read-only (get-session-mgr-count)
+  (ok (var-get session-mgr-counter)))
