@@ -1507,3 +1507,8 @@
     (map-set rbac-ctrl-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set rbac-ctrl-counter id)
     (ok id)))
+(define-public (update-rbac-ctrl (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? rbac-ctrl-registry id) (err u971))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u972))
+    (asserts! (get active entry) (err u973))
+    (ok (map-set rbac-ctrl-registry id (merge entry {value: new-val})))))
