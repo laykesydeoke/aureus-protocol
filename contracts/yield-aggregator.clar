@@ -1464,3 +1464,7 @@
     (err u951)))
 (define-read-only (get-session-mgr-value (id uint))
   (default-to u0 (get value (map-get? session-mgr-registry id))))
+
+;; token-auth module
+(define-map token-auth-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var token-auth-counter uint u0)
