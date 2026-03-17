@@ -1402,3 +1402,9 @@
 ;; pool-conn module
 (define-map pool-conn-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var pool-conn-counter uint u0)
+(define-public (create-pool-conn (val uint))
+  (let ((id (+ (var-get pool-conn-counter) u1)))
+    (asserts! (> val u0) (err u940))
+    (map-set pool-conn-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set pool-conn-counter id)
+    (ok id)))
