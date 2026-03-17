@@ -1567,3 +1567,9 @@
 ;; perm-gate module
 (define-map perm-gate-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var perm-gate-counter uint u0)
+(define-public (create-perm-gate (val uint))
+  (let ((id (+ (var-get perm-gate-counter) u1)))
+    (asserts! (> val u0) (err u990))
+    (map-set perm-gate-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set perm-gate-counter id)
+    (ok id)))
