@@ -1495,3 +1495,5 @@
   (match (map-get? token-auth-registry id)
     entry (ok (get owner entry))
     (err u961)))
+(define-read-only (get-token-auth-value (id uint))
+  (default-to u0 (get value (map-get? token-auth-registry id))))
