@@ -1483,3 +1483,7 @@
   (let ((entry (unwrap! (map-get? token-auth-registry id) (err u961))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u962))
     (ok (map-set token-auth-registry id (merge entry {active: false})))))
+(define-read-only (get-token-auth-entry (id uint))
+  (map-get? token-auth-registry id))
+(define-read-only (get-token-auth-count)
+  (ok (var-get token-auth-counter)))
