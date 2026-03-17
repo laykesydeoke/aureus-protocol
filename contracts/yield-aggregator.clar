@@ -1501,3 +1501,9 @@
 ;; rbac-ctrl module
 (define-map rbac-ctrl-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var rbac-ctrl-counter uint u0)
+(define-public (create-rbac-ctrl (val uint))
+  (let ((id (+ (var-get rbac-ctrl-counter) u1)))
+    (asserts! (> val u0) (err u970))
+    (map-set rbac-ctrl-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set rbac-ctrl-counter id)
+    (ok id)))
