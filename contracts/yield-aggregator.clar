@@ -668,3 +668,11 @@
   { cooldown: (var-get withdrawal-cooldown), max-pct: (var-get max-withdraw-pct-per-tx) })
 (define-read-only (can-withdraw (user principal))
   (> (- stacks-block-height (get-last-withdrawal user)) (var-get withdrawal-cooldown)))
+
+;; Yield calculation precision
+(define-constant YIELD-PRECISION u1000000)
+(define-data-var yield-rounding-mode uint u1)
+(define-read-only (precise-yield-calc (deposit uint) (rate-bps uint) (blocks uint))
+  (/ (* (* deposit rate-bps) blocks) (* u10000 u144)))
+(define-read-only (get-yield-precision-params)
+  { precision: YIELD-PRECISION, rounding: (var-get yield-rounding-mode) })
