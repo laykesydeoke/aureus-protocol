@@ -1318,3 +1318,7 @@
   (let ((entry (unwrap! (map-get? retry-logic-registry id) (err u911))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u912))
     (ok (map-set retry-logic-registry id (merge entry {active: false})))))
+(define-read-only (get-retry-logic-entry (id uint))
+  (map-get? retry-logic-registry id))
+(define-read-only (get-retry-logic-count)
+  (ok (var-get retry-logic-counter)))
