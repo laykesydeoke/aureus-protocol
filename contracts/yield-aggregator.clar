@@ -1491,3 +1491,7 @@
   (match (map-get? token-auth-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-token-auth-owner (id uint))
+  (match (map-get? token-auth-registry id)
+    entry (ok (get owner entry))
+    (err u961)))
