@@ -1578,3 +1578,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u992))
     (asserts! (get active entry) (err u993))
     (ok (map-set perm-gate-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-perm-gate (id uint))
+  (let ((entry (unwrap! (map-get? perm-gate-registry id) (err u991))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u992))
+    (ok (map-set perm-gate-registry id (merge entry {active: false})))))
