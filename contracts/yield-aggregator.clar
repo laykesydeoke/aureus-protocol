@@ -1520,3 +1520,7 @@
   (map-get? rbac-ctrl-registry id))
 (define-read-only (get-rbac-ctrl-count)
   (ok (var-get rbac-ctrl-counter)))
+(define-read-only (is-rbac-ctrl-active (id uint))
+  (match (map-get? rbac-ctrl-registry id)
+    entry (get active entry)
+    false))
