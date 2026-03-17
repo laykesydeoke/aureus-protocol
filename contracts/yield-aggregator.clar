@@ -676,3 +676,12 @@
   (/ (* (* deposit rate-bps) blocks) (* u10000 u144)))
 (define-read-only (get-yield-precision-params)
   { precision: YIELD-PRECISION, rounding: (var-get yield-rounding-mode) })
+
+;; Strategy parameter validation
+(define-constant MAX-APY u5000)
+(define-constant MAX-STRATEGY-COUNT u20)
+(define-data-var strategy-validation-enabled bool true)
+(define-read-only (is-valid-strategy (apy uint) (stype uint))
+  (and (<= apy MAX-APY) (<= stype u5)))
+(define-read-only (get-strategy-validation-params)
+  { max-apy: MAX-APY, max-strategies: MAX-STRATEGY-COUNT, enabled: (var-get strategy-validation-enabled) })
