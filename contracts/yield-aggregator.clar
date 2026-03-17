@@ -1540,3 +1540,8 @@
     (map-set acl-engine-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set acl-engine-counter id)
     (ok id)))
+(define-public (update-acl-engine (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? acl-engine-registry id) (err u981))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u982))
+    (asserts! (get active entry) (err u983))
+    (ok (map-set acl-engine-registry id (merge entry {value: new-val})))))
