@@ -1594,3 +1594,5 @@
   (match (map-get? perm-gate-registry id)
     entry (ok (get owner entry))
     (err u991)))
+(define-read-only (get-perm-gate-value (id uint))
+  (default-to u0 (get value (map-get? perm-gate-registry id))))
