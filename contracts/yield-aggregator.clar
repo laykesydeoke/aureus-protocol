@@ -1380,3 +1380,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u932))
     (asserts! (get active entry) (err u933))
     (ok (map-set timeout-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-timeout-mgr (id uint))
+  (let ((entry (unwrap! (map-get? timeout-mgr-registry id) (err u931))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u932))
+    (ok (map-set timeout-mgr-registry id (merge entry {active: false})))))
