@@ -1285,3 +1285,7 @@
   (let ((entry (unwrap! (map-get? throttle-svc-registry id) (err u901))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u902))
     (ok (map-set throttle-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-throttle-svc-entry (id uint))
+  (map-get? throttle-svc-registry id))
+(define-read-only (get-throttle-svc-count)
+  (ok (var-get throttle-svc-counter)))
