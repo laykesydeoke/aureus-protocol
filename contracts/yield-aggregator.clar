@@ -1516,3 +1516,7 @@
   (let ((entry (unwrap! (map-get? rbac-ctrl-registry id) (err u971))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u972))
     (ok (map-set rbac-ctrl-registry id (merge entry {active: false})))))
+(define-read-only (get-rbac-ctrl-entry (id uint))
+  (map-get? rbac-ctrl-registry id))
+(define-read-only (get-rbac-ctrl-count)
+  (ok (var-get rbac-ctrl-counter)))
