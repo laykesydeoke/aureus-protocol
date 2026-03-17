@@ -1545,3 +1545,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u982))
     (asserts! (get active entry) (err u983))
     (ok (map-set acl-engine-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-acl-engine (id uint))
+  (let ((entry (unwrap! (map-get? acl-engine-registry id) (err u981))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u982))
+    (ok (map-set acl-engine-registry id (merge entry {active: false})))))
