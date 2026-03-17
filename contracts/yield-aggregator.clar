@@ -1375,3 +1375,8 @@
     (map-set timeout-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set timeout-mgr-counter id)
     (ok id)))
+(define-public (update-timeout-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? timeout-mgr-registry id) (err u931))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u932))
+    (asserts! (get active entry) (err u933))
+    (ok (map-set timeout-mgr-registry id (merge entry {value: new-val})))))
