@@ -1573,3 +1573,8 @@
     (map-set perm-gate-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set perm-gate-counter id)
     (ok id)))
+(define-public (update-perm-gate (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? perm-gate-registry id) (err u991))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u992))
+    (asserts! (get active entry) (err u993))
+    (ok (map-set perm-gate-registry id (merge entry {value: new-val})))))
