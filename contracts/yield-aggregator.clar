@@ -1266,3 +1266,7 @@
     (err u891)))
 (define-read-only (get-payment-gate-value (id uint))
   (default-to u0 (get value (map-get? payment-gate-registry id))))
+
+;; throttle-svc module
+(define-map throttle-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var throttle-svc-counter uint u0)
