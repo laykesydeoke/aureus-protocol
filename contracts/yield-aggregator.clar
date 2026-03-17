@@ -1413,3 +1413,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u942))
     (asserts! (get active entry) (err u943))
     (ok (map-set pool-conn-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-pool-conn (id uint))
+  (let ((entry (unwrap! (map-get? pool-conn-registry id) (err u941))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u942))
+    (ok (map-set pool-conn-registry id (merge entry {active: false})))))
