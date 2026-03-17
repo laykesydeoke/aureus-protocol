@@ -1435,3 +1435,9 @@
 ;; session-mgr module
 (define-map session-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var session-mgr-counter uint u0)
+(define-public (create-session-mgr (val uint))
+  (let ((id (+ (var-get session-mgr-counter) u1)))
+    (asserts! (> val u0) (err u950))
+    (map-set session-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set session-mgr-counter id)
+    (ok id)))
