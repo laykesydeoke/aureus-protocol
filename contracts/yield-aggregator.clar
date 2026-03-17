@@ -1363,3 +1363,5 @@
   (match (map-get? circuit-brk-registry id)
     entry (ok (get owner entry))
     (err u921)))
+(define-read-only (get-circuit-brk-value (id uint))
+  (default-to u0 (get value (map-get? circuit-brk-registry id))))
