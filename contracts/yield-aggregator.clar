@@ -1549,3 +1549,7 @@
   (let ((entry (unwrap! (map-get? acl-engine-registry id) (err u981))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u982))
     (ok (map-set acl-engine-registry id (merge entry {active: false})))))
+(define-read-only (get-acl-engine-entry (id uint))
+  (map-get? acl-engine-registry id))
+(define-read-only (get-acl-engine-count)
+  (ok (var-get acl-engine-counter)))
