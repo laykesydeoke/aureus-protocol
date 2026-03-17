@@ -1586,3 +1586,7 @@
   (map-get? perm-gate-registry id))
 (define-read-only (get-perm-gate-count)
   (ok (var-get perm-gate-counter)))
+(define-read-only (is-perm-gate-active (id uint))
+  (match (map-get? perm-gate-registry id)
+    entry (get active entry)
+    false))
