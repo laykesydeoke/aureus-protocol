@@ -1732,3 +1732,9 @@
 ;; latency-mon module
 (define-map latency-mon-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var latency-mon-counter uint u0)
+(define-public (create-latency-mon (val uint))
+  (let ((id (+ (var-get latency-mon-counter) u1)))
+    (asserts! (> val u0) (err u1040))
+    (map-set latency-mon-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set latency-mon-counter id)
+    (ok id)))
