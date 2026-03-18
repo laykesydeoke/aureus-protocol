@@ -1780,3 +1780,7 @@
   (let ((entry (unwrap! (map-get? uptime-chk-registry id) (err u1051))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1052))
     (ok (map-set uptime-chk-registry id (merge entry {active: false})))))
+(define-read-only (get-uptime-chk-entry (id uint))
+  (map-get? uptime-chk-registry id))
+(define-read-only (get-uptime-chk-count)
+  (ok (var-get uptime-chk-counter)))
