@@ -1893,3 +1893,7 @@
     (err u1081)))
 (define-read-only (get-report-gen-value (id uint))
   (default-to u0 (get value (map-get? report-gen-registry id))))
+
+;; export-svc module
+(define-map export-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var export-svc-counter uint u0)
