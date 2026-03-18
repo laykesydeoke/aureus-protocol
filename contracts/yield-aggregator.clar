@@ -1662,3 +1662,7 @@
     (err u1011)))
 (define-read-only (get-metric-agg-value (id uint))
   (default-to u0 (get value (map-get? metric-agg-registry id))))
+
+;; trace-sys module
+(define-map trace-sys-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var trace-sys-counter uint u0)
