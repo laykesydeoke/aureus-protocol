@@ -1854,3 +1854,7 @@
   (match (map-get? dashboard-api-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-dashboard-api-owner (id uint))
+  (match (map-get? dashboard-api-registry id)
+    entry (ok (get owner entry))
+    (err u1071)))
