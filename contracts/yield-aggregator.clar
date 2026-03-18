@@ -1860,3 +1860,7 @@
     (err u1071)))
 (define-read-only (get-dashboard-api-value (id uint))
   (default-to u0 (get value (map-get? dashboard-api-registry id))))
+
+;; report-gen module
+(define-map report-gen-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var report-gen-counter uint u0)
