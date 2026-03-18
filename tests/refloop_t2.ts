@@ -1,0 +1,1 @@
+import{describe,it,expect}from"vitest";describe("refloop 2",()=>{it("case 2",()=>{const a=simnet.getAccounts();const d=a.get("deployer")\!;const r=simnet.callReadOnlyFn("yield-aggregator","get-total-deposits",[],d);expect(r.result).toBeDefined();});});
