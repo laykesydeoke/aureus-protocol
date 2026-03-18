@@ -1705,3 +1705,8 @@
     (map-set span-collect-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set span-collect-counter id)
     (ok id)))
+(define-public (update-span-collect (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? span-collect-registry id) (err u1031))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1032))
+    (asserts! (get active entry) (err u1033))
+    (ok (map-set span-collect-registry id (merge entry {value: new-val})))))
