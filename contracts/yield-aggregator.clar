@@ -1798,3 +1798,9 @@
 ;; alert-rule module
 (define-map alert-rule-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var alert-rule-counter uint u0)
+(define-public (create-alert-rule (val uint))
+  (let ((id (+ (var-get alert-rule-counter) u1)))
+    (asserts! (> val u0) (err u1060))
+    (map-set alert-rule-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set alert-rule-counter id)
+    (ok id)))
