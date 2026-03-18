@@ -1761,3 +1761,7 @@
     (err u1041)))
 (define-read-only (get-latency-mon-value (id uint))
   (default-to u0 (get value (map-get? latency-mon-registry id))))
+
+;; uptime-chk module
+(define-map uptime-chk-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var uptime-chk-counter uint u0)
