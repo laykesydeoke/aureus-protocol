@@ -1623,3 +1623,7 @@
   (match (map-get? log-rotate-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-log-rotate-owner (id uint))
+  (match (map-get? log-rotate-registry id)
+    entry (ok (get owner entry))
+    (err u1001)))
