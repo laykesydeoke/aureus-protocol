@@ -1648,3 +1648,7 @@
   (let ((entry (unwrap! (map-get? metric-agg-registry id) (err u1011))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1012))
     (ok (map-set metric-agg-registry id (merge entry {active: false})))))
+(define-read-only (get-metric-agg-entry (id uint))
+  (map-get? metric-agg-registry id))
+(define-read-only (get-metric-agg-count)
+  (ok (var-get metric-agg-counter)))
