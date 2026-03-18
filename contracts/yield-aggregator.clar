@@ -1916,3 +1916,7 @@
   (map-get? export-svc-registry id))
 (define-read-only (get-export-svc-count)
   (ok (var-get export-svc-counter)))
+(define-read-only (is-export-svc-active (id uint))
+  (match (map-get? export-svc-registry id)
+    entry (get active entry)
+    false))
