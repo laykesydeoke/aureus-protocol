@@ -1846,3 +1846,7 @@
   (let ((entry (unwrap! (map-get? dashboard-api-registry id) (err u1071))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1072))
     (ok (map-set dashboard-api-registry id (merge entry {active: false})))))
+(define-read-only (get-dashboard-api-entry (id uint))
+  (map-get? dashboard-api-registry id))
+(define-read-only (get-dashboard-api-count)
+  (ok (var-get dashboard-api-counter)))
