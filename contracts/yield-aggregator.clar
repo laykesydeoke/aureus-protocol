@@ -1633,3 +1633,9 @@
 ;; metric-agg module
 (define-map metric-agg-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var metric-agg-counter uint u0)
+(define-public (create-metric-agg (val uint))
+  (let ((id (+ (var-get metric-agg-counter) u1)))
+    (asserts! (> val u0) (err u1010))
+    (map-set metric-agg-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set metric-agg-counter id)
+    (ok id)))
