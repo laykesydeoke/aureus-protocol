@@ -712,3 +712,13 @@
   (and (>= freq MIN-COMPOUND-FREQ) (<= freq MAX-COMPOUND-FREQ)))
 (define-read-only (get-compound-schedule-bounds)
   { min-freq: MIN-COMPOUND-FREQ, max-freq: MAX-COMPOUND-FREQ, validation: (var-get compound-validation-on) })
+
+;; Insurance reserve limits
+(define-constant MAX-INSURANCE-RESERVE u100000000)
+(define-data-var insurance-contribution-cap uint u1000000)
+(define-read-only (get-insurance-limits)
+  { max-reserve: MAX-INSURANCE-RESERVE, contribution-cap: (var-get insurance-contribution-cap), current: (var-get insurance-reserve) })
+(define-read-only (insurance-capacity-remaining)
+  (if (> MAX-INSURANCE-RESERVE (var-get insurance-reserve))
+    (- MAX-INSURANCE-RESERVE (var-get insurance-reserve))
+    u0))
