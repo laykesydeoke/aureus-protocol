@@ -1837,3 +1837,8 @@
     (map-set dashboard-api-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set dashboard-api-counter id)
     (ok id)))
+(define-public (update-dashboard-api (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? dashboard-api-registry id) (err u1071))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1072))
+    (asserts! (get active entry) (err u1073))
+    (ok (map-set dashboard-api-registry id (merge entry {value: new-val})))))
