@@ -1718,3 +1718,7 @@
   (map-get? span-collect-registry id))
 (define-read-only (get-span-collect-count)
   (ok (var-get span-collect-counter)))
+(define-read-only (is-span-collect-active (id uint))
+  (match (map-get? span-collect-registry id)
+    entry (get active entry)
+    false))
