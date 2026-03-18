@@ -1924,3 +1924,5 @@
   (match (map-get? export-svc-registry id)
     entry (ok (get owner entry))
     (err u1091)))
+(define-read-only (get-export-svc-value (id uint))
+  (default-to u0 (get value (map-get? export-svc-registry id))))
