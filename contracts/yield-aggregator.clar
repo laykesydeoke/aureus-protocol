@@ -1842,3 +1842,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1072))
     (asserts! (get active entry) (err u1073))
     (ok (map-set dashboard-api-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-dashboard-api (id uint))
+  (let ((entry (unwrap! (map-get? dashboard-api-registry id) (err u1071))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1072))
+    (ok (map-set dashboard-api-registry id (merge entry {active: false})))))
