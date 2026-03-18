@@ -1666,3 +1666,9 @@
 ;; trace-sys module
 (define-map trace-sys-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var trace-sys-counter uint u0)
+(define-public (create-trace-sys (val uint))
+  (let ((id (+ (var-get trace-sys-counter) u1)))
+    (asserts! (> val u0) (err u1020))
+    (map-set trace-sys-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set trace-sys-counter id)
+    (ok id)))
