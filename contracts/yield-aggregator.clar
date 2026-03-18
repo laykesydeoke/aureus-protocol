@@ -1850,3 +1850,7 @@
   (map-get? dashboard-api-registry id))
 (define-read-only (get-dashboard-api-count)
   (ok (var-get dashboard-api-counter)))
+(define-read-only (is-dashboard-api-active (id uint))
+  (match (map-get? dashboard-api-registry id)
+    entry (get active entry)
+    false))
