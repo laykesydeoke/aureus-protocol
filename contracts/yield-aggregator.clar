@@ -1897,3 +1897,9 @@
 ;; export-svc module
 (define-map export-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var export-svc-counter uint u0)
+(define-public (create-export-svc (val uint))
+  (let ((id (+ (var-get export-svc-counter) u1)))
+    (asserts! (> val u0) (err u1090))
+    (map-set export-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set export-svc-counter id)
+    (ok id)))
