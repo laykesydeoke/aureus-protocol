@@ -1747,3 +1747,7 @@
   (let ((entry (unwrap! (map-get? latency-mon-registry id) (err u1041))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1042))
     (ok (map-set latency-mon-registry id (merge entry {active: false})))))
+(define-read-only (get-latency-mon-entry (id uint))
+  (map-get? latency-mon-registry id))
+(define-read-only (get-latency-mon-count)
+  (ok (var-get latency-mon-counter)))
