@@ -1639,3 +1639,8 @@
     (map-set metric-agg-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set metric-agg-counter id)
     (ok id)))
+(define-public (update-metric-agg (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? metric-agg-registry id) (err u1011))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1012))
+    (asserts! (get active entry) (err u1013))
+    (ok (map-set metric-agg-registry id (merge entry {value: new-val})))))
