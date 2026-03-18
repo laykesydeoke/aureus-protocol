@@ -1813,3 +1813,7 @@
   (let ((entry (unwrap! (map-get? alert-rule-registry id) (err u1061))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1062))
     (ok (map-set alert-rule-registry id (merge entry {active: false})))))
+(define-read-only (get-alert-rule-entry (id uint))
+  (map-get? alert-rule-registry id))
+(define-read-only (get-alert-rule-count)
+  (ok (var-get alert-rule-counter)))
