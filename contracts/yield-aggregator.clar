@@ -1685,3 +1685,7 @@
   (map-get? trace-sys-registry id))
 (define-read-only (get-trace-sys-count)
   (ok (var-get trace-sys-counter)))
+(define-read-only (is-trace-sys-active (id uint))
+  (match (map-get? trace-sys-registry id)
+    entry (get active entry)
+    false))
