@@ -1728,3 +1728,7 @@
     (err u1031)))
 (define-read-only (get-span-collect-value (id uint))
   (default-to u0 (get value (map-get? span-collect-registry id))))
+
+;; latency-mon module
+(define-map latency-mon-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var latency-mon-counter uint u0)
