@@ -1600,3 +1600,9 @@
 ;; log-rotate module
 (define-map log-rotate-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var log-rotate-counter uint u0)
+(define-public (create-log-rotate (val uint))
+  (let ((id (+ (var-get log-rotate-counter) u1)))
+    (asserts! (> val u0) (err u1000))
+    (map-set log-rotate-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set log-rotate-counter id)
+    (ok id)))
