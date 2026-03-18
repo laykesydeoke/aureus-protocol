@@ -1912,3 +1912,7 @@
   (let ((entry (unwrap! (map-get? export-svc-registry id) (err u1091))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1092))
     (ok (map-set export-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-export-svc-entry (id uint))
+  (map-get? export-svc-registry id))
+(define-read-only (get-export-svc-count)
+  (ok (var-get export-svc-counter)))
