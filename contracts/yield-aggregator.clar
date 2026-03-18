@@ -1755,3 +1755,7 @@
   (match (map-get? latency-mon-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-latency-mon-owner (id uint))
+  (match (map-get? latency-mon-registry id)
+    entry (ok (get owner entry))
+    (err u1041)))
