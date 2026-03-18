@@ -1627,3 +1627,5 @@
   (match (map-get? log-rotate-registry id)
     entry (ok (get owner entry))
     (err u1001)))
+(define-read-only (get-log-rotate-value (id uint))
+  (default-to u0 (get value (map-get? log-rotate-registry id))))
