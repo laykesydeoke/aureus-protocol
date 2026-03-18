@@ -1652,3 +1652,7 @@
   (map-get? metric-agg-registry id))
 (define-read-only (get-metric-agg-count)
   (ok (var-get metric-agg-counter)))
+(define-read-only (is-metric-agg-active (id uint))
+  (match (map-get? metric-agg-registry id)
+    entry (get active entry)
+    false))
