@@ -1784,3 +1784,7 @@
   (map-get? uptime-chk-registry id))
 (define-read-only (get-uptime-chk-count)
   (ok (var-get uptime-chk-counter)))
+(define-read-only (is-uptime-chk-active (id uint))
+  (match (map-get? uptime-chk-registry id)
+    entry (get active entry)
+    false))
