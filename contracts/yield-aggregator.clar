@@ -1765,3 +1765,9 @@
 ;; uptime-chk module
 (define-map uptime-chk-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var uptime-chk-counter uint u0)
+(define-public (create-uptime-chk (val uint))
+  (let ((id (+ (var-get uptime-chk-counter) u1)))
+    (asserts! (> val u0) (err u1050))
+    (map-set uptime-chk-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set uptime-chk-counter id)
+    (ok id)))
