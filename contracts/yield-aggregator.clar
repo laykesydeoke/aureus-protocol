@@ -1699,3 +1699,9 @@
 ;; span-collect module
 (define-map span-collect-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var span-collect-counter uint u0)
+(define-public (create-span-collect (val uint))
+  (let ((id (+ (var-get span-collect-counter) u1)))
+    (asserts! (> val u0) (err u1030))
+    (map-set span-collect-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set span-collect-counter id)
+    (ok id)))
