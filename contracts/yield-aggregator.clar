@@ -1788,3 +1788,7 @@
   (match (map-get? uptime-chk-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-uptime-chk-owner (id uint))
+  (match (map-get? uptime-chk-registry id)
+    entry (ok (get owner entry))
+    (err u1051)))
