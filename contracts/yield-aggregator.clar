@@ -1644,3 +1644,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1012))
     (asserts! (get active entry) (err u1013))
     (ok (map-set metric-agg-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-metric-agg (id uint))
+  (let ((entry (unwrap! (map-get? metric-agg-registry id) (err u1011))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1012))
+    (ok (map-set metric-agg-registry id (merge entry {active: false})))))
