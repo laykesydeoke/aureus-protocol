@@ -1693,3 +1693,5 @@
   (match (map-get? trace-sys-registry id)
     entry (ok (get owner entry))
     (err u1021)))
+(define-read-only (get-trace-sys-value (id uint))
+  (default-to u0 (get value (map-get? trace-sys-registry id))))
