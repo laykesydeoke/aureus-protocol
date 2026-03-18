@@ -1908,3 +1908,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1092))
     (asserts! (get active entry) (err u1093))
     (ok (map-set export-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-export-svc (id uint))
+  (let ((entry (unwrap! (map-get? export-svc-registry id) (err u1091))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1092))
+    (ok (map-set export-svc-registry id (merge entry {active: false})))))
