@@ -1751,3 +1751,7 @@
   (map-get? latency-mon-registry id))
 (define-read-only (get-latency-mon-count)
   (ok (var-get latency-mon-counter)))
+(define-read-only (is-latency-mon-active (id uint))
+  (match (map-get? latency-mon-registry id)
+    entry (get active entry)
+    false))
