@@ -1809,3 +1809,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1062))
     (asserts! (get active entry) (err u1063))
     (ok (map-set alert-rule-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-alert-rule (id uint))
+  (let ((entry (unwrap! (map-get? alert-rule-registry id) (err u1061))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1062))
+    (ok (map-set alert-rule-registry id (merge entry {active: false})))))
