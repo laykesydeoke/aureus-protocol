@@ -1672,3 +1672,8 @@
     (map-set trace-sys-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set trace-sys-counter id)
     (ok id)))
+(define-public (update-trace-sys (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? trace-sys-registry id) (err u1021))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1022))
+    (asserts! (get active entry) (err u1023))
+    (ok (map-set trace-sys-registry id (merge entry {value: new-val})))))
