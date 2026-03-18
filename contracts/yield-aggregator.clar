@@ -722,3 +722,17 @@
   (if (> MAX-INSURANCE-RESERVE (var-get insurance-reserve))
     (- MAX-INSURANCE-RESERVE (var-get insurance-reserve))
     u0))
+
+;; Governance vote validation
+(define-data-var voting-period uint u1440)
+(define-data-var min-voting-power uint u100)
+(define-map voter-registry principal { weight: uint, last-vote: uint })
+(define-read-only (get-voter (addr principal))
+  (default-to { weight: u0, last-vote: u0 } (map-get? voter-registry addr)))
+(define-read-only (get-voting-params)
+  { period: (var-get voting-period), min-power: (var-get min-voting-power) })
+(define-public (register-voter (weight uint))
+  (begin
+    (asserts\! (>= weight (var-get min-voting-power)) (err u165))
+    (map-set voter-registry tx-sender { weight: weight, last-vote: u0 })
+    (ok true)))
