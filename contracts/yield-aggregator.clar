@@ -1677,3 +1677,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1022))
     (asserts! (get active entry) (err u1023))
     (ok (map-set trace-sys-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-trace-sys (id uint))
+  (let ((entry (unwrap! (map-get? trace-sys-registry id) (err u1021))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1022))
+    (ok (map-set trace-sys-registry id (merge entry {active: false})))))
