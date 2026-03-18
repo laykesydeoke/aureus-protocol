@@ -1821,3 +1821,7 @@
   (match (map-get? alert-rule-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-alert-rule-owner (id uint))
+  (match (map-get? alert-rule-registry id)
+    entry (ok (get owner entry))
+    (err u1061)))
