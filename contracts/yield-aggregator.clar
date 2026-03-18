@@ -1831,3 +1831,9 @@
 ;; dashboard-api module
 (define-map dashboard-api-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var dashboard-api-counter uint u0)
+(define-public (create-dashboard-api (val uint))
+  (let ((id (+ (var-get dashboard-api-counter) u1)))
+    (asserts! (> val u0) (err u1070))
+    (map-set dashboard-api-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set dashboard-api-counter id)
+    (ok id)))
