@@ -695,3 +695,11 @@
   (> (- stacks-block-height (var-get last-fee-change)) (var-get fee-change-cooldown)))
 (define-read-only (get-fee-bounds)
   { min: MIN-FEE, max: ABSOLUTE-MAX-FEE, cooldown: (var-get fee-change-cooldown), last-change: (var-get last-fee-change) })
+
+;; Prevent referral chain loops
+(define-data-var max-referral-depth uint u3)
+(define-map referral-chain principal (list 10 principal))
+(define-read-only (get-referral-chain (user principal))
+  (default-to (list) (map-get? referral-chain user)))
+(define-read-only (get-referral-depth-params)
+  { max-depth: (var-get max-referral-depth) })
