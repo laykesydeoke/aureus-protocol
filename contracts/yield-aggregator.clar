@@ -1887,3 +1887,7 @@
   (match (map-get? report-gen-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-report-gen-owner (id uint))
+  (match (map-get? report-gen-registry id)
+    entry (ok (get owner entry))
+    (err u1081)))
