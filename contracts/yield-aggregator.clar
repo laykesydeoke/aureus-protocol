@@ -1611,3 +1611,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1002))
     (asserts! (get active entry) (err u1003))
     (ok (map-set log-rotate-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-log-rotate (id uint))
+  (let ((entry (unwrap! (map-get? log-rotate-registry id) (err u1001))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1002))
+    (ok (map-set log-rotate-registry id (merge entry {active: false})))))
