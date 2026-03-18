@@ -1629,3 +1629,7 @@
     (err u1001)))
 (define-read-only (get-log-rotate-value (id uint))
   (default-to u0 (get value (map-get? log-rotate-registry id))))
+
+;; metric-agg module
+(define-map metric-agg-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var metric-agg-counter uint u0)
