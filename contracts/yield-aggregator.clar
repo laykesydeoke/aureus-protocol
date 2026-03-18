@@ -1615,3 +1615,7 @@
   (let ((entry (unwrap! (map-get? log-rotate-registry id) (err u1001))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1002))
     (ok (map-set log-rotate-registry id (merge entry {active: false})))))
+(define-read-only (get-log-rotate-entry (id uint))
+  (map-get? log-rotate-registry id))
+(define-read-only (get-log-rotate-count)
+  (ok (var-get log-rotate-counter)))
