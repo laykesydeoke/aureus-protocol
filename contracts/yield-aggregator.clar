@@ -1714,3 +1714,7 @@
   (let ((entry (unwrap! (map-get? span-collect-registry id) (err u1031))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1032))
     (ok (map-set span-collect-registry id (merge entry {active: false})))))
+(define-read-only (get-span-collect-entry (id uint))
+  (map-get? span-collect-registry id))
+(define-read-only (get-span-collect-count)
+  (ok (var-get span-collect-counter)))
