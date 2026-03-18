@@ -1883,3 +1883,7 @@
   (map-get? report-gen-registry id))
 (define-read-only (get-report-gen-count)
   (ok (var-get report-gen-counter)))
+(define-read-only (is-report-gen-active (id uint))
+  (match (map-get? report-gen-registry id)
+    entry (get active entry)
+    false))
