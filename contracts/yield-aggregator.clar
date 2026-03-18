@@ -1743,3 +1743,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1042))
     (asserts! (get active entry) (err u1043))
     (ok (map-set latency-mon-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-latency-mon (id uint))
+  (let ((entry (unwrap! (map-get? latency-mon-registry id) (err u1041))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1042))
+    (ok (map-set latency-mon-registry id (merge entry {active: false})))))
