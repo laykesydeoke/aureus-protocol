@@ -1804,3 +1804,8 @@
     (map-set alert-rule-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set alert-rule-counter id)
     (ok id)))
+(define-public (update-alert-rule (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? alert-rule-registry id) (err u1061))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1062))
+    (asserts! (get active entry) (err u1063))
+    (ok (map-set alert-rule-registry id (merge entry {value: new-val})))))
