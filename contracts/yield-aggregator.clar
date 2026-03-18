@@ -1681,3 +1681,7 @@
   (let ((entry (unwrap! (map-get? trace-sys-registry id) (err u1021))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1022))
     (ok (map-set trace-sys-registry id (merge entry {active: false})))))
+(define-read-only (get-trace-sys-entry (id uint))
+  (map-get? trace-sys-registry id))
+(define-read-only (get-trace-sys-count)
+  (ok (var-get trace-sys-counter)))
