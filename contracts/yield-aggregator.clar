@@ -736,3 +736,13 @@
     (asserts\! (>= weight (var-get min-voting-power)) (err u165))
     (map-set voter-registry tx-sender { weight: weight, last-vote: u0 })
     (ok true)))
+
+;; Treasury deposit caps
+(define-constant MAX-TREASURY u500000000)
+(define-data-var treasury-deposit-limit uint u10000000)
+(define-read-only (get-treasury-caps)
+  { max: MAX-TREASURY, per-deposit: (var-get treasury-deposit-limit), current: (var-get aureus-treasury) })
+(define-read-only (treasury-capacity)
+  (if (> MAX-TREASURY (var-get aureus-treasury))
+    (- MAX-TREASURY (var-get aureus-treasury))
+    u0))
