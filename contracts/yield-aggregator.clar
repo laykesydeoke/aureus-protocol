@@ -1776,3 +1776,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1052))
     (asserts! (get active entry) (err u1053))
     (ok (map-set uptime-chk-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-uptime-chk (id uint))
+  (let ((entry (unwrap! (map-get? uptime-chk-registry id) (err u1051))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1052))
+    (ok (map-set uptime-chk-registry id (merge entry {active: false})))))
