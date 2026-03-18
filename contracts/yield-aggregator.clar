@@ -1817,3 +1817,7 @@
   (map-get? alert-rule-registry id))
 (define-read-only (get-alert-rule-count)
   (ok (var-get alert-rule-counter)))
+(define-read-only (is-alert-rule-active (id uint))
+  (match (map-get? alert-rule-registry id)
+    entry (get active entry)
+    false))
