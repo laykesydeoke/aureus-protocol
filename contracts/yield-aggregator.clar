@@ -1827,3 +1827,7 @@
     (err u1061)))
 (define-read-only (get-alert-rule-value (id uint))
   (default-to u0 (get value (map-get? alert-rule-registry id))))
+
+;; dashboard-api module
+(define-map dashboard-api-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var dashboard-api-counter uint u0)
