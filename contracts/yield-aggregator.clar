@@ -1875,3 +1875,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1082))
     (asserts! (get active entry) (err u1083))
     (ok (map-set report-gen-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-report-gen (id uint))
+  (let ((entry (unwrap! (map-get? report-gen-registry id) (err u1081))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1082))
+    (ok (map-set report-gen-registry id (merge entry {active: false})))))
