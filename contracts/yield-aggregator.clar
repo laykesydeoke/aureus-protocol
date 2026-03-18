@@ -1695,3 +1695,7 @@
     (err u1021)))
 (define-read-only (get-trace-sys-value (id uint))
   (default-to u0 (get value (map-get? trace-sys-registry id))))
+
+;; span-collect module
+(define-map span-collect-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var span-collect-counter uint u0)
