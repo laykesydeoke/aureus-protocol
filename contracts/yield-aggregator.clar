@@ -1903,3 +1903,8 @@
     (map-set export-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set export-svc-counter id)
     (ok id)))
+(define-public (update-export-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? export-svc-registry id) (err u1091))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1092))
+    (asserts! (get active entry) (err u1093))
+    (ok (map-set export-svc-registry id (merge entry {value: new-val})))))
