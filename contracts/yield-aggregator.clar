@@ -1794,3 +1794,7 @@
     (err u1051)))
 (define-read-only (get-uptime-chk-value (id uint))
   (default-to u0 (get value (map-get? uptime-chk-registry id))))
+
+;; alert-rule module
+(define-map alert-rule-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var alert-rule-counter uint u0)
