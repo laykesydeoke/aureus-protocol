@@ -2048,3 +2048,7 @@
   (map-get? restore-proc-registry id))
 (define-read-only (get-restore-proc-count)
   (ok (var-get restore-proc-counter)))
+(define-read-only (is-restore-proc-active (id uint))
+  (match (map-get? restore-proc-registry id)
+    entry (get active entry)
+    false))
