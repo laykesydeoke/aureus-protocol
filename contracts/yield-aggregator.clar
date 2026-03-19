@@ -2122,3 +2122,5 @@
   (match (map-get? archive-svc-registry id)
     entry (ok (get owner entry))
     (err u1151)))
+(define-read-only (get-archive-svc-value (id uint))
+  (default-to u0 (get value (map-get? archive-svc-registry id))))
