@@ -2077,3 +2077,7 @@
   (let ((entry (unwrap! (map-get? snapshot-mgr-registry id) (err u1141))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1142))
     (ok (map-set snapshot-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-snapshot-mgr-entry (id uint))
+  (map-get? snapshot-mgr-registry id))
+(define-read-only (get-snapshot-mgr-count)
+  (ok (var-get snapshot-mgr-counter)))
