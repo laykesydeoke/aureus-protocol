@@ -2023,3 +2023,5 @@
   (match (map-get? backup-svc-registry id)
     entry (ok (get owner entry))
     (err u1121)))
+(define-read-only (get-backup-svc-value (id uint))
+  (default-to u0 (get value (map-get? backup-svc-registry id))))
