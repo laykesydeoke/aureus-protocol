@@ -1957,3 +1957,5 @@
   (match (map-get? schema-mig-registry id)
     entry (ok (get owner entry))
     (err u1101)))
+(define-read-only (get-schema-mig-value (id uint))
+  (default-to u0 (get value (map-get? schema-mig-registry id))))
