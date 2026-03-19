@@ -1941,3 +1941,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1102))
     (asserts! (get active entry) (err u1103))
     (ok (map-set schema-mig-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-schema-mig (id uint))
+  (let ((entry (unwrap! (map-get? schema-mig-registry id) (err u1101))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1102))
+    (ok (map-set schema-mig-registry id (merge entry {active: false})))))
