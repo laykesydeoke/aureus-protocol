@@ -1930,3 +1930,9 @@
 ;; schema-mig module
 (define-map schema-mig-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var schema-mig-counter uint u0)
+(define-public (create-schema-mig (val uint))
+  (let ((id (+ (var-get schema-mig-counter) u1)))
+    (asserts! (> val u0) (err u1100))
+    (map-set schema-mig-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set schema-mig-counter id)
+    (ok id)))
