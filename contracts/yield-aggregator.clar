@@ -2134,3 +2134,8 @@
     (map-set purge-job-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set purge-job-counter id)
     (ok id)))
+(define-public (update-purge-job (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? purge-job-registry id) (err u1161))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1162))
+    (asserts! (get active entry) (err u1163))
+    (ok (map-set purge-job-registry id (merge entry {value: new-val})))))
