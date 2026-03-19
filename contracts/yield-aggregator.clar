@@ -2007,3 +2007,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1122))
     (asserts! (get active entry) (err u1123))
     (ok (map-set backup-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-backup-svc (id uint))
+  (let ((entry (unwrap! (map-get? backup-svc-registry id) (err u1121))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1122))
+    (ok (map-set backup-svc-registry id (merge entry {active: false})))))
