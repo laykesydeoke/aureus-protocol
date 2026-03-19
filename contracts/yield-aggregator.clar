@@ -1974,3 +1974,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1112))
     (asserts! (get active entry) (err u1113))
     (ok (map-set seed-data-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-seed-data (id uint))
+  (let ((entry (unwrap! (map-get? seed-data-registry id) (err u1111))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1112))
+    (ok (map-set seed-data-registry id (merge entry {active: false})))))
