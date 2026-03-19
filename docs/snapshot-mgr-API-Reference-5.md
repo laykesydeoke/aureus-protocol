@@ -1,0 +1,20 @@
+# snapshot-mgr - API Reference
+
+## snapshot-mgr API Reference
+
+### create-snapshot-mgr
+Creates a new snapshot-mgr entry with the given value.
+
+**Parameters:**
+- `val` (uint): The initial value
+
+**Returns:** (response uint error)
+
+### update-snapshot-mgr
+Updates an existing entry. Only the owner can update.
+
+**Parameters:**
+- `id` (uint): Entry ID
+- `new-val` (uint): New value
+
+**Returns:** (response bool error)
