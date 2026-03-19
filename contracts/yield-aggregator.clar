@@ -2172,3 +2172,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1172))
     (asserts! (get active entry) (err u1173))
     (ok (map-set cleanup-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-cleanup-svc (id uint))
+  (let ((entry (unwrap! (map-get? cleanup-svc-registry id) (err u1171))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1172))
+    (ok (map-set cleanup-svc-registry id (merge entry {active: false})))))
