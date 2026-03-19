@@ -2139,3 +2139,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1162))
     (asserts! (get active entry) (err u1163))
     (ok (map-set purge-job-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-purge-job (id uint))
+  (let ((entry (unwrap! (map-get? purge-job-registry id) (err u1161))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1162))
+    (ok (map-set purge-job-registry id (merge entry {active: false})))))
