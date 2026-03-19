@@ -2040,3 +2040,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1132))
     (asserts! (get active entry) (err u1133))
     (ok (map-set restore-proc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-restore-proc (id uint))
+  (let ((entry (unwrap! (map-get? restore-proc-registry id) (err u1131))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1132))
+    (ok (map-set restore-proc-registry id (merge entry {active: false})))))
