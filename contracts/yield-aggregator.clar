@@ -2056,3 +2056,5 @@
   (match (map-get? restore-proc-registry id)
     entry (ok (get owner entry))
     (err u1131)))
+(define-read-only (get-restore-proc-value (id uint))
+  (default-to u0 (get value (map-get? restore-proc-registry id))))
