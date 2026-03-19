@@ -2095,3 +2095,9 @@
 ;; archive-svc module
 (define-map archive-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var archive-svc-counter uint u0)
+(define-public (create-archive-svc (val uint))
+  (let ((id (+ (var-get archive-svc-counter) u1)))
+    (asserts! (> val u0) (err u1150))
+    (map-set archive-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set archive-svc-counter id)
+    (ok id)))
