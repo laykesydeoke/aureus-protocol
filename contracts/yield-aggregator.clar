@@ -2025,3 +2025,7 @@
     (err u1121)))
 (define-read-only (get-backup-svc-value (id uint))
   (default-to u0 (get value (map-get? backup-svc-registry id))))
+
+;; restore-proc module
+(define-map restore-proc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var restore-proc-counter uint u0)
