@@ -777,3 +777,16 @@
     (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
     (map-set token-whitelist token { approved: true, approved-at: stacks-block-height })
     (ok true)))
+
+;; Pause event logging
+(define-map pause-history uint { paused-by: principal, reason: (string-ascii 32), block: uint, is-pause: bool })
+(define-data-var pause-log-count uint u0)
+(define-read-only (get-pause-log (id uint))
+  (map-get? pause-history id))
+(define-public (log-pause-event (reason (string-ascii 32)) (is-pause bool))
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (let ((id (+ (var-get pause-log-count) u1)))
+      (map-set pause-history id { paused-by: tx-sender, reason: reason, block: stacks-block-height, is-pause: is-pause })
+      (var-set pause-log-count id)
+      (ok id))))
