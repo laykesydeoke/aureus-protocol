@@ -2217,3 +2217,7 @@
   (match (map-get? gc-runner-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-gc-runner-owner (id uint))
+  (match (map-get? gc-runner-registry id)
+    entry (ok (get owner entry))
+    (err u1181)))
