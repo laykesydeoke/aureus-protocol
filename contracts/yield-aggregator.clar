@@ -2223,3 +2223,7 @@
     (err u1181)))
 (define-read-only (get-gc-runner-value (id uint))
   (default-to u0 (get value (map-get? gc-runner-registry id))))
+
+;; compact-svc module
+(define-map compact-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var compact-svc-counter uint u0)
