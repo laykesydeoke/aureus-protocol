@@ -2143,3 +2143,7 @@
   (let ((entry (unwrap! (map-get? purge-job-registry id) (err u1161))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1162))
     (ok (map-set purge-job-registry id (merge entry {active: false})))))
+(define-read-only (get-purge-job-entry (id uint))
+  (map-get? purge-job-registry id))
+(define-read-only (get-purge-job-count)
+  (ok (var-get purge-job-counter)))
