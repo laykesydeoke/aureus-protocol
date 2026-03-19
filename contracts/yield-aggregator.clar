@@ -2062,3 +2062,9 @@
 ;; snapshot-mgr module
 (define-map snapshot-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var snapshot-mgr-counter uint u0)
+(define-public (create-snapshot-mgr (val uint))
+  (let ((id (+ (var-get snapshot-mgr-counter) u1)))
+    (asserts! (> val u0) (err u1140))
+    (map-set snapshot-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set snapshot-mgr-counter id)
+    (ok id)))
