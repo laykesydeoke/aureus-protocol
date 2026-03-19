@@ -2029,3 +2029,9 @@
 ;; restore-proc module
 (define-map restore-proc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var restore-proc-counter uint u0)
+(define-public (create-restore-proc (val uint))
+  (let ((id (+ (var-get restore-proc-counter) u1)))
+    (asserts! (> val u0) (err u1130))
+    (map-set restore-proc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set restore-proc-counter id)
+    (ok id)))
