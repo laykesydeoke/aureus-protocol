@@ -1959,3 +1959,7 @@
     (err u1101)))
 (define-read-only (get-schema-mig-value (id uint))
   (default-to u0 (get value (map-get? schema-mig-registry id))))
+
+;; seed-data module
+(define-map seed-data-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var seed-data-counter uint u0)
