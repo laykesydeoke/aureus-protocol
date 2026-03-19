@@ -2200,3 +2200,8 @@
     (map-set gc-runner-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set gc-runner-counter id)
     (ok id)))
+(define-public (update-gc-runner (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? gc-runner-registry id) (err u1181))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1182))
+    (asserts! (get active entry) (err u1183))
+    (ok (map-set gc-runner-registry id (merge entry {value: new-val})))))
