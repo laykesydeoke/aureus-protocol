@@ -2011,3 +2011,7 @@
   (let ((entry (unwrap! (map-get? backup-svc-registry id) (err u1121))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1122))
     (ok (map-set backup-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-backup-svc-entry (id uint))
+  (map-get? backup-svc-registry id))
+(define-read-only (get-backup-svc-count)
+  (ok (var-get backup-svc-counter)))
