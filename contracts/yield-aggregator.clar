@@ -2110,3 +2110,7 @@
   (let ((entry (unwrap! (map-get? archive-svc-registry id) (err u1151))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1152))
     (ok (map-set archive-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-archive-svc-entry (id uint))
+  (map-get? archive-svc-registry id))
+(define-read-only (get-archive-svc-count)
+  (ok (var-get archive-svc-counter)))
