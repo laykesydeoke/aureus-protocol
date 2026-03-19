@@ -1949,3 +1949,7 @@
   (map-get? schema-mig-registry id))
 (define-read-only (get-schema-mig-count)
   (ok (var-get schema-mig-counter)))
+(define-read-only (is-schema-mig-active (id uint))
+  (match (map-get? schema-mig-registry id)
+    entry (get active entry)
+    false))
