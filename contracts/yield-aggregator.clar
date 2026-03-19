@@ -2101,3 +2101,8 @@
     (map-set archive-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set archive-svc-counter id)
     (ok id)))
+(define-public (update-archive-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? archive-svc-registry id) (err u1151))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1152))
+    (asserts! (get active entry) (err u1153))
+    (ok (map-set archive-svc-registry id (merge entry {value: new-val})))))
