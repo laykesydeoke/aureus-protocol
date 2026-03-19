@@ -2091,3 +2091,7 @@
     (err u1141)))
 (define-read-only (get-snapshot-mgr-value (id uint))
   (default-to u0 (get value (map-get? snapshot-mgr-registry id))))
+
+;; archive-svc module
+(define-map archive-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var archive-svc-counter uint u0)
