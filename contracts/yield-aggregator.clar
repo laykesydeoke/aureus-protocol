@@ -2233,3 +2233,8 @@
     (map-set compact-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set compact-svc-counter id)
     (ok id)))
+(define-public (update-compact-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? compact-svc-registry id) (err u1191))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1192))
+    (asserts! (get active entry) (err u1193))
+    (ok (map-set compact-svc-registry id (merge entry {value: new-val})))))
