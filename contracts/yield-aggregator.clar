@@ -2254,3 +2254,5 @@
   (match (map-get? compact-svc-registry id)
     entry (ok (get owner entry))
     (err u1191)))
+(define-read-only (get-compact-svc-value (id uint))
+  (default-to u0 (get value (map-get? compact-svc-registry id))))
