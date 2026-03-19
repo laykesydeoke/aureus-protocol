@@ -2106,3 +2106,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1152))
     (asserts! (get active entry) (err u1153))
     (ok (map-set archive-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-archive-svc (id uint))
+  (let ((entry (unwrap! (map-get? archive-svc-registry id) (err u1151))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1152))
+    (ok (map-set archive-svc-registry id (merge entry {active: false})))))
