@@ -2227,3 +2227,9 @@
 ;; compact-svc module
 (define-map compact-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var compact-svc-counter uint u0)
+(define-public (create-compact-svc (val uint))
+  (let ((id (+ (var-get compact-svc-counter) u1)))
+    (asserts! (> val u0) (err u1190))
+    (map-set compact-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set compact-svc-counter id)
+    (ok id)))
