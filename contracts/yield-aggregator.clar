@@ -1978,3 +1978,7 @@
   (let ((entry (unwrap! (map-get? seed-data-registry id) (err u1111))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1112))
     (ok (map-set seed-data-registry id (merge entry {active: false})))))
+(define-read-only (get-seed-data-entry (id uint))
+  (map-get? seed-data-registry id))
+(define-read-only (get-seed-data-count)
+  (ok (var-get seed-data-counter)))
