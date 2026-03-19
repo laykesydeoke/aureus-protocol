@@ -1992,3 +1992,7 @@
     (err u1111)))
 (define-read-only (get-seed-data-value (id uint))
   (default-to u0 (get value (map-get? seed-data-registry id))))
+
+;; backup-svc module
+(define-map backup-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var backup-svc-counter uint u0)
