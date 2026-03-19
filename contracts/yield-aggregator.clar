@@ -2157,3 +2157,7 @@
     (err u1161)))
 (define-read-only (get-purge-job-value (id uint))
   (default-to u0 (get value (map-get? purge-job-registry id))))
+
+;; cleanup-svc module
+(define-map cleanup-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var cleanup-svc-counter uint u0)
