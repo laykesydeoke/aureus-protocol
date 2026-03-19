@@ -2209,3 +2209,7 @@
   (let ((entry (unwrap! (map-get? gc-runner-registry id) (err u1181))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1182))
     (ok (map-set gc-runner-registry id (merge entry {active: false})))))
+(define-read-only (get-gc-runner-entry (id uint))
+  (map-get? gc-runner-registry id))
+(define-read-only (get-gc-runner-count)
+  (ok (var-get gc-runner-counter)))
