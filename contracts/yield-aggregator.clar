@@ -2155,3 +2155,5 @@
   (match (map-get? purge-job-registry id)
     entry (ok (get owner entry))
     (err u1161)))
+(define-read-only (get-purge-job-value (id uint))
+  (default-to u0 (get value (map-get? purge-job-registry id))))
