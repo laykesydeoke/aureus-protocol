@@ -754,3 +754,13 @@
   (and (<= daily MAX-DAILY-VOLUME) (<= weekly MAX-WEEKLY-VOLUME) (<= daily weekly)))
 (define-read-only (get-analytics-bounds)
   { max-daily: MAX-DAILY-VOLUME, max-weekly: MAX-WEEKLY-VOLUME })
+
+;; Vault capacity limits
+(define-constant MAX-VAULT-TVL u10000000000)
+(define-data-var vault-capacity-check bool true)
+(define-read-only (get-vault-capacity)
+  (if (> MAX-VAULT-TVL (var-get total-deposits))
+    (- MAX-VAULT-TVL (var-get total-deposits))
+    u0))
+(define-read-only (get-vault-limits)
+  { max-tvl: MAX-VAULT-TVL, current: (var-get total-deposits), capacity-check: (var-get vault-capacity-check) })
