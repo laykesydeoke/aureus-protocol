@@ -1963,3 +1963,9 @@
 ;; seed-data module
 (define-map seed-data-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var seed-data-counter uint u0)
+(define-public (create-seed-data (val uint))
+  (let ((id (+ (var-get seed-data-counter) u1)))
+    (asserts! (> val u0) (err u1110))
+    (map-set seed-data-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set seed-data-counter id)
+    (ok id)))
