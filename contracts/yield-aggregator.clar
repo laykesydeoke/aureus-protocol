@@ -2184,3 +2184,7 @@
   (match (map-get? cleanup-svc-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-cleanup-svc-owner (id uint))
+  (match (map-get? cleanup-svc-registry id)
+    entry (ok (get owner entry))
+    (err u1171)))
