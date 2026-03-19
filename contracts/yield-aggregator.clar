@@ -2089,3 +2089,5 @@
   (match (map-get? snapshot-mgr-registry id)
     entry (ok (get owner entry))
     (err u1141)))
+(define-read-only (get-snapshot-mgr-value (id uint))
+  (default-to u0 (get value (map-get? snapshot-mgr-registry id))))
