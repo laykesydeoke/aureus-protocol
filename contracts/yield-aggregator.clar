@@ -1936,3 +1936,8 @@
     (map-set schema-mig-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set schema-mig-counter id)
     (ok id)))
+(define-public (update-schema-mig (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? schema-mig-registry id) (err u1101))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1102))
+    (asserts! (get active entry) (err u1103))
+    (ok (map-set schema-mig-registry id (merge entry {value: new-val})))))
