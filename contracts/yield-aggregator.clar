@@ -790,3 +790,11 @@
       (map-set pause-history id { paused-by: tx-sender, reason: reason, block: stacks-block-height, is-pause: is-pause })
       (var-set pause-log-count id)
       (ok id))))
+
+;; Booster parameter validation
+(define-constant MIN-BOOSTER-DURATION u100)
+(define-constant MIN-BOOSTER-MULT u100)
+(define-read-only (is-valid-booster (mult uint) (dur uint))
+  (and (>= mult MIN-BOOSTER-MULT) (<= mult (var-get max-booster-multiplier)) (>= dur MIN-BOOSTER-DURATION)))
+(define-read-only (get-booster-validation-params)
+  { min-mult: MIN-BOOSTER-MULT, max-mult: (var-get max-booster-multiplier), min-dur: MIN-BOOSTER-DURATION })
