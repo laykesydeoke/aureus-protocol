@@ -1996,3 +1996,9 @@
 ;; backup-svc module
 (define-map backup-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var backup-svc-counter uint u0)
+(define-public (create-backup-svc (val uint))
+  (let ((id (+ (var-get backup-svc-counter) u1)))
+    (asserts! (> val u0) (err u1120))
+    (map-set backup-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set backup-svc-counter id)
+    (ok id)))
