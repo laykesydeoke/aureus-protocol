@@ -2128,3 +2128,9 @@
 ;; purge-job module
 (define-map purge-job-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var purge-job-counter uint u0)
+(define-public (create-purge-job (val uint))
+  (let ((id (+ (var-get purge-job-counter) u1)))
+    (asserts! (> val u0) (err u1160))
+    (map-set purge-job-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set purge-job-counter id)
+    (ok id)))
