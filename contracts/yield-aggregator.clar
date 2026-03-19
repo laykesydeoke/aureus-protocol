@@ -2205,3 +2205,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1182))
     (asserts! (get active entry) (err u1183))
     (ok (map-set gc-runner-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-gc-runner (id uint))
+  (let ((entry (unwrap! (map-get? gc-runner-registry id) (err u1181))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1182))
+    (ok (map-set gc-runner-registry id (merge entry {active: false})))))
