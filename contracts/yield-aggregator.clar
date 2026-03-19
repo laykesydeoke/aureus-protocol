@@ -2180,3 +2180,7 @@
   (map-get? cleanup-svc-registry id))
 (define-read-only (get-cleanup-svc-count)
   (ok (var-get cleanup-svc-counter)))
+(define-read-only (is-cleanup-svc-active (id uint))
+  (match (map-get? cleanup-svc-registry id)
+    entry (get active entry)
+    false))
