@@ -2081,3 +2081,7 @@
   (map-get? snapshot-mgr-registry id))
 (define-read-only (get-snapshot-mgr-count)
   (ok (var-get snapshot-mgr-counter)))
+(define-read-only (is-snapshot-mgr-active (id uint))
+  (match (map-get? snapshot-mgr-registry id)
+    entry (get active entry)
+    false))
