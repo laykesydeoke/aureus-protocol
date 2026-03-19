@@ -2194,3 +2194,9 @@
 ;; gc-runner module
 (define-map gc-runner-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var gc-runner-counter uint u0)
+(define-public (create-gc-runner (val uint))
+  (let ((id (+ (var-get gc-runner-counter) u1)))
+    (asserts! (> val u0) (err u1180))
+    (map-set gc-runner-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set gc-runner-counter id)
+    (ok id)))
