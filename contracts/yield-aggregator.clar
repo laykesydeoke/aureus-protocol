@@ -2190,3 +2190,7 @@
     (err u1171)))
 (define-read-only (get-cleanup-svc-value (id uint))
   (default-to u0 (get value (map-get? cleanup-svc-registry id))))
+
+;; gc-runner module
+(define-map gc-runner-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var gc-runner-counter uint u0)
