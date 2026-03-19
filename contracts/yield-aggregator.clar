@@ -2058,3 +2058,7 @@
     (err u1131)))
 (define-read-only (get-restore-proc-value (id uint))
   (default-to u0 (get value (map-get? restore-proc-registry id))))
+
+;; snapshot-mgr module
+(define-map snapshot-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var snapshot-mgr-counter uint u0)
