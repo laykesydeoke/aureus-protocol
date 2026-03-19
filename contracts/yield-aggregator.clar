@@ -2002,3 +2002,8 @@
     (map-set backup-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set backup-svc-counter id)
     (ok id)))
+(define-public (update-backup-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? backup-svc-registry id) (err u1121))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1122))
+    (asserts! (get active entry) (err u1123))
+    (ok (map-set backup-svc-registry id (merge entry {value: new-val})))))
