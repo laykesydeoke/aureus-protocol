@@ -2161,3 +2161,9 @@
 ;; cleanup-svc module
 (define-map cleanup-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var cleanup-svc-counter uint u0)
+(define-public (create-cleanup-svc (val uint))
+  (let ((id (+ (var-get cleanup-svc-counter) u1)))
+    (asserts! (> val u0) (err u1170))
+    (map-set cleanup-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set cleanup-svc-counter id)
+    (ok id)))
