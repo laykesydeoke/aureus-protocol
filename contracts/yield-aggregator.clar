@@ -736,3 +736,11 @@
     (asserts\! (>= weight (var-get min-voting-power)) (err u165))
     (map-set voter-registry tx-sender { weight: weight, last-vote: u0 })
     (ok true)))
+
+;; Booster parameter validation
+(define-constant MIN-BOOSTER-DURATION u100)
+(define-constant MIN-BOOSTER-MULT u100)
+(define-read-only (is-valid-booster (mult uint) (dur uint))
+  (and (>= mult MIN-BOOSTER-MULT) (<= mult (var-get max-booster-multiplier)) (>= dur MIN-BOOSTER-DURATION)))
+(define-read-only (get-booster-validation-params)
+  { min-mult: MIN-BOOSTER-MULT, max-mult: (var-get max-booster-multiplier), min-dur: MIN-BOOSTER-DURATION })
