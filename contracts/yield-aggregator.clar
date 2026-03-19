@@ -2073,3 +2073,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1142))
     (asserts! (get active entry) (err u1143))
     (ok (map-set snapshot-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-snapshot-mgr (id uint))
+  (let ((entry (unwrap! (map-get? snapshot-mgr-registry id) (err u1141))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1142))
+    (ok (map-set snapshot-mgr-registry id (merge entry {active: false})))))
