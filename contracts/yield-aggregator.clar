@@ -1926,3 +1926,7 @@
     (err u1091)))
 (define-read-only (get-export-svc-value (id uint))
   (default-to u0 (get value (map-get? export-svc-registry id))))
+
+;; schema-mig module
+(define-map schema-mig-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var schema-mig-counter uint u0)
