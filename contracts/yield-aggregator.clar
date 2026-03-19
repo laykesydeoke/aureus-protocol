@@ -2176,3 +2176,7 @@
   (let ((entry (unwrap! (map-get? cleanup-svc-registry id) (err u1171))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1172))
     (ok (map-set cleanup-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-cleanup-svc-entry (id uint))
+  (map-get? cleanup-svc-registry id))
+(define-read-only (get-cleanup-svc-count)
+  (ok (var-get cleanup-svc-counter)))
