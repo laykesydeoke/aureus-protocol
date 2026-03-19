@@ -2044,3 +2044,7 @@
   (let ((entry (unwrap! (map-get? restore-proc-registry id) (err u1131))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1132))
     (ok (map-set restore-proc-registry id (merge entry {active: false})))))
+(define-read-only (get-restore-proc-entry (id uint))
+  (map-get? restore-proc-registry id))
+(define-read-only (get-restore-proc-count)
+  (ok (var-get restore-proc-counter)))
