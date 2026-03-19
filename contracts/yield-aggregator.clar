@@ -2242,3 +2242,7 @@
   (let ((entry (unwrap! (map-get? compact-svc-registry id) (err u1191))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1192))
     (ok (map-set compact-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-compact-svc-entry (id uint))
+  (map-get? compact-svc-registry id))
+(define-read-only (get-compact-svc-count)
+  (ok (var-get compact-svc-counter)))
