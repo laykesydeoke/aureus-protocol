@@ -2238,3 +2238,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1192))
     (asserts! (get active entry) (err u1193))
     (ok (map-set compact-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-compact-svc (id uint))
+  (let ((entry (unwrap! (map-get? compact-svc-registry id) (err u1191))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1192))
+    (ok (map-set compact-svc-registry id (merge entry {active: false})))))
