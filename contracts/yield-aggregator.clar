@@ -1969,3 +1969,8 @@
     (map-set seed-data-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set seed-data-counter id)
     (ok id)))
+(define-public (update-seed-data (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? seed-data-registry id) (err u1111))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1112))
+    (asserts! (get active entry) (err u1113))
+    (ok (map-set seed-data-registry id (merge entry {value: new-val})))))
