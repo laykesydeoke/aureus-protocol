@@ -2266,3 +2266,8 @@
     (map-set cache-warm-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set cache-warm-counter id)
     (ok id)))
+(define-public (update-cache-warm (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? cache-warm-registry id) (err u1201))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1202))
+    (asserts! (get active entry) (err u1203))
+    (ok (map-set cache-warm-registry id (merge entry {value: new-val})))))
