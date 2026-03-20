@@ -2322,3 +2322,7 @@
     (err u1211)))
 (define-read-only (get-prefetch-svc-value (id uint))
   (default-to u0 (get value (map-get? prefetch-svc-registry id))))
+
+;; preload-mgr module
+(define-map preload-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var preload-mgr-counter uint u0)
