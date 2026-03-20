@@ -2392,3 +2392,9 @@
 ;; eager-fetch module
 (define-map eager-fetch-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var eager-fetch-counter uint u0)
+(define-public (create-eager-fetch (val uint))
+  (let ((id (+ (var-get eager-fetch-counter) u1)))
+    (asserts! (> val u0) (err u1240))
+    (map-set eager-fetch-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set eager-fetch-counter id)
+    (ok id)))
