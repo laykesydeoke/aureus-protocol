@@ -2421,3 +2421,7 @@
     (err u1241)))
 (define-read-only (get-eager-fetch-value (id uint))
   (default-to u0 (get value (map-get? eager-fetch-registry id))))
+
+;; stream-proc module
+(define-map stream-proc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var stream-proc-counter uint u0)
