@@ -2353,3 +2353,5 @@
   (match (map-get? preload-mgr-registry id)
     entry (ok (get owner entry))
     (err u1221)))
+(define-read-only (get-preload-mgr-value (id uint))
+  (default-to u0 (get value (map-get? preload-mgr-registry id))))
