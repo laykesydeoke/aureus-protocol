@@ -2431,3 +2431,8 @@
     (map-set stream-proc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set stream-proc-counter id)
     (ok id)))
+(define-public (update-stream-proc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? stream-proc-registry id) (err u1251))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1252))
+    (asserts! (get active entry) (err u1253))
+    (ok (map-set stream-proc-registry id (merge entry {value: new-val})))))
