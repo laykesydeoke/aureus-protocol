@@ -2557,3 +2557,9 @@
 ;; map-reduce module
 (define-map map-reduce-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var map-reduce-counter uint u0)
+(define-public (create-map-reduce (val uint))
+  (let ((id (+ (var-get map-reduce-counter) u1)))
+    (asserts! (> val u0) (err u1290))
+    (map-set map-reduce-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set map-reduce-counter id)
+    (ok id)))
