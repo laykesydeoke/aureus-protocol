@@ -2520,3 +2520,7 @@
     (err u1271)))
 (define-read-only (get-transform-svc-value (id uint))
   (default-to u0 (get value (map-get? transform-svc-registry id))))
+
+;; filter-eng module
+(define-map filter-eng-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var filter-eng-counter uint u0)
