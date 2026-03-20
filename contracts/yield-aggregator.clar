@@ -2487,3 +2487,7 @@
     (err u1261)))
 (define-read-only (get-pipe-chain-value (id uint))
   (default-to u0 (get value (map-get? pipe-chain-registry id))))
+
+;; transform-svc module
+(define-map transform-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var transform-svc-counter uint u0)
