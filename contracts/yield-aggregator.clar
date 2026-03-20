@@ -2535,3 +2535,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1282))
     (asserts! (get active entry) (err u1283))
     (ok (map-set filter-eng-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-filter-eng (id uint))
+  (let ((entry (unwrap! (map-get? filter-eng-registry id) (err u1281))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1282))
+    (ok (map-set filter-eng-registry id (merge entry {active: false})))))
