@@ -2539,3 +2539,7 @@
   (let ((entry (unwrap! (map-get? filter-eng-registry id) (err u1281))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1282))
     (ok (map-set filter-eng-registry id (merge entry {active: false})))))
+(define-read-only (get-filter-eng-entry (id uint))
+  (map-get? filter-eng-registry id))
+(define-read-only (get-filter-eng-count)
+  (ok (var-get filter-eng-counter)))
