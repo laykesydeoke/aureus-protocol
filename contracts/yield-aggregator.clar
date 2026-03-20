@@ -2370,3 +2370,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1232))
     (asserts! (get active entry) (err u1233))
     (ok (map-set lazy-load-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-lazy-load (id uint))
+  (let ((entry (unwrap! (map-get? lazy-load-registry id) (err u1231))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1232))
+    (ok (map-set lazy-load-registry id (merge entry {active: false})))))
