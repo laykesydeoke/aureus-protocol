@@ -2553,3 +2553,7 @@
     (err u1281)))
 (define-read-only (get-filter-eng-value (id uint))
   (default-to u0 (get value (map-get? filter-eng-registry id))))
+
+;; map-reduce module
+(define-map map-reduce-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var map-reduce-counter uint u0)
