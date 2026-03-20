@@ -2491,3 +2491,9 @@
 ;; transform-svc module
 (define-map transform-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var transform-svc-counter uint u0)
+(define-public (create-transform-svc (val uint))
+  (let ((id (+ (var-get transform-svc-counter) u1)))
+    (asserts! (> val u0) (err u1270))
+    (map-set transform-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set transform-svc-counter id)
+    (ok id)))
