@@ -2415,3 +2415,7 @@
   (match (map-get? eager-fetch-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-eager-fetch-owner (id uint))
+  (match (map-get? eager-fetch-registry id)
+    entry (ok (get owner entry))
+    (err u1241)))
