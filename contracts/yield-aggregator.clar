@@ -2454,3 +2454,7 @@
     (err u1251)))
 (define-read-only (get-stream-proc-value (id uint))
   (default-to u0 (get value (map-get? stream-proc-registry id))))
+
+;; pipe-chain module
+(define-map pipe-chain-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var pipe-chain-counter uint u0)
