@@ -2506,3 +2506,7 @@
   (let ((entry (unwrap! (map-get? transform-svc-registry id) (err u1271))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1272))
     (ok (map-set transform-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-transform-svc-entry (id uint))
+  (map-get? transform-svc-registry id))
+(define-read-only (get-transform-svc-count)
+  (ok (var-get transform-svc-counter)))
