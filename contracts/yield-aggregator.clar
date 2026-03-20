@@ -2576,3 +2576,7 @@
   (map-get? map-reduce-registry id))
 (define-read-only (get-map-reduce-count)
   (ok (var-get map-reduce-counter)))
+(define-read-only (is-map-reduce-active (id uint))
+  (match (map-get? map-reduce-registry id)
+    entry (get active entry)
+    false))
