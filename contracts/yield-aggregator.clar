@@ -820,3 +820,9 @@
 (define-read-only (calc-tier-adjusted-reward (deposit uint) (rate uint) (tier-bonus uint))
   (let ((base (/ (* deposit rate) u10000)))
     (+ base (/ (* base tier-bonus) u10000))))
+
+;; Pool overflow protection
+(define-constant MAX-POOL-SIZE u50000000000)
+(define-read-only (check-pool-overflow (additional uint))
+  (let ((new-total (+ (var-get total-deposits) additional)))
+    { would-overflow: (> new-total MAX-POOL-SIZE), current: (var-get total-deposits), new-total: new-total, max: MAX-POOL-SIZE }))
