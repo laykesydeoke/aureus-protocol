@@ -2312,3 +2312,7 @@
   (map-get? prefetch-svc-registry id))
 (define-read-only (get-prefetch-svc-count)
   (ok (var-get prefetch-svc-counter)))
+(define-read-only (is-prefetch-svc-active (id uint))
+  (match (map-get? prefetch-svc-registry id)
+    entry (get active entry)
+    false))
