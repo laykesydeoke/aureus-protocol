@@ -2355,3 +2355,7 @@
     (err u1221)))
 (define-read-only (get-preload-mgr-value (id uint))
   (default-to u0 (get value (map-get? preload-mgr-registry id))))
+
+;; lazy-load module
+(define-map lazy-load-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var lazy-load-counter uint u0)
