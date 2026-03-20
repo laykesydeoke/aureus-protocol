@@ -2275,3 +2275,7 @@
   (let ((entry (unwrap! (map-get? cache-warm-registry id) (err u1201))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1202))
     (ok (map-set cache-warm-registry id (merge entry {active: false})))))
+(define-read-only (get-cache-warm-entry (id uint))
+  (map-get? cache-warm-registry id))
+(define-read-only (get-cache-warm-count)
+  (ok (var-get cache-warm-counter)))
