@@ -2345,3 +2345,7 @@
   (map-get? preload-mgr-registry id))
 (define-read-only (get-preload-mgr-count)
   (ok (var-get preload-mgr-counter)))
+(define-read-only (is-preload-mgr-active (id uint))
+  (match (map-get? preload-mgr-registry id)
+    entry (get active entry)
+    false))
