@@ -2279,3 +2279,7 @@
   (map-get? cache-warm-registry id))
 (define-read-only (get-cache-warm-count)
   (ok (var-get cache-warm-counter)))
+(define-read-only (is-cache-warm-active (id uint))
+  (match (map-get? cache-warm-registry id)
+    entry (get active entry)
+    false))
