@@ -2436,3 +2436,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1252))
     (asserts! (get active entry) (err u1253))
     (ok (map-set stream-proc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-stream-proc (id uint))
+  (let ((entry (unwrap! (map-get? stream-proc-registry id) (err u1251))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1252))
+    (ok (map-set stream-proc-registry id (merge entry {active: false})))))
