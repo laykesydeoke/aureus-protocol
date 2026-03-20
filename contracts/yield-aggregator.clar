@@ -2256,3 +2256,7 @@
     (err u1191)))
 (define-read-only (get-compact-svc-value (id uint))
   (default-to u0 (get value (map-get? compact-svc-registry id))))
+
+;; cache-warm module
+(define-map cache-warm-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var cache-warm-counter uint u0)
