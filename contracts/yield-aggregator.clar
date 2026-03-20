@@ -2388,3 +2388,7 @@
     (err u1231)))
 (define-read-only (get-lazy-load-value (id uint))
   (default-to u0 (get value (map-get? lazy-load-registry id))))
+
+;; eager-fetch module
+(define-map eager-fetch-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var eager-fetch-counter uint u0)
