@@ -2464,3 +2464,8 @@
     (map-set pipe-chain-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set pipe-chain-counter id)
     (ok id)))
+(define-public (update-pipe-chain (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? pipe-chain-registry id) (err u1261))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1262))
+    (asserts! (get active entry) (err u1263))
+    (ok (map-set pipe-chain-registry id (merge entry {value: new-val})))))
