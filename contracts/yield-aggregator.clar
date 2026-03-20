@@ -2359,3 +2359,9 @@
 ;; lazy-load module
 (define-map lazy-load-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var lazy-load-counter uint u0)
+(define-public (create-lazy-load (val uint))
+  (let ((id (+ (var-get lazy-load-counter) u1)))
+    (asserts! (> val u0) (err u1230))
+    (map-set lazy-load-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set lazy-load-counter id)
+    (ok id)))
