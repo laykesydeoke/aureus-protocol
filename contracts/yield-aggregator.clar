@@ -798,3 +798,17 @@
   (and (>= mult MIN-BOOSTER-MULT) (<= mult (var-get max-booster-multiplier)) (>= dur MIN-BOOSTER-DURATION)))
 (define-read-only (get-booster-validation-params)
   { min-mult: MIN-BOOSTER-MULT, max-mult: (var-get max-booster-multiplier), min-dur: MIN-BOOSTER-DURATION })
+
+;; Auth hierarchy levels
+(define-map auth-levels principal uint)
+(define-constant AUTH-ADMIN u3)
+(define-constant AUTH-OPERATOR u2)
+(define-constant AUTH-VIEWER u1)
+(define-read-only (get-auth-level (addr principal))
+  (default-to u0 (map-get? auth-levels addr)))
+(define-public (set-auth-level (addr principal) (level uint))
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts\! (<= level AUTH-ADMIN) (err u200))
+    (map-set auth-levels addr level)
+    (ok true)))
