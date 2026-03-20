@@ -2289,3 +2289,7 @@
     (err u1201)))
 (define-read-only (get-cache-warm-value (id uint))
   (default-to u0 (get value (map-get? cache-warm-registry id))))
+
+;; prefetch-svc module
+(define-map prefetch-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var prefetch-svc-counter uint u0)
