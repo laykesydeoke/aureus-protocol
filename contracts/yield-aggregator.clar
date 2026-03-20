@@ -2374,3 +2374,7 @@
   (let ((entry (unwrap! (map-get? lazy-load-registry id) (err u1231))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1232))
     (ok (map-set lazy-load-registry id (merge entry {active: false})))))
+(define-read-only (get-lazy-load-entry (id uint))
+  (map-get? lazy-load-registry id))
+(define-read-only (get-lazy-load-count)
+  (ok (var-get lazy-load-counter)))
