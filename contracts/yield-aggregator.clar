@@ -2337,3 +2337,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1222))
     (asserts! (get active entry) (err u1223))
     (ok (map-set preload-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-preload-mgr (id uint))
+  (let ((entry (unwrap! (map-get? preload-mgr-registry id) (err u1221))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1222))
+    (ok (map-set preload-mgr-registry id (merge entry {active: false})))))
