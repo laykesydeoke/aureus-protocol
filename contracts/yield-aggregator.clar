@@ -2524,3 +2524,9 @@
 ;; filter-eng module
 (define-map filter-eng-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var filter-eng-counter uint u0)
+(define-public (create-filter-eng (val uint))
+  (let ((id (+ (var-get filter-eng-counter) u1)))
+    (asserts! (> val u0) (err u1280))
+    (map-set filter-eng-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set filter-eng-counter id)
+    (ok id)))
