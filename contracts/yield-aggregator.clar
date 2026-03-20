@@ -2411,3 +2411,7 @@
   (map-get? eager-fetch-registry id))
 (define-read-only (get-eager-fetch-count)
   (ok (var-get eager-fetch-counter)))
+(define-read-only (is-eager-fetch-active (id uint))
+  (match (map-get? eager-fetch-registry id)
+    entry (get active entry)
+    false))
