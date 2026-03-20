@@ -2572,3 +2572,7 @@
   (let ((entry (unwrap! (map-get? map-reduce-registry id) (err u1291))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1292))
     (ok (map-set map-reduce-registry id (merge entry {active: false})))))
+(define-read-only (get-map-reduce-entry (id uint))
+  (map-get? map-reduce-registry id))
+(define-read-only (get-map-reduce-count)
+  (ok (var-get map-reduce-counter)))
