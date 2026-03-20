@@ -2510,3 +2510,7 @@
   (map-get? transform-svc-registry id))
 (define-read-only (get-transform-svc-count)
   (ok (var-get transform-svc-counter)))
+(define-read-only (is-transform-svc-active (id uint))
+  (match (map-get? transform-svc-registry id)
+    entry (get active entry)
+    false))
