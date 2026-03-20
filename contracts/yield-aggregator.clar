@@ -2341,3 +2341,7 @@
   (let ((entry (unwrap! (map-get? preload-mgr-registry id) (err u1221))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1222))
     (ok (map-set preload-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-preload-mgr-entry (id uint))
+  (map-get? preload-mgr-registry id))
+(define-read-only (get-preload-mgr-count)
+  (ok (var-get preload-mgr-counter)))
