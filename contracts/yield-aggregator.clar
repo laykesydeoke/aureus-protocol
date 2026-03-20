@@ -2444,3 +2444,7 @@
   (map-get? stream-proc-registry id))
 (define-read-only (get-stream-proc-count)
   (ok (var-get stream-proc-counter)))
+(define-read-only (is-stream-proc-active (id uint))
+  (match (map-get? stream-proc-registry id)
+    entry (get active entry)
+    false))
