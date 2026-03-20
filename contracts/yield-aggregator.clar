@@ -2293,3 +2293,9 @@
 ;; prefetch-svc module
 (define-map prefetch-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var prefetch-svc-counter uint u0)
+(define-public (create-prefetch-svc (val uint))
+  (let ((id (+ (var-get prefetch-svc-counter) u1)))
+    (asserts! (> val u0) (err u1210))
+    (map-set prefetch-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set prefetch-svc-counter id)
+    (ok id)))
