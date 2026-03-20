@@ -2320,3 +2320,5 @@
   (match (map-get? prefetch-svc-registry id)
     entry (ok (get owner entry))
     (err u1211)))
+(define-read-only (get-prefetch-svc-value (id uint))
+  (default-to u0 (get value (map-get? prefetch-svc-registry id))))
