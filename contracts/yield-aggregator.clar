@@ -2382,3 +2382,7 @@
   (match (map-get? lazy-load-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-lazy-load-owner (id uint))
+  (match (map-get? lazy-load-registry id)
+    entry (ok (get owner entry))
+    (err u1231)))
