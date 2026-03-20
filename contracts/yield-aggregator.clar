@@ -2407,3 +2407,7 @@
   (let ((entry (unwrap! (map-get? eager-fetch-registry id) (err u1241))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1242))
     (ok (map-set eager-fetch-registry id (merge entry {active: false})))))
+(define-read-only (get-eager-fetch-entry (id uint))
+  (map-get? eager-fetch-registry id))
+(define-read-only (get-eager-fetch-count)
+  (ok (var-get eager-fetch-counter)))
