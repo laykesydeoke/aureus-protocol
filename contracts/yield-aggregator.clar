@@ -2378,3 +2378,7 @@
   (map-get? lazy-load-registry id))
 (define-read-only (get-lazy-load-count)
   (ok (var-get lazy-load-counter)))
+(define-read-only (is-lazy-load-active (id uint))
+  (match (map-get? lazy-load-registry id)
+    entry (get active entry)
+    false))
