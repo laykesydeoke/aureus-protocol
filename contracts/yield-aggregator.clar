@@ -2469,3 +2469,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1262))
     (asserts! (get active entry) (err u1263))
     (ok (map-set pipe-chain-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-pipe-chain (id uint))
+  (let ((entry (unwrap! (map-get? pipe-chain-registry id) (err u1261))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1262))
+    (ok (map-set pipe-chain-registry id (merge entry {active: false})))))
