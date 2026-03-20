@@ -2502,3 +2502,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1272))
     (asserts! (get active entry) (err u1273))
     (ok (map-set transform-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-transform-svc (id uint))
+  (let ((entry (unwrap! (map-get? transform-svc-registry id) (err u1271))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1272))
+    (ok (map-set transform-svc-registry id (merge entry {active: false})))))
