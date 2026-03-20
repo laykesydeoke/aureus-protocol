@@ -2580,3 +2580,7 @@
   (match (map-get? map-reduce-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-map-reduce-owner (id uint))
+  (match (map-get? map-reduce-registry id)
+    entry (ok (get owner entry))
+    (err u1291)))
