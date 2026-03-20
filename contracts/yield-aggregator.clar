@@ -2485,3 +2485,5 @@
   (match (map-get? pipe-chain-registry id)
     entry (ok (get owner entry))
     (err u1261)))
+(define-read-only (get-pipe-chain-value (id uint))
+  (default-to u0 (get value (map-get? pipe-chain-registry id))))
