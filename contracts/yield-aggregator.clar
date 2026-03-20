@@ -2260,3 +2260,9 @@
 ;; cache-warm module
 (define-map cache-warm-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var cache-warm-counter uint u0)
+(define-public (create-cache-warm (val uint))
+  (let ((id (+ (var-get cache-warm-counter) u1)))
+    (asserts! (> val u0) (err u1200))
+    (map-set cache-warm-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set cache-warm-counter id)
+    (ok id)))
