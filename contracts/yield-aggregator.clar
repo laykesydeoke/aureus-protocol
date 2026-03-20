@@ -2326,3 +2326,9 @@
 ;; preload-mgr module
 (define-map preload-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var preload-mgr-counter uint u0)
+(define-public (create-preload-mgr (val uint))
+  (let ((id (+ (var-get preload-mgr-counter) u1)))
+    (asserts! (> val u0) (err u1220))
+    (map-set preload-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set preload-mgr-counter id)
+    (ok id)))
