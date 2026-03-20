@@ -2299,3 +2299,8 @@
     (map-set prefetch-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set prefetch-svc-counter id)
     (ok id)))
+(define-public (update-prefetch-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? prefetch-svc-registry id) (err u1211))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1212))
+    (asserts! (get active entry) (err u1213))
+    (ok (map-set prefetch-svc-registry id (merge entry {value: new-val})))))
