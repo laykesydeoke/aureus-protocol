@@ -2365,3 +2365,8 @@
     (map-set lazy-load-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set lazy-load-counter id)
     (ok id)))
+(define-public (update-lazy-load (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? lazy-load-registry id) (err u1231))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1232))
+    (asserts! (get active entry) (err u1233))
+    (ok (map-set lazy-load-registry id (merge entry {value: new-val})))))
