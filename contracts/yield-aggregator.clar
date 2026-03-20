@@ -2458,3 +2458,9 @@
 ;; pipe-chain module
 (define-map pipe-chain-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var pipe-chain-counter uint u0)
+(define-public (create-pipe-chain (val uint))
+  (let ((id (+ (var-get pipe-chain-counter) u1)))
+    (asserts! (> val u0) (err u1260))
+    (map-set pipe-chain-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set pipe-chain-counter id)
+    (ok id)))
