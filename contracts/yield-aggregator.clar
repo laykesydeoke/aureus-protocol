@@ -2271,3 +2271,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1202))
     (asserts! (get active entry) (err u1203))
     (ok (map-set cache-warm-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-cache-warm (id uint))
+  (let ((entry (unwrap! (map-get? cache-warm-registry id) (err u1201))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1202))
+    (ok (map-set cache-warm-registry id (merge entry {active: false})))))
