@@ -1,0 +1,20 @@
+# lazy-load - API Reference
+
+## lazy-load API Reference
+
+### create-lazy-load
+Creates a new lazy-load entry with the given value.
+
+**Parameters:**
+- `val` (uint): The initial value
+
+**Returns:** (response uint error)
+
+### update-lazy-load
+Updates an existing entry. Only the owner can update.
+
+**Parameters:**
+- `id` (uint): Entry ID
+- `new-val` (uint): New value
+
+**Returns:** (response bool error)
