@@ -2283,3 +2283,7 @@
   (match (map-get? cache-warm-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-cache-warm-owner (id uint))
+  (match (map-get? cache-warm-registry id)
+    entry (ok (get owner entry))
+    (err u1201)))
