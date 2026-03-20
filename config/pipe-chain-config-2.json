@@ -1,0 +1,14 @@
+{
+  "module": "pipe-chain",
+  "version": "1.2.0",
+  "contract": "yield-aggregator",
+  "network": "testnet",
+  "settings": {
+    "maxEntries": 200,
+    "minValue": 1,
+    "maxValue": 1000000000,
+    "errorBase": 1260,
+    "autoDeactivate": false,
+    "auditLog": true
+  }
+}
