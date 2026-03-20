@@ -2518,3 +2518,5 @@
   (match (map-get? transform-svc-registry id)
     entry (ok (get owner entry))
     (err u1271)))
+(define-read-only (get-transform-svc-value (id uint))
+  (default-to u0 (get value (map-get? transform-svc-registry id))))
