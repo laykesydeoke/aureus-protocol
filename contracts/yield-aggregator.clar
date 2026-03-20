@@ -2440,3 +2440,7 @@
   (let ((entry (unwrap! (map-get? stream-proc-registry id) (err u1251))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1252))
     (ok (map-set stream-proc-registry id (merge entry {active: false})))))
+(define-read-only (get-stream-proc-entry (id uint))
+  (map-get? stream-proc-registry id))
+(define-read-only (get-stream-proc-count)
+  (ok (var-get stream-proc-counter)))
