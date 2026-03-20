@@ -2398,3 +2398,8 @@
     (map-set eager-fetch-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set eager-fetch-counter id)
     (ok id)))
+(define-public (update-eager-fetch (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? eager-fetch-registry id) (err u1241))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1242))
+    (asserts! (get active entry) (err u1243))
+    (ok (map-set eager-fetch-registry id (merge entry {value: new-val})))))
