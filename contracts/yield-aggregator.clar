@@ -2473,3 +2473,7 @@
   (let ((entry (unwrap! (map-get? pipe-chain-registry id) (err u1261))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1262))
     (ok (map-set pipe-chain-registry id (merge entry {active: false})))))
+(define-read-only (get-pipe-chain-entry (id uint))
+  (map-get? pipe-chain-registry id))
+(define-read-only (get-pipe-chain-count)
+  (ok (var-get pipe-chain-counter)))
