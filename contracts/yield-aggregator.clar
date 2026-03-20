@@ -2425,3 +2425,9 @@
 ;; stream-proc module
 (define-map stream-proc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var stream-proc-counter uint u0)
+(define-public (create-stream-proc (val uint))
+  (let ((id (+ (var-get stream-proc-counter) u1)))
+    (asserts! (> val u0) (err u1250))
+    (map-set stream-proc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set stream-proc-counter id)
+    (ok id)))
