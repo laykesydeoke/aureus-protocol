@@ -2568,3 +2568,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1292))
     (asserts! (get active entry) (err u1293))
     (ok (map-set map-reduce-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-map-reduce (id uint))
+  (let ((entry (unwrap! (map-get? map-reduce-registry id) (err u1291))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1292))
+    (ok (map-set map-reduce-registry id (merge entry {active: false})))))
