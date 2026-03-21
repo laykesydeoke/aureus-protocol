@@ -880,3 +880,14 @@
   (* pct u100))
 (define-read-only (normalize-rate (rate uint) (from-base uint) (to-base uint))
   (/ (* rate to-base) from-base))
+
+;; Event ordering and sequencing
+(define-data-var event-sequence uint u0)
+(define-map ordered-events uint { seq: uint, event-type: (string-ascii 32), actor: principal, block: uint })
+(define-read-only (get-ordered-event (id uint))
+  (map-get? ordered-events id))
+(define-public (emit-ordered-event (event-type (string-ascii 32)))
+  (let ((seq (+ (var-get event-sequence) u1)))
+    (map-set ordered-events seq { seq: seq, event-type: event-type, actor: tx-sender, block: stacks-block-height })
+    (var-set event-sequence seq)
+    (ok seq)))
