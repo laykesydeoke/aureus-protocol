@@ -2902,3 +2902,7 @@
   (let ((entry (unwrap! (map-get? cdn-config-registry id) (err u1391))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1392))
     (ok (map-set cdn-config-registry id (merge entry {active: false})))))
+(define-read-only (get-cdn-config-entry (id uint))
+  (map-get? cdn-config-registry id))
+(define-read-only (get-cdn-config-count)
+  (ok (var-get cdn-config-counter)))
