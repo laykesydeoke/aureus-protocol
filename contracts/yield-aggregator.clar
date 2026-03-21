@@ -2749,3 +2749,5 @@
   (match (map-get? validate-ci-registry id)
     entry (ok (get owner entry))
     (err u1341)))
+(define-read-only (get-validate-ci-value (id uint))
+  (default-to u0 (get value (map-get? validate-ci-registry id))))
