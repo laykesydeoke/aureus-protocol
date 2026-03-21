@@ -862,3 +862,11 @@
       (map-set migration-checkpoints step { step: step, block: stacks-block-height, verified: true })
       (var-set migration-step step)
       (ok step))))
+
+;; API pagination support
+(define-constant DEFAULT-PAGE u1)
+(define-constant DEFAULT-LIMIT u20)
+(define-constant MAX-LIMIT u100)
+(define-data-var api-request-count uint u0)
+(define-read-only (get-pagination-defaults)
+  { page: DEFAULT-PAGE, limit: DEFAULT-LIMIT, max-limit: MAX-LIMIT, requests: (var-get api-request-count) })
