@@ -2770,3 +2770,7 @@
   (let ((entry (unwrap! (map-get? test-runner-registry id) (err u1351))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1352))
     (ok (map-set test-runner-registry id (merge entry {active: false})))))
+(define-read-only (get-test-runner-entry (id uint))
+  (map-get? test-runner-registry id))
+(define-read-only (get-test-runner-count)
+  (ok (var-get test-runner-counter)))
