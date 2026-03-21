@@ -2590,3 +2590,9 @@
 ;; deploy-hook module
 (define-map deploy-hook-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var deploy-hook-counter uint u0)
+(define-public (create-deploy-hook (val uint))
+  (let ((id (+ (var-get deploy-hook-counter) u1)))
+    (asserts! (> val u0) (err u1300))
+    (map-set deploy-hook-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set deploy-hook-counter id)
+    (ok id)))
