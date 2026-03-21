@@ -2638,3 +2638,7 @@
   (let ((entry (unwrap! (map-get? pre-commit-registry id) (err u1311))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1312))
     (ok (map-set pre-commit-registry id (merge entry {active: false})))))
+(define-read-only (get-pre-commit-entry (id uint))
+  (map-get? pre-commit-registry id))
+(define-read-only (get-pre-commit-count)
+  (ok (var-get pre-commit-counter)))
