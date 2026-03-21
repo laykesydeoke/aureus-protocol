@@ -657,3 +657,14 @@
   (and (>= amount MIN-DEPOSIT) (<= amount MAX-DEPOSIT-PER-TX)))
 (define-read-only (get-deposit-guard-params)
   { min: MIN-DEPOSIT, max: MAX-DEPOSIT-PER-TX, enabled: (var-get deposit-guard-enabled) })
+
+;; Withdrawal safety checks
+(define-data-var withdrawal-cooldown uint u10)
+(define-data-var max-withdraw-pct-per-tx uint u50)
+(define-map withdrawal-timestamps principal uint)
+(define-read-only (get-last-withdrawal (user principal))
+  (default-to u0 (map-get? withdrawal-timestamps user)))
+(define-read-only (get-withdrawal-safety-params)
+  { cooldown: (var-get withdrawal-cooldown), max-pct: (var-get max-withdraw-pct-per-tx) })
+(define-read-only (can-withdraw (user principal))
+  (> (- stacks-block-height (get-last-withdrawal user)) (var-get withdrawal-cooldown)))
