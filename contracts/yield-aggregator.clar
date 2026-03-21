@@ -2873,3 +2873,7 @@
   (map-get? asset-pipe-registry id))
 (define-read-only (get-asset-pipe-count)
   (ok (var-get asset-pipe-counter)))
+(define-read-only (is-asset-pipe-active (id uint))
+  (match (map-get? asset-pipe-registry id)
+    entry (get active entry)
+    false))
