@@ -2836,3 +2836,7 @@
   (let ((entry (unwrap! (map-get? bundle-svc-registry id) (err u1371))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1372))
     (ok (map-set bundle-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-bundle-svc-entry (id uint))
+  (map-get? bundle-svc-registry id))
+(define-read-only (get-bundle-svc-count)
+  (ok (var-get bundle-svc-counter)))
