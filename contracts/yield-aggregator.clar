@@ -870,3 +870,13 @@
 (define-data-var api-request-count uint u0)
 (define-read-only (get-pagination-defaults)
   { page: DEFAULT-PAGE, limit: DEFAULT-LIMIT, max-limit: MAX-LIMIT, requests: (var-get api-request-count) })
+
+;; Rate normalization functions
+(define-constant BPS-BASE u10000)
+(define-constant PCT-BASE u100)
+(define-read-only (bps-to-pct (bps uint))
+  (/ bps u100))
+(define-read-only (pct-to-bps (pct uint))
+  (* pct u100))
+(define-read-only (normalize-rate (rate uint) (from-base uint) (to-base uint))
+  (/ (* rate to-base) from-base))
