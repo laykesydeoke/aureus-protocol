@@ -2794,3 +2794,8 @@
     (map-set build-opt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set build-opt-counter id)
     (ok id)))
+(define-public (update-build-opt (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? build-opt-registry id) (err u1361))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1362))
+    (asserts! (get active entry) (err u1363))
+    (ok (map-set build-opt-registry id (merge entry {value: new-val})))))
