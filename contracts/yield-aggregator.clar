@@ -826,3 +826,18 @@
 (define-read-only (check-pool-overflow (additional uint))
   (let ((new-total (+ (var-get total-deposits) additional)))
     { would-overflow: (> new-total MAX-POOL-SIZE), current: (var-get total-deposits), new-total: new-total, max: MAX-POOL-SIZE }))
+
+;; Oracle data validation
+(define-data-var oracle-last-update uint u0)
+(define-data-var oracle-staleness-threshold uint u144)
+(define-map oracle-prices (string-ascii 16) { price: uint, updated-at: uint, source: uint })
+(define-read-only (get-oracle-price (asset (string-ascii 16)))
+  (map-get? oracle-prices asset))
+(define-read-only (is-oracle-stale)
+  (> (- stacks-block-height (var-get oracle-last-update)) (var-get oracle-staleness-threshold)))
+(define-public (update-oracle-price (asset (string-ascii 16)) (price uint))
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (map-set oracle-prices asset { price: price, updated-at: stacks-block-height, source: u1 })
+    (var-set oracle-last-update stacks-block-height)
+    (ok true)))
