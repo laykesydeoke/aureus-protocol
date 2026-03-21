@@ -1,0 +1,1 @@
+import{describe,it,expect}from"vitest";describe("depgrd 18",()=>{it("case 18",()=>{const a=simnet.getAccounts();const d=a.get("deployer")\!;const r=simnet.callReadOnlyFn("yield-aggregator","get-total-deposits",[],d);expect(r.result).toBeDefined();});});

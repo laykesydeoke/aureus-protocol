@@ -648,3 +648,12 @@
       (var-set peak-tvl (var-get total-deposits)))
     (var-set analytics-epoch (+ (var-get analytics-epoch) u1))
     (ok true)))
+
+;; Deposit amount guards
+(define-constant MIN-DEPOSIT u1000)
+(define-constant MAX-DEPOSIT-PER-TX u500000000)
+(define-data-var deposit-guard-enabled bool true)
+(define-read-only (validate-deposit-amount (amount uint))
+  (and (>= amount MIN-DEPOSIT) (<= amount MAX-DEPOSIT-PER-TX)))
+(define-read-only (get-deposit-guard-params)
+  { min: MIN-DEPOSIT, max: MAX-DEPOSIT-PER-TX, enabled: (var-get deposit-guard-enabled) })
