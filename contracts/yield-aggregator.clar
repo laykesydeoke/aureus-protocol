@@ -2605,3 +2605,7 @@
   (let ((entry (unwrap! (map-get? deploy-hook-registry id) (err u1301))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1302))
     (ok (map-set deploy-hook-registry id (merge entry {active: false})))))
+(define-read-only (get-deploy-hook-entry (id uint))
+  (map-get? deploy-hook-registry id))
+(define-read-only (get-deploy-hook-count)
+  (ok (var-get deploy-hook-counter)))
