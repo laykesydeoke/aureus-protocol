@@ -2887,3 +2887,9 @@
 ;; cdn-config module
 (define-map cdn-config-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var cdn-config-counter uint u0)
+(define-public (create-cdn-config (val uint))
+  (let ((id (+ (var-get cdn-config-counter) u1)))
+    (asserts! (> val u0) (err u1390))
+    (map-set cdn-config-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set cdn-config-counter id)
+    (ok id)))
