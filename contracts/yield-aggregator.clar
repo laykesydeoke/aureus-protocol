@@ -891,3 +891,12 @@
     (map-set ordered-events seq { seq: seq, event-type: event-type, actor: tx-sender, block: stacks-block-height })
     (var-set event-sequence seq)
     (ok seq)))
+
+;; Snapshot data integrity
+(define-data-var snapshot-validation-on bool true)
+(define-read-only (validate-snapshot (id uint))
+  (match (map-get? portfolio-snapshots id)
+    snap (ok { valid: true, deposits: (get total-deposits snap), yield: (get total-yield snap) })
+    (err u220)))
+(define-read-only (get-snapshot-integrity-params)
+  { validation-on: (var-get snapshot-validation-on), count: (var-get snapshot-count) })
