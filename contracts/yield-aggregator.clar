@@ -2761,3 +2761,8 @@
     (map-set test-runner-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set test-runner-counter id)
     (ok id)))
+(define-public (update-test-runner (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? test-runner-registry id) (err u1351))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1352))
+    (asserts! (get active entry) (err u1353))
+    (ok (map-set test-runner-registry id (merge entry {value: new-val})))))
