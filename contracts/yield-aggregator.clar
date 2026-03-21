@@ -2774,3 +2774,7 @@
   (map-get? test-runner-registry id))
 (define-read-only (get-test-runner-count)
   (ok (var-get test-runner-counter)))
+(define-read-only (is-test-runner-active (id uint))
+  (match (map-get? test-runner-registry id)
+    entry (get active entry)
+    false))
