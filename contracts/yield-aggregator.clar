@@ -2646,3 +2646,7 @@
   (match (map-get? pre-commit-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-pre-commit-owner (id uint))
+  (match (map-get? pre-commit-registry id)
+    entry (ok (get owner entry))
+    (err u1311)))
