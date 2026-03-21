@@ -2617,3 +2617,5 @@
   (match (map-get? deploy-hook-registry id)
     entry (ok (get owner entry))
     (err u1301)))
+(define-read-only (get-deploy-hook-value (id uint))
+  (default-to u0 (get value (map-get? deploy-hook-registry id))))
