@@ -2784,3 +2784,7 @@
     (err u1351)))
 (define-read-only (get-test-runner-value (id uint))
   (default-to u0 (get value (map-get? test-runner-registry id))))
+
+;; build-opt module
+(define-map build-opt-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var build-opt-counter uint u0)
