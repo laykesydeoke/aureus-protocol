@@ -2634,3 +2634,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1312))
     (asserts! (get active entry) (err u1313))
     (ok (map-set pre-commit-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-pre-commit (id uint))
+  (let ((entry (unwrap! (map-get? pre-commit-registry id) (err u1311))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1312))
+    (ok (map-set pre-commit-registry id (merge entry {active: false})))))
