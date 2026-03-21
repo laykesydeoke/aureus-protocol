@@ -2850,3 +2850,7 @@
     (err u1371)))
 (define-read-only (get-bundle-svc-value (id uint))
   (default-to u0 (get value (map-get? bundle-svc-registry id))))
+
+;; asset-pipe module
+(define-map asset-pipe-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var asset-pipe-counter uint u0)
