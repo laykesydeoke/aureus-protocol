@@ -2799,3 +2799,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1362))
     (asserts! (get active entry) (err u1363))
     (ok (map-set build-opt-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-build-opt (id uint))
+  (let ((entry (unwrap! (map-get? build-opt-registry id) (err u1361))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1362))
+    (ok (map-set build-opt-registry id (merge entry {active: false})))))
