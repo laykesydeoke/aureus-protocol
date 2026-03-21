@@ -2807,3 +2807,7 @@
   (map-get? build-opt-registry id))
 (define-read-only (get-build-opt-count)
   (ok (var-get build-opt-counter)))
+(define-read-only (is-build-opt-active (id uint))
+  (match (map-get? build-opt-registry id)
+    entry (get active entry)
+    false))
