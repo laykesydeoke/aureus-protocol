@@ -2683,3 +2683,5 @@
   (match (map-get? lint-check-registry id)
     entry (ok (get owner entry))
     (err u1321)))
+(define-read-only (get-lint-check-value (id uint))
+  (default-to u0 (get value (map-get? lint-check-registry id))))
