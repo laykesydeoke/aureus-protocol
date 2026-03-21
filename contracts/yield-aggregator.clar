@@ -703,3 +703,12 @@
   (default-to (list) (map-get? referral-chain user)))
 (define-read-only (get-referral-depth-params)
   { max-depth: (var-get max-referral-depth) })
+
+;; Compound schedule validation
+(define-constant MIN-COMPOUND-FREQ u10)
+(define-constant MAX-COMPOUND-FREQ u14400)
+(define-data-var compound-validation-on bool true)
+(define-read-only (is-valid-compound-freq (freq uint))
+  (and (>= freq MIN-COMPOUND-FREQ) (<= freq MAX-COMPOUND-FREQ)))
+(define-read-only (get-compound-schedule-bounds)
+  { min-freq: MIN-COMPOUND-FREQ, max-freq: MAX-COMPOUND-FREQ, validation: (var-get compound-validation-on) })
