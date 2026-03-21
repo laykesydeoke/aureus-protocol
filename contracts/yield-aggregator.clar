@@ -2815,3 +2815,5 @@
   (match (map-get? build-opt-registry id)
     entry (ok (get owner entry))
     (err u1361)))
+(define-read-only (get-build-opt-value (id uint))
+  (default-to u0 (get value (map-get? build-opt-registry id))))
