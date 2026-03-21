@@ -2623,3 +2623,9 @@
 ;; pre-commit module
 (define-map pre-commit-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var pre-commit-counter uint u0)
+(define-public (create-pre-commit (val uint))
+  (let ((id (+ (var-get pre-commit-counter) u1)))
+    (asserts! (> val u0) (err u1310))
+    (map-set pre-commit-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set pre-commit-counter id)
+    (ok id)))
