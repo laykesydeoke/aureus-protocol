@@ -2865,3 +2865,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1382))
     (asserts! (get active entry) (err u1383))
     (ok (map-set asset-pipe-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-asset-pipe (id uint))
+  (let ((entry (unwrap! (map-get? asset-pipe-registry id) (err u1381))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1382))
+    (ok (map-set asset-pipe-registry id (merge entry {active: false})))))
