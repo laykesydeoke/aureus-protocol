@@ -2914,3 +2914,5 @@
   (match (map-get? cdn-config-registry id)
     entry (ok (get owner entry))
     (err u1391)))
+(define-read-only (get-cdn-config-value (id uint))
+  (default-to u0 (get value (map-get? cdn-config-registry id))))
