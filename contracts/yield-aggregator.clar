@@ -841,3 +841,24 @@
     (map-set oracle-prices asset { price: price, updated-at: stacks-block-height, source: u1 })
     (var-set oracle-last-update stacks-block-height)
     (ok true)))
+
+;; Migration tooling
+(define-data-var migration-active bool false)
+(define-data-var migration-step uint u0)
+(define-map migration-checkpoints uint { step: uint, block: uint, verified: bool })
+(define-read-only (get-migration-status)
+  { active: (var-get migration-active), step: (var-get migration-step) })
+(define-public (start-migration)
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (var-set migration-active true)
+    (var-set migration-step u1)
+    (ok true)))
+(define-public (advance-migration)
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts\! (var-get migration-active) (err u210))
+    (let ((step (+ (var-get migration-step) u1)))
+      (map-set migration-checkpoints step { step: step, block: stacks-block-height, verified: true })
+      (var-set migration-step step)
+      (ok step))))
