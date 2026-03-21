@@ -746,3 +746,11 @@
   (if (> MAX-TREASURY (var-get aureus-treasury))
     (- MAX-TREASURY (var-get aureus-treasury))
     u0))
+
+;; Analytics boundary checks
+(define-constant MAX-DAILY-VOLUME u1000000000)
+(define-constant MAX-WEEKLY-VOLUME u5000000000)
+(define-read-only (validate-analytics-input (daily uint) (weekly uint))
+  (and (<= daily MAX-DAILY-VOLUME) (<= weekly MAX-WEEKLY-VOLUME) (<= daily weekly)))
+(define-read-only (get-analytics-bounds)
+  { max-daily: MAX-DAILY-VOLUME, max-weekly: MAX-WEEKLY-VOLUME })
