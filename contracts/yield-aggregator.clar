@@ -2906,3 +2906,7 @@
   (map-get? cdn-config-registry id))
 (define-read-only (get-cdn-config-count)
   (ok (var-get cdn-config-counter)))
+(define-read-only (is-cdn-config-active (id uint))
+  (match (map-get? cdn-config-registry id)
+    entry (get active entry)
+    false))
