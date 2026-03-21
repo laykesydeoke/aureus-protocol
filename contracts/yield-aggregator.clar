@@ -2650,3 +2650,5 @@
   (match (map-get? pre-commit-registry id)
     entry (ok (get owner entry))
     (err u1311)))
+(define-read-only (get-pre-commit-value (id uint))
+  (default-to u0 (get value (map-get? pre-commit-registry id))))
