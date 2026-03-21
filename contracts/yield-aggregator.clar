@@ -2652,3 +2652,7 @@
     (err u1311)))
 (define-read-only (get-pre-commit-value (id uint))
   (default-to u0 (get value (map-get? pre-commit-registry id))))
+
+;; lint-check module
+(define-map lint-check-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var lint-check-counter uint u0)
