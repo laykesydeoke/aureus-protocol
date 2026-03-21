@@ -812,3 +812,11 @@
     (asserts\! (<= level AUTH-ADMIN) (err u200))
     (map-set auth-levels addr level)
     (ok true)))
+
+;; Reward calculation fix
+(define-constant REWARD-PRECISION u1000000)
+(define-read-only (calc-precise-reward (deposit uint) (rate uint) (duration uint))
+  (/ (* (* deposit rate) duration) (* u10000 u144)))
+(define-read-only (calc-tier-adjusted-reward (deposit uint) (rate uint) (tier-bonus uint))
+  (let ((base (/ (* deposit rate) u10000)))
+    (+ base (/ (* base tier-bonus) u10000))))
