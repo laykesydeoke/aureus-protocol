@@ -2755,3 +2755,9 @@
 ;; test-runner module
 (define-map test-runner-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var test-runner-counter uint u0)
+(define-public (create-test-runner (val uint))
+  (let ((id (+ (var-get test-runner-counter) u1)))
+    (asserts! (> val u0) (err u1350))
+    (map-set test-runner-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set test-runner-counter id)
+    (ok id)))
