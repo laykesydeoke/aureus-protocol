@@ -2619,3 +2619,7 @@
     (err u1301)))
 (define-read-only (get-deploy-hook-value (id uint))
   (default-to u0 (get value (map-get? deploy-hook-registry id))))
+
+;; pre-commit module
+(define-map pre-commit-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var pre-commit-counter uint u0)
