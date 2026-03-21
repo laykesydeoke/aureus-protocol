@@ -2675,3 +2675,7 @@
   (map-get? lint-check-registry id))
 (define-read-only (get-lint-check-count)
   (ok (var-get lint-check-counter)))
+(define-read-only (is-lint-check-active (id uint))
+  (match (map-get? lint-check-registry id)
+    entry (get active entry)
+    false))
