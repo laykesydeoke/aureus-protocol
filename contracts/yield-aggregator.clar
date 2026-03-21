@@ -2881,3 +2881,5 @@
   (match (map-get? asset-pipe-registry id)
     entry (ok (get owner entry))
     (err u1381)))
+(define-read-only (get-asset-pipe-value (id uint))
+  (default-to u0 (get value (map-get? asset-pipe-registry id))))
