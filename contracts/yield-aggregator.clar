@@ -2642,3 +2642,7 @@
   (map-get? pre-commit-registry id))
 (define-read-only (get-pre-commit-count)
   (ok (var-get pre-commit-counter)))
+(define-read-only (is-pre-commit-active (id uint))
+  (match (map-get? pre-commit-registry id)
+    entry (get active entry)
+    false))
