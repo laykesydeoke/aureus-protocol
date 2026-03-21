@@ -2596,3 +2596,8 @@
     (map-set deploy-hook-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set deploy-hook-counter id)
     (ok id)))
+(define-public (update-deploy-hook (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? deploy-hook-registry id) (err u1301))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1302))
+    (asserts! (get active entry) (err u1303))
+    (ok (map-set deploy-hook-registry id (merge entry {value: new-val})))))
