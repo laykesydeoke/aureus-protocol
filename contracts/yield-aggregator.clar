@@ -2722,3 +2722,9 @@
 ;; validate-ci module
 (define-map validate-ci-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var validate-ci-counter uint u0)
+(define-public (create-validate-ci (val uint))
+  (let ((id (+ (var-get validate-ci-counter) u1)))
+    (asserts! (> val u0) (err u1340))
+    (map-set validate-ci-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set validate-ci-counter id)
+    (ok id)))
