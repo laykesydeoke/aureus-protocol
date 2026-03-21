@@ -2733,3 +2733,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1342))
     (asserts! (get active entry) (err u1343))
     (ok (map-set validate-ci-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-validate-ci (id uint))
+  (let ((entry (unwrap! (map-get? validate-ci-registry id) (err u1341))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1342))
+    (ok (map-set validate-ci-registry id (merge entry {active: false})))))
