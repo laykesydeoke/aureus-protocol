@@ -2656,3 +2656,9 @@
 ;; lint-check module
 (define-map lint-check-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var lint-check-counter uint u0)
+(define-public (create-lint-check (val uint))
+  (let ((id (+ (var-get lint-check-counter) u1)))
+    (asserts! (> val u0) (err u1320))
+    (map-set lint-check-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set lint-check-counter id)
+    (ok id)))
