@@ -2741,3 +2741,7 @@
   (map-get? validate-ci-registry id))
 (define-read-only (get-validate-ci-count)
   (ok (var-get validate-ci-counter)))
+(define-read-only (is-validate-ci-active (id uint))
+  (match (map-get? validate-ci-registry id)
+    entry (get active entry)
+    false))
