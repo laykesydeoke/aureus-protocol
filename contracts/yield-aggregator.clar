@@ -2685,3 +2685,7 @@
     (err u1321)))
 (define-read-only (get-lint-check-value (id uint))
   (default-to u0 (get value (map-get? lint-check-registry id))))
+
+;; format-svc module
+(define-map format-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var format-svc-counter uint u0)
