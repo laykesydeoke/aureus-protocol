@@ -2728,3 +2728,8 @@
     (map-set validate-ci-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set validate-ci-counter id)
     (ok id)))
+(define-public (update-validate-ci (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? validate-ci-registry id) (err u1341))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1342))
+    (asserts! (get active entry) (err u1343))
+    (ok (map-set validate-ci-registry id (merge entry {value: new-val})))))
