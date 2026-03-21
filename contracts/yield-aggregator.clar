@@ -2689,3 +2689,9 @@
 ;; format-svc module
 (define-map format-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var format-svc-counter uint u0)
+(define-public (create-format-svc (val uint))
+  (let ((id (+ (var-get format-svc-counter) u1)))
+    (asserts! (> val u0) (err u1330))
+    (map-set format-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set format-svc-counter id)
+    (ok id)))
