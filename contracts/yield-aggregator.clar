@@ -2832,3 +2832,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1372))
     (asserts! (get active entry) (err u1373))
     (ok (map-set bundle-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-bundle-svc (id uint))
+  (let ((entry (unwrap! (map-get? bundle-svc-registry id) (err u1371))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1372))
+    (ok (map-set bundle-svc-registry id (merge entry {active: false})))))
