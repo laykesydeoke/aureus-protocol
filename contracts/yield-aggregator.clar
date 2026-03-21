@@ -2782,3 +2782,5 @@
   (match (map-get? test-runner-registry id)
     entry (ok (get owner entry))
     (err u1351)))
+(define-read-only (get-test-runner-value (id uint))
+  (default-to u0 (get value (map-get? test-runner-registry id))))
