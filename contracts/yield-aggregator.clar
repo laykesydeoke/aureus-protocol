@@ -2893,3 +2893,8 @@
     (map-set cdn-config-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set cdn-config-counter id)
     (ok id)))
+(define-public (update-cdn-config (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? cdn-config-registry id) (err u1391))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1392))
+    (asserts! (get active entry) (err u1393))
+    (ok (map-set cdn-config-registry id (merge entry {value: new-val})))))
