@@ -764,3 +764,16 @@
     u0))
 (define-read-only (get-vault-limits)
   { max-tvl: MAX-VAULT-TVL, current: (var-get total-deposits), capacity-check: (var-get vault-capacity-check) })
+
+;; Token validation checks
+(define-data-var token-whitelist-enabled bool true)
+(define-map token-whitelist principal { approved: bool, approved-at: uint })
+(define-read-only (is-token-approved (token principal))
+  (if (var-get token-whitelist-enabled)
+    (default-to false (get approved (map-get? token-whitelist token)))
+    true))
+(define-public (approve-token (token principal))
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (map-set token-whitelist token { approved: true, approved-at: stacks-block-height })
+    (ok true)))
