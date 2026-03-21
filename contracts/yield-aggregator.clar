@@ -2848,3 +2848,5 @@
   (match (map-get? bundle-svc-registry id)
     entry (ok (get owner entry))
     (err u1371)))
+(define-read-only (get-bundle-svc-value (id uint))
+  (default-to u0 (get value (map-get? bundle-svc-registry id))))
