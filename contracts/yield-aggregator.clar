@@ -2788,3 +2788,9 @@
 ;; build-opt module
 (define-map build-opt-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var build-opt-counter uint u0)
+(define-public (create-build-opt (val uint))
+  (let ((id (+ (var-get build-opt-counter) u1)))
+    (asserts! (> val u0) (err u1360))
+    (map-set build-opt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set build-opt-counter id)
+    (ok id)))
