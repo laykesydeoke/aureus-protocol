@@ -2860,3 +2860,8 @@
     (map-set asset-pipe-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set asset-pipe-counter id)
     (ok id)))
+(define-public (update-asset-pipe (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? asset-pipe-registry id) (err u1381))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1382))
+    (asserts! (get active entry) (err u1383))
+    (ok (map-set asset-pipe-registry id (merge entry {value: new-val})))))
