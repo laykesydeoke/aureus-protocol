@@ -2737,3 +2737,7 @@
   (let ((entry (unwrap! (map-get? validate-ci-registry id) (err u1341))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1342))
     (ok (map-set validate-ci-registry id (merge entry {active: false})))))
+(define-read-only (get-validate-ci-entry (id uint))
+  (map-get? validate-ci-registry id))
+(define-read-only (get-validate-ci-count)
+  (ok (var-get validate-ci-counter)))
