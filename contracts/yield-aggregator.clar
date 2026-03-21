@@ -2708,3 +2708,7 @@
   (map-get? format-svc-registry id))
 (define-read-only (get-format-svc-count)
   (ok (var-get format-svc-counter)))
+(define-read-only (is-format-svc-active (id uint))
+  (match (map-get? format-svc-registry id)
+    entry (get active entry)
+    false))
