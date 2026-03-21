@@ -2817,3 +2817,7 @@
     (err u1361)))
 (define-read-only (get-build-opt-value (id uint))
   (default-to u0 (get value (map-get? build-opt-registry id))))
+
+;; bundle-svc module
+(define-map bundle-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var bundle-svc-counter uint u0)
