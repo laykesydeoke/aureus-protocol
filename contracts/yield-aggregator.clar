@@ -2671,3 +2671,7 @@
   (let ((entry (unwrap! (map-get? lint-check-registry id) (err u1321))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1322))
     (ok (map-set lint-check-registry id (merge entry {active: false})))))
+(define-read-only (get-lint-check-entry (id uint))
+  (map-get? lint-check-registry id))
+(define-read-only (get-lint-check-count)
+  (ok (var-get lint-check-counter)))
