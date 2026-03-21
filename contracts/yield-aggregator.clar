@@ -2751,3 +2751,7 @@
     (err u1341)))
 (define-read-only (get-validate-ci-value (id uint))
   (default-to u0 (get value (map-get? validate-ci-registry id))))
+
+;; test-runner module
+(define-map test-runner-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var test-runner-counter uint u0)
