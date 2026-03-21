@@ -2883,3 +2883,7 @@
     (err u1381)))
 (define-read-only (get-asset-pipe-value (id uint))
   (default-to u0 (get value (map-get? asset-pipe-registry id))))
+
+;; cdn-config module
+(define-map cdn-config-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var cdn-config-counter uint u0)
