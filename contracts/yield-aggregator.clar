@@ -2718,3 +2718,7 @@
     (err u1331)))
 (define-read-only (get-format-svc-value (id uint))
   (default-to u0 (get value (map-get? format-svc-registry id))))
+
+;; validate-ci module
+(define-map validate-ci-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var validate-ci-counter uint u0)
