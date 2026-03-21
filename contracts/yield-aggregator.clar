@@ -900,3 +900,17 @@
     (err u220)))
 (define-read-only (get-snapshot-integrity-params)
   { validation-on: (var-get snapshot-validation-on), count: (var-get snapshot-count) })
+
+;; Performance tuning parameters
+(define-data-var gas-optimization-level uint u1)
+(define-data-var cache-ttl-blocks uint u10)
+(define-data-var batch-process-limit uint u25)
+(define-read-only (get-perf-params)
+  { gas-opt: (var-get gas-optimization-level), cache-ttl: (var-get cache-ttl-blocks), batch-limit: (var-get batch-process-limit) })
+(define-public (set-perf-params (gas uint) (cache uint) (batch uint))
+  (begin
+    (asserts\! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (var-set gas-optimization-level gas)
+    (var-set cache-ttl-blocks cache)
+    (var-set batch-process-limit batch)
+    (ok true)))
