@@ -2869,3 +2869,7 @@
   (let ((entry (unwrap! (map-get? asset-pipe-registry id) (err u1381))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1382))
     (ok (map-set asset-pipe-registry id (merge entry {active: false})))))
+(define-read-only (get-asset-pipe-entry (id uint))
+  (map-get? asset-pipe-registry id))
+(define-read-only (get-asset-pipe-count)
+  (ok (var-get asset-pipe-counter)))
