@@ -2803,3 +2803,7 @@
   (let ((entry (unwrap! (map-get? build-opt-registry id) (err u1361))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1362))
     (ok (map-set build-opt-registry id (merge entry {active: false})))))
+(define-read-only (get-build-opt-entry (id uint))
+  (map-get? build-opt-registry id))
+(define-read-only (get-build-opt-count)
+  (ok (var-get build-opt-counter)))
