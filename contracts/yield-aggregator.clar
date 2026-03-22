@@ -2935,3 +2935,7 @@
   (let ((entry (unwrap! (map-get? env-config-registry id) (err u1401))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1402))
     (ok (map-set env-config-registry id (merge entry {active: false})))))
+(define-read-only (get-env-config-entry (id uint))
+  (map-get? env-config-registry id))
+(define-read-only (get-env-config-count)
+  (ok (var-get env-config-counter)))
