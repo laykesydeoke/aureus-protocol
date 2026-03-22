@@ -914,3 +914,14 @@
     (var-set cache-ttl-blocks cache)
     (var-set batch-process-limit batch)
     (ok true)))
+
+;; liqchk tracking
+(define-map liqchk-log uint { v: uint, at: uint })
+(define-data-var liqchk-cnt uint u0)
+(define-public (log-liqchk (val uint))
+  (begin (asserts! (> val u0) (err u4100))
+    (let ((id (+ (var-get liqchk-cnt) u1)))
+      (map-set liqchk-log id { v: val, at: stacks-block-height })
+      (var-set liqchk-cnt id) (ok id))))
+(define-read-only (get-liqchk-entry (id uint))
+  (map-get? liqchk-log id))
