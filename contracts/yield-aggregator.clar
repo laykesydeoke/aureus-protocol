@@ -2949,3 +2949,7 @@
     (err u1401)))
 (define-read-only (get-env-config-value (id uint))
   (default-to u0 (get value (map-get? env-config-registry id))))
+
+;; secret-mgr module
+(define-map secret-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var secret-mgr-counter uint u0)
