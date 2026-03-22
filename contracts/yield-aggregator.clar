@@ -3034,3 +3034,7 @@
   (let ((entry (unwrap! (map-get? kms-proxy-registry id) (err u1431))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1432))
     (ok (map-set kms-proxy-registry id (merge entry {active: false})))))
+(define-read-only (get-kms-proxy-entry (id uint))
+  (map-get? kms-proxy-registry id))
+(define-read-only (get-kms-proxy-count)
+  (ok (var-get kms-proxy-counter)))
