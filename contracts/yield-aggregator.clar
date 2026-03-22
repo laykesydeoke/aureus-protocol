@@ -3166,3 +3166,7 @@
   (let ((entry (unwrap! (map-get? csp-header-registry id) (err u1471))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1472))
     (ok (map-set csp-header-registry id (merge entry {active: false})))))
+(define-read-only (get-csp-header-entry (id uint))
+  (map-get? csp-header-registry id))
+(define-read-only (get-csp-header-count)
+  (ok (var-get csp-header-counter)))
