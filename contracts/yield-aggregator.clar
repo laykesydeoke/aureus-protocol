@@ -2916,3 +2916,7 @@
     (err u1391)))
 (define-read-only (get-cdn-config-value (id uint))
   (default-to u0 (get value (map-get? cdn-config-registry id))))
+
+;; env-config module
+(define-map env-config-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var env-config-counter uint u0)
