@@ -3228,3 +3228,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1492))
     (asserts! (get active entry) (err u1493))
     (ok (map-set csrf-token-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-csrf-token (id uint))
+  (let ((entry (unwrap! (map-get? csrf-token-registry id) (err u1491))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1492))
+    (ok (map-set csrf-token-registry id (merge entry {active: false})))))
