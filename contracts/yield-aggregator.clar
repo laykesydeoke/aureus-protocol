@@ -3157,3 +3157,8 @@
     (map-set csp-header-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set csp-header-counter id)
     (ok id)))
+(define-public (update-csp-header (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? csp-header-registry id) (err u1471))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1472))
+    (asserts! (get active entry) (err u1473))
+    (ok (map-set csp-header-registry id (merge entry {value: new-val})))))
