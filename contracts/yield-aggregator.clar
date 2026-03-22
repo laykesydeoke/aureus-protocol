@@ -3199,3 +3199,7 @@
   (let ((entry (unwrap! (map-get? xss-guard-registry id) (err u1481))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1482))
     (ok (map-set xss-guard-registry id (merge entry {active: false})))))
+(define-read-only (get-xss-guard-entry (id uint))
+  (map-get? xss-guard-registry id))
+(define-read-only (get-xss-guard-count)
+  (ok (var-get xss-guard-counter)))
