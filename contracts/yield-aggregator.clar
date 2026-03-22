@@ -3071,3 +3071,7 @@
   (map-get? cert-mgr-registry id))
 (define-read-only (get-cert-mgr-count)
   (ok (var-get cert-mgr-counter)))
+(define-read-only (is-cert-mgr-active (id uint))
+  (match (map-get? cert-mgr-registry id)
+    entry (get active entry)
+    false))
