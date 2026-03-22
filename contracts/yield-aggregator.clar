@@ -958,3 +958,14 @@
       (var-set mrgcal-cnt id) (ok id))))
 (define-read-only (get-mrgcal-entry (id uint))
   (map-get? mrgcal-log id))
+
+;; ordrt tracking
+(define-map ordrt-log uint { v: uint, at: uint })
+(define-data-var ordrt-cnt uint u0)
+(define-public (log-ordrt (val uint))
+  (begin (asserts! (> val u0) (err u4500))
+    (let ((id (+ (var-get ordrt-cnt) u1)))
+      (map-set ordrt-log id { v: val, at: stacks-block-height })
+      (var-set ordrt-cnt id) (ok id))))
+(define-read-only (get-ordrt-entry (id uint))
+  (map-get? ordrt-log id))
