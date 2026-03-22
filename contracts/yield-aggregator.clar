@@ -3129,3 +3129,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1462))
     (asserts! (get active entry) (err u1463))
     (ok (map-set cors-policy-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-cors-policy (id uint))
+  (let ((entry (unwrap! (map-get? cors-policy-registry id) (err u1461))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1462))
+    (ok (map-set cors-policy-registry id (merge entry {active: false})))))
