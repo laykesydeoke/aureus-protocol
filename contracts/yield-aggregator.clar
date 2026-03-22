@@ -3058,3 +3058,8 @@
     (map-set cert-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set cert-mgr-counter id)
     (ok id)))
+(define-public (update-cert-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? cert-mgr-registry id) (err u1441))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1442))
+    (asserts! (get active entry) (err u1443))
+    (ok (map-set cert-mgr-registry id (merge entry {value: new-val})))))
