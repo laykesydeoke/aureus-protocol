@@ -2986,3 +2986,9 @@
 ;; vault-svc module
 (define-map vault-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var vault-svc-counter uint u0)
+(define-public (create-vault-svc (val uint))
+  (let ((id (+ (var-get vault-svc-counter) u1)))
+    (asserts! (> val u0) (err u1420))
+    (map-set vault-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set vault-svc-counter id)
+    (ok id)))
