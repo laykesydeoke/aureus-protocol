@@ -2926,3 +2926,8 @@
     (map-set env-config-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set env-config-counter id)
     (ok id)))
+(define-public (update-env-config (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? env-config-registry id) (err u1401))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1402))
+    (asserts! (get active entry) (err u1403))
+    (ok (map-set env-config-registry id (merge entry {value: new-val})))))
