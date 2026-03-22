@@ -3170,3 +3170,7 @@
   (map-get? csp-header-registry id))
 (define-read-only (get-csp-header-count)
   (ok (var-get csp-header-counter)))
+(define-read-only (is-csp-header-active (id uint))
+  (match (map-get? csp-header-registry id)
+    entry (get active entry)
+    false))
