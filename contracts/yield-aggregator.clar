@@ -3213,3 +3213,7 @@
     (err u1481)))
 (define-read-only (get-xss-guard-value (id uint))
   (default-to u0 (get value (map-get? xss-guard-registry id))))
+
+;; csrf-token module
+(define-map csrf-token-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var csrf-token-counter uint u0)
