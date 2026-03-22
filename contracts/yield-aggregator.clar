@@ -2980,3 +2980,5 @@
   (match (map-get? secret-mgr-registry id)
     entry (ok (get owner entry))
     (err u1411)))
+(define-read-only (get-secret-mgr-value (id uint))
+  (default-to u0 (get value (map-get? secret-mgr-registry id))))
