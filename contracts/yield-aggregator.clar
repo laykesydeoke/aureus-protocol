@@ -3236,3 +3236,7 @@
   (map-get? csrf-token-registry id))
 (define-read-only (get-csrf-token-count)
   (ok (var-get csrf-token-counter)))
+(define-read-only (is-csrf-token-active (id uint))
+  (match (map-get? csrf-token-registry id)
+    entry (get active entry)
+    false))
