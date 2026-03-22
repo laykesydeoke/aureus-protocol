@@ -2972,3 +2972,7 @@
   (map-get? secret-mgr-registry id))
 (define-read-only (get-secret-mgr-count)
   (ok (var-get secret-mgr-counter)))
+(define-read-only (is-secret-mgr-active (id uint))
+  (match (map-get? secret-mgr-registry id)
+    entry (get active entry)
+    false))
