@@ -3195,3 +3195,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1482))
     (asserts! (get active entry) (err u1483))
     (ok (map-set xss-guard-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-xss-guard (id uint))
+  (let ((entry (unwrap! (map-get? xss-guard-registry id) (err u1481))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1482))
+    (ok (map-set xss-guard-registry id (merge entry {active: false})))))
