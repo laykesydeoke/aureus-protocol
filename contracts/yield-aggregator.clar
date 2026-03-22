@@ -3091,3 +3091,8 @@
     (map-set tls-config-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set tls-config-counter id)
     (ok id)))
+(define-public (update-tls-config (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? tls-config-registry id) (err u1451))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1452))
+    (asserts! (get active entry) (err u1453))
+    (ok (map-set tls-config-registry id (merge entry {value: new-val})))))
