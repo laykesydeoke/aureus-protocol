@@ -3048,3 +3048,7 @@
     (err u1431)))
 (define-read-only (get-kms-proxy-value (id uint))
   (default-to u0 (get value (map-get? kms-proxy-registry id))))
+
+;; cert-mgr module
+(define-map cert-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var cert-mgr-counter uint u0)
