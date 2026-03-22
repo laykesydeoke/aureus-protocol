@@ -3124,3 +3124,8 @@
     (map-set cors-policy-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set cors-policy-counter id)
     (ok id)))
+(define-public (update-cors-policy (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? cors-policy-registry id) (err u1461))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1462))
+    (asserts! (get active entry) (err u1463))
+    (ok (map-set cors-policy-registry id (merge entry {value: new-val})))))
