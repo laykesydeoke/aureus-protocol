@@ -2943,3 +2943,7 @@
   (match (map-get? env-config-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-env-config-owner (id uint))
+  (match (map-get? env-config-registry id)
+    entry (ok (get owner entry))
+    (err u1401)))
