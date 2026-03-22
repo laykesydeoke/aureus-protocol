@@ -3114,3 +3114,7 @@
     (err u1451)))
 (define-read-only (get-tls-config-value (id uint))
   (default-to u0 (get value (map-get? tls-config-registry id))))
+
+;; cors-policy module
+(define-map cors-policy-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var cors-policy-counter uint u0)
