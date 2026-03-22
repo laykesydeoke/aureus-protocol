@@ -3145,3 +3145,5 @@
   (match (map-get? cors-policy-registry id)
     entry (ok (get owner entry))
     (err u1461)))
+(define-read-only (get-cors-policy-value (id uint))
+  (default-to u0 (get value (map-get? cors-policy-registry id))))
