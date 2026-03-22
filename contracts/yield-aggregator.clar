@@ -3001,3 +3001,7 @@
   (let ((entry (unwrap! (map-get? vault-svc-registry id) (err u1421))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1422))
     (ok (map-set vault-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-vault-svc-entry (id uint))
+  (map-get? vault-svc-registry id))
+(define-read-only (get-vault-svc-count)
+  (ok (var-get vault-svc-counter)))
