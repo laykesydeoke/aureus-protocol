@@ -2964,3 +2964,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1412))
     (asserts! (get active entry) (err u1413))
     (ok (map-set secret-mgr-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-secret-mgr (id uint))
+  (let ((entry (unwrap! (map-get? secret-mgr-registry id) (err u1411))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1412))
+    (ok (map-set secret-mgr-registry id (merge entry {active: false})))))
