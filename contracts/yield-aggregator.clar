@@ -3203,3 +3203,7 @@
   (map-get? xss-guard-registry id))
 (define-read-only (get-xss-guard-count)
   (ok (var-get xss-guard-counter)))
+(define-read-only (is-xss-guard-active (id uint))
+  (match (map-get? xss-guard-registry id)
+    entry (get active entry)
+    false))
