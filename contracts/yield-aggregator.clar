@@ -3019,3 +3019,9 @@
 ;; kms-proxy module
 (define-map kms-proxy-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var kms-proxy-counter uint u0)
+(define-public (create-kms-proxy (val uint))
+  (let ((id (+ (var-get kms-proxy-counter) u1)))
+    (asserts! (> val u0) (err u1430))
+    (map-set kms-proxy-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set kms-proxy-counter id)
+    (ok id)))
