@@ -3184,3 +3184,9 @@
 ;; xss-guard module
 (define-map xss-guard-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var xss-guard-counter uint u0)
+(define-public (create-xss-guard (val uint))
+  (let ((id (+ (var-get xss-guard-counter) u1)))
+    (asserts! (> val u0) (err u1480))
+    (map-set xss-guard-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set xss-guard-counter id)
+    (ok id)))
