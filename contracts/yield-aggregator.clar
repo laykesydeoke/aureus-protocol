@@ -2920,3 +2920,9 @@
 ;; env-config module
 (define-map env-config-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var env-config-counter uint u0)
+(define-public (create-env-config (val uint))
+  (let ((id (+ (var-get env-config-counter) u1)))
+    (asserts! (> val u0) (err u1400))
+    (map-set env-config-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set env-config-counter id)
+    (ok id)))
