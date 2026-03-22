@@ -2982,3 +2982,7 @@
     (err u1411)))
 (define-read-only (get-secret-mgr-value (id uint))
   (default-to u0 (get value (map-get? secret-mgr-registry id))))
+
+;; vault-svc module
+(define-map vault-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var vault-svc-counter uint u0)
