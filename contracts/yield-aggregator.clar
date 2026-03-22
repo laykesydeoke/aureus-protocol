@@ -3151,3 +3151,9 @@
 ;; csp-header module
 (define-map csp-header-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var csp-header-counter uint u0)
+(define-public (create-csp-header (val uint))
+  (let ((id (+ (var-get csp-header-counter) u1)))
+    (asserts! (> val u0) (err u1470))
+    (map-set csp-header-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set csp-header-counter id)
+    (ok id)))
