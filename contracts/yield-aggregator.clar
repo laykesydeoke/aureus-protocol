@@ -3085,3 +3085,9 @@
 ;; tls-config module
 (define-map tls-config-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var tls-config-counter uint u0)
+(define-public (create-tls-config (val uint))
+  (let ((id (+ (var-get tls-config-counter) u1)))
+    (asserts! (> val u0) (err u1450))
+    (map-set tls-config-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set tls-config-counter id)
+    (ok id)))
