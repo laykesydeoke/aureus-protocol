@@ -2992,3 +2992,8 @@
     (map-set vault-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set vault-svc-counter id)
     (ok id)))
+(define-public (update-vault-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? vault-svc-registry id) (err u1421))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1422))
+    (asserts! (get active entry) (err u1423))
+    (ok (map-set vault-svc-registry id (merge entry {value: new-val})))))
