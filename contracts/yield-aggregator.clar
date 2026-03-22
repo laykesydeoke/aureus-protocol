@@ -3096,3 +3096,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1452))
     (asserts! (get active entry) (err u1453))
     (ok (map-set tls-config-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-tls-config (id uint))
+  (let ((entry (unwrap! (map-get? tls-config-registry id) (err u1451))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1452))
+    (ok (map-set tls-config-registry id (merge entry {active: false})))))
