@@ -2997,3 +2997,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1422))
     (asserts! (get active entry) (err u1423))
     (ok (map-set vault-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-vault-svc (id uint))
+  (let ((entry (unwrap! (map-get? vault-svc-registry id) (err u1421))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1422))
+    (ok (map-set vault-svc-registry id (merge entry {active: false})))))
