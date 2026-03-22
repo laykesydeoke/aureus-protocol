@@ -3133,3 +3133,7 @@
   (let ((entry (unwrap! (map-get? cors-policy-registry id) (err u1461))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1462))
     (ok (map-set cors-policy-registry id (merge entry {active: false})))))
+(define-read-only (get-cors-policy-entry (id uint))
+  (map-get? cors-policy-registry id))
+(define-read-only (get-cors-policy-count)
+  (ok (var-get cors-policy-counter)))
