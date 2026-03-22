@@ -2968,3 +2968,7 @@
   (let ((entry (unwrap! (map-get? secret-mgr-registry id) (err u1411))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1412))
     (ok (map-set secret-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-secret-mgr-entry (id uint))
+  (map-get? secret-mgr-registry id))
+(define-read-only (get-secret-mgr-count)
+  (ok (var-get secret-mgr-counter)))
