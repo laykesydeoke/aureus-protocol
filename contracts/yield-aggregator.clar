@@ -3067,3 +3067,7 @@
   (let ((entry (unwrap! (map-get? cert-mgr-registry id) (err u1441))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1442))
     (ok (map-set cert-mgr-registry id (merge entry {active: false})))))
+(define-read-only (get-cert-mgr-entry (id uint))
+  (map-get? cert-mgr-registry id))
+(define-read-only (get-cert-mgr-count)
+  (ok (var-get cert-mgr-counter)))
