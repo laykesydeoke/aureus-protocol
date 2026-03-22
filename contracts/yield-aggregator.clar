@@ -3217,3 +3217,9 @@
 ;; csrf-token module
 (define-map csrf-token-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var csrf-token-counter uint u0)
+(define-public (create-csrf-token (val uint))
+  (let ((id (+ (var-get csrf-token-counter) u1)))
+    (asserts! (> val u0) (err u1490))
+    (map-set csrf-token-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set csrf-token-counter id)
+    (ok id)))
