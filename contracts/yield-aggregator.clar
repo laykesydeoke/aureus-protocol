@@ -3147,3 +3147,7 @@
     (err u1461)))
 (define-read-only (get-cors-policy-value (id uint))
   (default-to u0 (get value (map-get? cors-policy-registry id))))
+
+;; csp-header module
+(define-map csp-header-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var csp-header-counter uint u0)
