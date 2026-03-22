@@ -3232,3 +3232,7 @@
   (let ((entry (unwrap! (map-get? csrf-token-registry id) (err u1491))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1492))
     (ok (map-set csrf-token-registry id (merge entry {active: false})))))
+(define-read-only (get-csrf-token-entry (id uint))
+  (map-get? csrf-token-registry id))
+(define-read-only (get-csrf-token-count)
+  (ok (var-get csrf-token-counter)))
