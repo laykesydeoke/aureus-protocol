@@ -925,3 +925,14 @@
       (var-set liqchk-cnt id) (ok id))))
 (define-read-only (get-liqchk-entry (id uint))
   (map-get? liqchk-log id))
+
+;; slpgrd tracking
+(define-map slpgrd-log uint { v: uint, at: uint })
+(define-data-var slpgrd-cnt uint u0)
+(define-public (log-slpgrd (val uint))
+  (begin (asserts! (> val u0) (err u4200))
+    (let ((id (+ (var-get slpgrd-cnt) u1)))
+      (map-set slpgrd-log id { v: val, at: stacks-block-height })
+      (var-set slpgrd-cnt id) (ok id))))
+(define-read-only (get-slpgrd-entry (id uint))
+  (map-get? slpgrd-log id))
