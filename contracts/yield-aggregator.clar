@@ -947,3 +947,14 @@
       (var-set possiz-cnt id) (ok id))))
 (define-read-only (get-possiz-entry (id uint))
   (map-get? possiz-log id))
+
+;; mrgcal tracking
+(define-map mrgcal-log uint { v: uint, at: uint })
+(define-data-var mrgcal-cnt uint u0)
+(define-public (log-mrgcal (val uint))
+  (begin (asserts! (> val u0) (err u4400))
+    (let ((id (+ (var-get mrgcal-cnt) u1)))
+      (map-set mrgcal-log id { v: val, at: stacks-block-height })
+      (var-set mrgcal-cnt id) (ok id))))
+(define-read-only (get-mrgcal-entry (id uint))
+  (map-get? mrgcal-log id))
