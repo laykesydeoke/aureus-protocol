@@ -2959,3 +2959,8 @@
     (map-set secret-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set secret-mgr-counter id)
     (ok id)))
+(define-public (update-secret-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? secret-mgr-registry id) (err u1411))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1412))
+    (asserts! (get active entry) (err u1413))
+    (ok (map-set secret-mgr-registry id (merge entry {value: new-val})))))
