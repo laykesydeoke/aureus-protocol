@@ -3013,3 +3013,5 @@
   (match (map-get? vault-svc-registry id)
     entry (ok (get owner entry))
     (err u1421)))
+(define-read-only (get-vault-svc-value (id uint))
+  (default-to u0 (get value (map-get? vault-svc-registry id))))
