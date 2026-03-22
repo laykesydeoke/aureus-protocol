@@ -3162,3 +3162,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1472))
     (asserts! (get active entry) (err u1473))
     (ok (map-set csp-header-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-csp-header (id uint))
+  (let ((entry (unwrap! (map-get? csp-header-registry id) (err u1471))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1472))
+    (ok (map-set csp-header-registry id (merge entry {active: false})))))
