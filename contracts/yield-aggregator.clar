@@ -3118,3 +3118,9 @@
 ;; cors-policy module
 (define-map cors-policy-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var cors-policy-counter uint u0)
+(define-public (create-cors-policy (val uint))
+  (let ((id (+ (var-get cors-policy-counter) u1)))
+    (asserts! (> val u0) (err u1460))
+    (map-set cors-policy-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set cors-policy-counter id)
+    (ok id)))
