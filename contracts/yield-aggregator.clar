@@ -3052,3 +3052,9 @@
 ;; cert-mgr module
 (define-map cert-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var cert-mgr-counter uint u0)
+(define-public (create-cert-mgr (val uint))
+  (let ((id (+ (var-get cert-mgr-counter) u1)))
+    (asserts! (> val u0) (err u1440))
+    (map-set cert-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set cert-mgr-counter id)
+    (ok id)))
