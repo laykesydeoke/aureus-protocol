@@ -3025,3 +3025,8 @@
     (map-set kms-proxy-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set kms-proxy-counter id)
     (ok id)))
+(define-public (update-kms-proxy (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? kms-proxy-registry id) (err u1431))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1432))
+    (asserts! (get active entry) (err u1433))
+    (ok (map-set kms-proxy-registry id (merge entry {value: new-val})))))
