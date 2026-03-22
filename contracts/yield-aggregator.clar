@@ -980,3 +980,14 @@
       (var-set stlflw-cnt id) (ok id))))
 (define-read-only (get-stlflw-entry (id uint))
   (map-get? stlflw-log id))
+
+;; colmgr tracking
+(define-map colmgr-log uint { v: uint, at: uint })
+(define-data-var colmgr-cnt uint u0)
+(define-public (log-colmgr (val uint))
+  (begin (asserts! (> val u0) (err u4700))
+    (let ((id (+ (var-get colmgr-cnt) u1)))
+      (map-set colmgr-log id { v: val, at: stacks-block-height })
+      (var-set colmgr-cnt id) (ok id))))
+(define-read-only (get-colmgr-entry (id uint))
+  (map-get? colmgr-log id))
