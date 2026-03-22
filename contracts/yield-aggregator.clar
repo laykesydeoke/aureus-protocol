@@ -3137,3 +3137,7 @@
   (map-get? cors-policy-registry id))
 (define-read-only (get-cors-policy-count)
   (ok (var-get cors-policy-counter)))
+(define-read-only (is-cors-policy-active (id uint))
+  (match (map-get? cors-policy-registry id)
+    entry (get active entry)
+    false))
