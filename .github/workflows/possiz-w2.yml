@@ -1,0 +1,7 @@
+name: possiz-2
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
