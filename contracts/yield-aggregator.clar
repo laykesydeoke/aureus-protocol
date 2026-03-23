@@ -3481,3 +3481,9 @@
 ;; text-sanitize module
 (define-map text-sanitize-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var text-sanitize-counter uint u0)
+(define-public (create-text-sanitize (val uint))
+  (let ((id (+ (var-get text-sanitize-counter) u1)))
+    (asserts! (> val u0) (err u1570))
+    (map-set text-sanitize-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set text-sanitize-counter id)
+    (ok id)))
