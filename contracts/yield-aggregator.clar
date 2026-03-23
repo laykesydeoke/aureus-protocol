@@ -3349,3 +3349,9 @@
 ;; locale-fmt module
 (define-map locale-fmt-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var locale-fmt-counter uint u0)
+(define-public (create-locale-fmt (val uint))
+  (let ((id (+ (var-get locale-fmt-counter) u1)))
+    (asserts! (> val u0) (err u1530))
+    (map-set locale-fmt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set locale-fmt-counter id)
+    (ok id)))
