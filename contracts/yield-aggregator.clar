@@ -38,6 +38,23 @@
 (define-map user-yield-earned principal uint)
 (define-map deposit-history principal (list 100 {amount: uint, timestamp: uint, block-height: uint}))
 
+;; Deposit tiers for yield bonus
+(define-constant TIER_BRONZE u0)
+(define-constant TIER_SILVER u1)
+(define-constant TIER_GOLD u2)
+(define-constant TIER_PLATINUM u3)
+
+(define-constant TIER_SILVER_THRESHOLD u10000000) ;; 10M sats
+(define-constant TIER_GOLD_THRESHOLD u50000000)   ;; 50M sats
+(define-constant TIER_PLATINUM_THRESHOLD u100000000) ;; 100M sats
+
+(define-map user-tier principal uint)
+
+;; Per-user deposit cap
+(define-data-var max-deposit-per-user uint u500000000) ;; 500M sats default cap
+;; Global TVL cap
+(define-data-var max-total-deposits uint u5000000000) ;; 5B sats
+
 ;; public functions
 
 ;; Initialize the yield aggregator (only contract owner)
