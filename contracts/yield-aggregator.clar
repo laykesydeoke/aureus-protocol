@@ -3269,3 +3269,7 @@
   (map-get? i18n-svc-registry id))
 (define-read-only (get-i18n-svc-count)
   (ok (var-get i18n-svc-counter)))
+(define-read-only (is-i18n-svc-active (id uint))
+  (match (map-get? i18n-svc-registry id)
+    entry (get active entry)
+    false))
