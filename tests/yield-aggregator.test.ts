@@ -118,6 +118,33 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
       simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], bob);
     });
 
+    it("prevents withdrawals when contract is paused", () => {
+      simnet.callPublicFn("yield-aggregator", "set-emergency-pause", [Cl.bool(true)], deployer);
+
+      const withdrawResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "withdraw-sbtc",
+        [Cl.uint(50_000), mockSbtc],
+        alice
+      );
+
+      expect(withdrawResult.result).toStrictEqual(Cl.error(Cl.uint(100))); // ERR_UNAUTHORIZED
+    });
+
+    it("allows withdrawals after unpause", () => {
+      simnet.callPublicFn("yield-aggregator", "set-emergency-pause", [Cl.bool(true)], deployer);
+      simnet.callPublicFn("yield-aggregator", "set-emergency-pause", [Cl.bool(false)], deployer);
+
+      const withdrawResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "withdraw-sbtc",
+        [Cl.uint(50_000), mockSbtc],
+        alice
+      );
+
+      expect(withdrawResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
+    });
+
     it("allows users to withdraw deposited tokens", () => {
       const withdrawAmount = 50_000;
       
