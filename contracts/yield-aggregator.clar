@@ -3312,3 +3312,7 @@
     (err u1511)))
 (define-read-only (get-l10n-mgr-value (id uint))
   (default-to u0 (get value (map-get? l10n-mgr-registry id))))
+
+;; timezone-svc module
+(define-map timezone-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var timezone-svc-counter uint u0)
