@@ -301,6 +301,14 @@
 (define-read-only (get-minimum-deposit)
   (ok (var-get min-deposit-amount)))
 
+;; Get withdrawal record by ID
+(define-read-only (get-withdrawal-record (id uint))
+  (ok (map-get? withdrawal-history id)))
+
+;; Get total withdrawal count
+(define-read-only (get-withdrawal-count)
+  (ok (var-get withdrawal-counter)))
+
 ;; Get user share of total deposits as basis points (100 = 1%)
 (define-read-only (get-user-share (user principal))
   (let (
