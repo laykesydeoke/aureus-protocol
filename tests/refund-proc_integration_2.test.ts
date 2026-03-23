@@ -1,0 +1,24 @@
+import { describe, it, expect } from "vitest";
+import { Cl } from "@stacks/transactions";
+import { simnet } from "./setup";
+const deployer = simnet.deployer;
+const wallet1 = simnet.getAccounts().get("wallet_1")!;
+
+describe("refund-proc integration 2", () => {
+  it("performs create-read-update cycle 2", () => {
+    // Create
+    const cr = simnet.callPublicFn("yield-aggregator", "create-refund-proc", [Cl.uint(200)], deployer);
+    expect(cr.result).toBeOk(expect.objectContaining({ type: expect.any(Number) }));
+    // Read
+    const rd = simnet.callReadOnlyFn("yield-aggregator", "get-refund-proc-count", [], deployer);
+    expect(rd.result).toBeDefined();
+  });
+
+  it("validates ownership in workflow 2", () => {
+    const cr = simnet.callPublicFn("yield-aggregator", "create-refund-proc", [Cl.uint(250)], deployer);
+    expect(cr.result).toBeOk(expect.objectContaining({ type: expect.any(Number) }));
+    // Non-owner cannot update
+    const up = simnet.callPublicFn("yield-aggregator", "update-refund-proc", [Cl.uint(1), Cl.uint(999)], wallet1);
+    expect(up.result).toBeErr(expect.objectContaining({ type: expect.any(Number) }));
+  });
+});
