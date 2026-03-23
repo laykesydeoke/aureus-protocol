@@ -3397,3 +3397,7 @@
   (let ((entry (unwrap! (map-get? date-parse-registry id) (err u1541))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1542))
     (ok (map-set date-parse-registry id (merge entry {active: false})))))
+(define-read-only (get-date-parse-entry (id uint))
+  (map-get? date-parse-registry id))
+(define-read-only (get-date-parse-count)
+  (ok (var-get date-parse-counter)))
