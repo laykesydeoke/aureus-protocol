@@ -369,6 +369,46 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
       const cap = simnet.callReadOnlyFn("yield-aggregator", "get-max-deposit-per-user", [], deployer);
       expect(cap.result).toStrictEqual(Cl.ok(Cl.uint(500_000_000))); // 500M sats default
     });
+
+    it("tier downgrades to BRONZE after full withdrawal", () => {
+      // Deposit to reach SILVER tier (10M sats)
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(10_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(10_000_000), mockSbtc], alice);
+
+      const tierBefore = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tierBefore.result).toStrictEqual(Cl.ok(Cl.uint(1))); // SILVER
+
+      // Withdraw all
+      simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(10_000_000), mockSbtc], alice);
+
+      const tierAfter = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tierAfter.result).toStrictEqual(Cl.ok(Cl.uint(0))); // BRONZE
+    });
+
+    it("tier stays SILVER after partial withdrawal above threshold", () => {
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(20_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(20_000_000), mockSbtc], alice);
+
+      // Withdraw 5M, still above silver threshold (10M)
+      simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(5_000_000), mockSbtc], alice);
+
+      const tierAfter = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tierAfter.result).toStrictEqual(Cl.ok(Cl.uint(1))); // Still SILVER
+    });
+
+    it("tier downgrades from GOLD to SILVER after large withdrawal", () => {
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(50_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(50_000_000), mockSbtc], alice);
+
+      const tierBefore = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tierBefore.result).toStrictEqual(Cl.ok(Cl.uint(2))); // GOLD
+
+      // Withdraw 41M, leaving 9M (below gold threshold 50M, below silver only at 10M but 9M < 10M so BRONZE)
+      simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(41_000_000), mockSbtc], alice);
+
+      const tierAfter = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tierAfter.result).toStrictEqual(Cl.ok(Cl.uint(0))); // BRONZE (9M < 10M silver threshold)
+    });
   });
 
   describe("Read-Only Functions", () => {

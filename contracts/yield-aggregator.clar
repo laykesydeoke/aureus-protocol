@@ -119,18 +119,23 @@
     (match (as-contract (contract-call? token transfer amount tx-sender caller none))
       success (begin
         ;; Update user balances
-        (if (<= amount user-deposit)
-          (begin
-            (map-set user-deposits caller (- user-deposit amount))
-            (map-set user-yield-earned caller user-yield))
-          (begin
-            (map-set user-deposits caller u0)
-            (map-set user-yield-earned caller (- user-yield (- amount user-deposit))))
+        (let ((new-deposit
+          (if (<= amount user-deposit)
+            (begin
+              (map-set user-yield-earned caller user-yield)
+              (- user-deposit amount))
+            (begin
+              (map-set user-yield-earned caller (- user-yield (- amount user-deposit)))
+              u0)
+          )))
+          (map-set user-deposits caller new-deposit)
+          ;; Recalculate and update user tier based on new deposit
+          (map-set user-tier caller (calculate-tier new-deposit))
+          ;; Update total deposits
+          (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
+          (print {event: "withdrawal", user: caller, amount: amount, new-tier: (calculate-tier new-deposit)})
+          (ok true)
         )
-        ;; Update total deposits
-        (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
-        (print {event: "withdrawal", user: caller, amount: amount})
-        (ok true)
       )
       error ERR_WITHDRAWAL_FAILED
     )
