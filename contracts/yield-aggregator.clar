@@ -137,6 +137,12 @@
           (map-set user-tier caller (calculate-tier new-deposit))
           ;; Update total deposits
           (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
+          ;; Record withdrawal in history
+          (let ((withdrawal-id (var-get withdrawal-counter)))
+            (map-set withdrawal-history withdrawal-id
+              {user: caller, amount: amount, block-height: stacks-block-height})
+            (var-set withdrawal-counter (+ withdrawal-id u1))
+          )
           (print {event: "withdrawal", user: caller, amount: amount, new-tier: (calculate-tier new-deposit)})
           (ok true)
         )
