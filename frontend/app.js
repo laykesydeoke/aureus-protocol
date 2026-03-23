@@ -283,13 +283,22 @@ function handleWithdraw() {
         return;
     }
 
+    var amountInput = document.getElementById('depositAmount');
+    var amount = parseFloat(amountInput.value);
+    if (!amount || amount <= 0) {
+        alert('Enter withdrawal amount');
+        return;
+    }
+
+    var microAmount = Math.floor(amount * 100000000);
+
     var txOptions = {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'yield-aggregator',
         functionName: 'withdraw-sbtc',
         functionArgs: [
-            '0x01' + 'ffffffffffffffffffffffffffffffff',
-            CONTRACT_ADDRESS + '.mock-sbtc'
+            uintToClarity(microAmount),
+            '0x0616' + CONTRACT_ADDRESS + '0a' + 'mock-sbtc'.length.toString(16).padStart(2, '0') + Buffer.from('mock-sbtc').toString('hex')
         ],
         appDetails: {
             name: 'Aureus Protocol',
@@ -297,6 +306,9 @@ function handleWithdraw() {
         },
         onFinish: function (data) {
             alert('Withdrawal submitted! TX: ' + data.txId);
+            amountInput.value = '';
+            loadVaultMetrics();
+            loadUserData(userAddress);
         },
         onCancel: function () {
             console.log('Withdrawal cancelled');
