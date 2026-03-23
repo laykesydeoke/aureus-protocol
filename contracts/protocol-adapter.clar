@@ -26,6 +26,7 @@
 (define-constant ERR_WITHDRAWAL_FAILED (err u205))
 (define-constant ERR_INSUFFICIENT_LIQUIDITY (err u206))
 (define-constant ERR_PROTOCOL_PAUSED (err u207))
+(define-constant ERR_ALREADY_INITIALIZED (err u208))
 
 ;; Protocol identifiers
 (define-constant PROTOCOL_ZEST u1)
