@@ -278,6 +278,19 @@
   (ok (default-to (list) (map-get? deposit-history user)))
 )
 
+;; Get user share of total deposits as basis points (100 = 1%)
+(define-read-only (get-user-share (user principal))
+  (let (
+    (user-deposit (default-to u0 (map-get? user-deposits user)))
+    (total (var-get total-deposits))
+  )
+    (if (> total u0)
+      (ok (/ (* user-deposit u10000) total))
+      (ok u0)
+    )
+  )
+)
+
 ;; private functions
 
 ;; Determine user deposit tier based on total deposit amount
