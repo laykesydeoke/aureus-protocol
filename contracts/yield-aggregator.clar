@@ -3525,3 +3525,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1582))
     (asserts! (get active entry) (err u1583))
     (ok (map-set slug-gen-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-slug-gen (id uint))
+  (let ((entry (unwrap! (map-get? slug-gen-registry id) (err u1581))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1582))
+    (ok (map-set slug-gen-registry id (merge entry {active: false})))))
