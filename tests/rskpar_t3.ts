@@ -1,0 +1,1 @@
+import{describe,it,expect}from"vitest";describe("rskpar 3",()=>{it("c3",()=>{const a=simnet.getAccounts();const d=a.get("deployer")\!;const r=simnet.callReadOnlyFn("yield-aggregator","get-total-deposits",[],d);expect(r.result).toBeDefined();});});
