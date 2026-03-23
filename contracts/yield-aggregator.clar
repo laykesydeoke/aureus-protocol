@@ -214,6 +214,18 @@
   (ok (var-get emergency-pause))
 )
 
+;; Get user deposit tier
+(define-read-only (get-user-tier (user principal))
+  (ok (default-to TIER_BRONZE (map-get? user-tier user))))
+
+;; Get per-user deposit cap
+(define-read-only (get-max-deposit-per-user)
+  (ok (var-get max-deposit-per-user)))
+
+;; Get global TVL cap
+(define-read-only (get-max-total-deposits)
+  (ok (var-get max-total-deposits)))
+
 ;; Get user deposit history
 (define-read-only (get-user-deposit-history (user principal))
   (ok (default-to (list) (map-get? deposit-history user)))
