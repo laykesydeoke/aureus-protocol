@@ -289,6 +289,10 @@
   (ok (default-to (list) (map-get? deposit-history user)))
 )
 
+;; Get minimum deposit amount
+(define-read-only (get-minimum-deposit)
+  (ok (var-get min-deposit-amount)))
+
 ;; Get user share of total deposits as basis points (100 = 1%)
 (define-read-only (get-user-share (user principal))
   (let (
