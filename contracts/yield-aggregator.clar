@@ -3543,3 +3543,7 @@
     (err u1581)))
 (define-read-only (get-slug-gen-value (id uint))
   (default-to u0 (get value (map-get? slug-gen-registry id))))
+
+;; url-encode module
+(define-map url-encode-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var url-encode-counter uint u0)
