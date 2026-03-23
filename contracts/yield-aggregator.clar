@@ -1035,3 +1035,14 @@
       (var-set mrktmk-cnt id) (ok id))))
 (define-read-only (get-mrktmk-entry (id uint))
   (map-get? mrktmk-log id))
+
+;; bsrsk tracking
+(define-map bsrsk-log uint { v: uint, at: uint })
+(define-data-var bsrsk-cnt uint u0)
+(define-public (log-bsrsk (val uint))
+  (begin (asserts! (> val u0) (err u5200))
+    (let ((id (+ (var-get bsrsk-cnt) u1)))
+      (map-set bsrsk-log id { v: val, at: stacks-block-height })
+      (var-set bsrsk-cnt id) (ok id))))
+(define-read-only (get-bsrsk-entry (id uint))
+  (map-get? bsrsk-log id))
