@@ -3514,3 +3514,9 @@
 ;; slug-gen module
 (define-map slug-gen-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var slug-gen-counter uint u0)
+(define-public (create-slug-gen (val uint))
+  (let ((id (+ (var-get slug-gen-counter) u1)))
+    (asserts! (> val u0) (err u1580))
+    (map-set slug-gen-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set slug-gen-counter id)
+    (ok id)))
