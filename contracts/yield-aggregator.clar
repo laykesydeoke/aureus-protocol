@@ -3279,3 +3279,7 @@
     (err u1501)))
 (define-read-only (get-i18n-svc-value (id uint))
   (default-to u0 (get value (map-get? i18n-svc-registry id))))
+
+;; l10n-mgr module
+(define-map l10n-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var l10n-mgr-counter uint u0)
