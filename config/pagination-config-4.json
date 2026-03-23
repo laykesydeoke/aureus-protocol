@@ -1,0 +1,14 @@
+{
+  "module": "pagination",
+  "version": "1.4.0",
+  "contract": "yield-aggregator",
+  "network": "testnet",
+  "settings": {
+    "maxEntries": 400,
+    "minValue": 1,
+    "maxValue": 1000000000,
+    "errorBase": 670,
+    "autoDeactivate": false,
+    "auditLog": true
+  }
+}
