@@ -3265,3 +3265,7 @@
   (let ((entry (unwrap! (map-get? i18n-svc-registry id) (err u1501))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1502))
     (ok (map-set i18n-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-i18n-svc-entry (id uint))
+  (map-get? i18n-svc-registry id))
+(define-read-only (get-i18n-svc-count)
+  (ok (var-get i18n-svc-counter)))
