@@ -352,4 +352,64 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
       expect(activeProtocol.result).toStrictEqual(Cl.ok(Cl.uint(PROTOCOL_ZEST)));
     });
   });
+
+  describe("Protocol Performance Tracking", () => {
+    beforeEach(() => {
+      simnet.callPublicFn("protocol-adapter", "deposit-to-optimal", [Cl.uint(200_000), mockSbtc], alice);
+    });
+
+    it("tracks deposit count in performance map", () => {
+      const perf = simnet.callReadOnlyFn(
+        "protocol-adapter",
+        "get-protocol-performance",
+        [Cl.uint(PROTOCOL_ZEST)],
+        deployer
+      );
+      expect(perf.result).toBeOk();
+    });
+
+    it("record-protocol-yield updates yield tracking", () => {
+      const recordResult = simnet.callPublicFn(
+        "protocol-adapter",
+        "record-protocol-yield",
+        [Cl.uint(PROTOCOL_ZEST), Cl.uint(5_000)],
+        deployer
+      );
+      expect(recordResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
+
+      const perf = simnet.callReadOnlyFn(
+        "protocol-adapter",
+        "get-protocol-performance",
+        [Cl.uint(PROTOCOL_ZEST)],
+        deployer
+      );
+      expect(perf.result).toBeOk();
+    });
+
+    it("get-best-performing-protocol returns a valid protocol", () => {
+      // Record yield for Zest
+      simnet.callPublicFn("protocol-adapter", "record-protocol-yield", [Cl.uint(PROTOCOL_ZEST), Cl.uint(10_000)], deployer);
+
+      const best = simnet.callReadOnlyFn("protocol-adapter", "get-best-performing-protocol", [], deployer);
+      expect(best.result).toStrictEqual(Cl.ok(Cl.uint(PROTOCOL_ZEST)));
+    });
+
+    it("prevents non-owner from recording yield", () => {
+      const recordResult = simnet.callPublicFn(
+        "protocol-adapter",
+        "record-protocol-yield",
+        [Cl.uint(PROTOCOL_ZEST), Cl.uint(1_000)],
+        alice
+      );
+      expect(recordResult.result).toStrictEqual(Cl.error(Cl.uint(200)));
+    });
+
+    it("get-best-performing-protocol switches to higher yield protocol", () => {
+      simnet.callPublicFn("protocol-adapter", "record-protocol-yield", [Cl.uint(PROTOCOL_ZEST), Cl.uint(5_000)], deployer);
+      simnet.callPublicFn("protocol-adapter", "record-protocol-yield", [Cl.uint(PROTOCOL_ALEX), Cl.uint(20_000)], deployer);
+
+      const best = simnet.callReadOnlyFn("protocol-adapter", "get-best-performing-protocol", [], deployer);
+      expect(best.result).toStrictEqual(Cl.ok(Cl.uint(PROTOCOL_ALEX)));
+    });
+  });
 });
