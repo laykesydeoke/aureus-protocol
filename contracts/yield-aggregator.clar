@@ -231,6 +231,15 @@
     (var-set max-total-deposits new-max)
     (ok true)))
 
+;; Admin: set minimum deposit amount
+(define-public (set-minimum-deposit (new-min uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (> new-min u0) ERR_INVALID_AMOUNT)
+    (var-set min-deposit-amount new-min)
+    (print {event: "min-deposit-updated", new-min: new-min, by: tx-sender})
+    (ok true)))
+
 ;; read only functions
 
 ;; Get user deposit balance
