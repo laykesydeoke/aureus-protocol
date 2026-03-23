@@ -3510,3 +3510,7 @@
     (err u1571)))
 (define-read-only (get-text-sanitize-value (id uint))
   (default-to u0 (get value (map-get? text-sanitize-registry id))))
+
+;; slug-gen module
+(define-map slug-gen-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var slug-gen-counter uint u0)
