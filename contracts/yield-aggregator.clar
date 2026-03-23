@@ -3454,3 +3454,8 @@
     (map-set number-fmt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set number-fmt-counter id)
     (ok id)))
+(define-public (update-number-fmt (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? number-fmt-registry id) (err u1561))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1562))
+    (asserts! (get active entry) (err u1563))
+    (ok (map-set number-fmt-registry id (merge entry {value: new-val})))))
