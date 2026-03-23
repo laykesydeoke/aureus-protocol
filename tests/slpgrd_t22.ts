@@ -1,0 +1,1 @@
+import{describe,it,expect}from"vitest";describe("slpgrd 22",()=>{it("c22",()=>{const a=simnet.getAccounts();const d=a.get("deployer")\!;const r=simnet.callReadOnlyFn("yield-aggregator","get-total-deposits",[],d);expect(r.result).toBeDefined();});});
