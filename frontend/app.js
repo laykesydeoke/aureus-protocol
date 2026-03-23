@@ -100,17 +100,28 @@ function onConnected(address) {
 }
 
 function loadProtocolRates() {
-    callReadOnly('protocol-adapter', 'get-all-protocol-rates', [])
-        .then(function (data) {
-            if (data && data.okay && data.result) {
-                updateRates(data.result);
-            } else {
+    try {
+        callReadOnly('protocol-adapter', 'get-all-protocol-rates', [])
+            .then(function (data) {
+                try {
+                    if (data && data.okay && data.result) {
+                        updateRates(data.result);
+                    } else {
+                        setDefaultRates();
+                    }
+                } catch (parseErr) {
+                    console.error('Error parsing protocol rates:', parseErr);
+                    setDefaultRates();
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load protocol rates:', err);
                 setDefaultRates();
-            }
-        })
-        .catch(function () {
-            setDefaultRates();
-        });
+            });
+    } catch (err) {
+        console.error('loadProtocolRates error:', err);
+        setDefaultRates();
+    }
 }
 
 function updateRates(rates) {
@@ -141,39 +152,80 @@ function setDefaultRates() {
 }
 
 function loadVaultMetrics() {
-    callReadOnly('yield-aggregator', 'get-total-deposits', [])
-        .then(function (data) {
-            var tvl = document.getElementById('tvl');
-            if (tvl && data && data.okay && data.result) {
-                tvl.textContent = (parseInt(data.result, 16) / 100000000).toFixed(2) + ' sBTC';
-            }
-        })
-        .catch(function () {
-            var tvl = document.getElementById('tvl');
-            if (tvl) tvl.textContent = '0 sBTC';
-        });
+    try {
+        callReadOnly('yield-aggregator', 'get-total-deposits', [])
+            .then(function (data) {
+                try {
+                    var tvl = document.getElementById('tvl');
+                    if (tvl && data && data.okay && data.result) {
+                        var rawHex = data.result.replace(/^0x0[0-9a-f]/, '');
+                        tvl.textContent = (parseInt(rawHex, 16) / 100000000).toFixed(2) + ' sBTC';
+                    }
+                } catch (parseErr) {
+                    console.error('Error parsing vault metrics:', parseErr);
+                    var tvl = document.getElementById('tvl');
+                    if (tvl) tvl.textContent = '0 sBTC';
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load vault metrics:', err);
+                var tvl = document.getElementById('tvl');
+                if (tvl) tvl.textContent = '0 sBTC';
+            });
+    } catch (err) {
+        console.error('loadVaultMetrics error:', err);
+    }
+}
+
+function encodePrincipal(address) {
+    // Encode a principal as a Clarity value for read-only calls
+    return '0x0516' + address;
+}
+
+function parseUintResult(hexResult) {
+    // Parse a Clarity uint response (strips leading type byte and converts)
+    try {
+        var stripped = hexResult.replace(/^0x0[0-9a-f]/, '');
+        return parseInt(stripped, 16);
+    } catch (e) {
+        return 0;
+    }
 }
 
 function loadUserData(address) {
-    callReadOnly('yield-aggregator', 'get-user-deposit', [
-        '0x0616' + address
-    ])
-        .then(function (data) {
-            if (data && data.okay && data.result) {
-                var el = document.getElementById('userDeposit');
-                if (el) el.textContent = (parseInt(data.result, 16) / 100000000).toFixed(4);
-            }
-        });
+    try {
+        callReadOnly('yield-aggregator', 'get-user-deposit', [encodePrincipal(address)])
+            .then(function (data) {
+                try {
+                    if (data && data.okay && data.result) {
+                        var el = document.getElementById('userDeposit');
+                        if (el) el.textContent = (parseUintResult(data.result) / 100000000).toFixed(4);
+                    }
+                } catch (e) {
+                    console.error('Error parsing user deposit:', e);
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load user deposit:', err);
+            });
 
-    callReadOnly('yield-aggregator', 'get-user-yield', [
-        '0x0616' + address
-    ])
-        .then(function (data) {
-            if (data && data.okay && data.result) {
-                var el = document.getElementById('userYield');
-                if (el) el.textContent = (parseInt(data.result, 16) / 100000000).toFixed(4);
-            }
-        });
+        callReadOnly('yield-aggregator', 'get-user-yield', [encodePrincipal(address)])
+            .then(function (data) {
+                try {
+                    if (data && data.okay && data.result) {
+                        var el = document.getElementById('userYield');
+                        if (el) el.textContent = (parseUintResult(data.result) / 100000000).toFixed(4);
+                    }
+                } catch (e) {
+                    console.error('Error parsing user yield:', e);
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load user yield:', err);
+            });
+    } catch (err) {
+        console.error('loadUserData error:', err);
+    }
 }
 
 function handleDeposit() {
