@@ -3444,3 +3444,7 @@
     (err u1551)))
 (define-read-only (get-currency-fmt-value (id uint))
   (default-to u0 (get value (map-get? currency-fmt-registry id))))
+
+;; number-fmt module
+(define-map number-fmt-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var number-fmt-counter uint u0)
