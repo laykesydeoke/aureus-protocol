@@ -59,7 +59,7 @@
 (define-public (initialize-adapter)
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
-    (asserts! (not (var-get adapter-initialized)) ERR_UNAUTHORIZED)
+    (asserts! (not (var-get adapter-initialized)) ERR_ALREADY_INITIALIZED)
 
     ;; Initialize default protocols
     (map-set protocol-info PROTOCOL_ZEST {
