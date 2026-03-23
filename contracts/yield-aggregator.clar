@@ -38,6 +38,23 @@
 (define-map user-yield-earned principal uint)
 (define-map deposit-history principal (list 100 {amount: uint, timestamp: uint, block-height: uint}))
 
+;; Deposit tiers for yield bonus
+(define-constant TIER_BRONZE u0)
+(define-constant TIER_SILVER u1)
+(define-constant TIER_GOLD u2)
+(define-constant TIER_PLATINUM u3)
+
+(define-constant TIER_SILVER_THRESHOLD u10000000) ;; 10M sats
+(define-constant TIER_GOLD_THRESHOLD u50000000)   ;; 50M sats
+(define-constant TIER_PLATINUM_THRESHOLD u100000000) ;; 100M sats
+
+(define-map user-tier principal uint)
+
+;; Per-user deposit cap
+(define-data-var max-deposit-per-user uint u500000000) ;; 500M sats default cap
+;; Global TVL cap
+(define-data-var max-total-deposits uint u5000000000) ;; 5B sats
+
 ;; public functions
 
 ;; Initialize the yield aggregator (only contract owner)
@@ -61,11 +78,15 @@
     (asserts! (not (var-get emergency-pause)) ERR_UNAUTHORIZED)
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
+    (asserts! (<= (+ current-user-deposit amount) (var-get max-deposit-per-user)) ERR_INVALID_AMOUNT)
+    (asserts! (<= (+ (var-get total-deposits) amount) (var-get max-total-deposits)) ERR_INVALID_AMOUNT)
 
     ;; Transfer tokens from user to this contract (vault)
     (match (contract-call? token transfer amount tx-sender (as-contract tx-sender) none)
       success (begin
         (map-set user-deposits tx-sender (+ current-user-deposit amount))
+        ;; Update user tier
+        (map-set user-tier tx-sender (calculate-tier (+ current-user-deposit amount)))
         (var-set total-deposits (+ (var-get total-deposits) amount))
         (let ((current-history (default-to (list) (map-get? deposit-history tx-sender))))
           (map-set deposit-history tx-sender
@@ -161,6 +182,22 @@
   )
 )
 
+;; Admin: set per-user deposit cap
+(define-public (set-max-deposit-per-user (new-max uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (> new-max u0) ERR_INVALID_AMOUNT)
+    (var-set max-deposit-per-user new-max)
+    (ok true)))
+
+;; Admin: set global TVL cap
+(define-public (set-max-total-deposits (new-max uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (> new-max u0) ERR_INVALID_AMOUNT)
+    (var-set max-total-deposits new-max)
+    (ok true)))
+
 ;; read only functions
 
 ;; Get user deposit balance
@@ -193,12 +230,34 @@
   (ok (var-get emergency-pause))
 )
 
+;; Get user deposit tier
+(define-read-only (get-user-tier (user principal))
+  (ok (default-to TIER_BRONZE (map-get? user-tier user))))
+
+;; Get per-user deposit cap
+(define-read-only (get-max-deposit-per-user)
+  (ok (var-get max-deposit-per-user)))
+
+;; Get global TVL cap
+(define-read-only (get-max-total-deposits)
+  (ok (var-get max-total-deposits)))
+
 ;; Get user deposit history
 (define-read-only (get-user-deposit-history (user principal))
   (ok (default-to (list) (map-get? deposit-history user)))
 )
 
 ;; private functions
+
+;; Determine user deposit tier based on total deposit amount
+(define-private (calculate-tier (total-deposit uint))
+  (if (>= total-deposit TIER_PLATINUM_THRESHOLD)
+    TIER_PLATINUM
+    (if (>= total-deposit TIER_GOLD_THRESHOLD)
+      TIER_GOLD
+      (if (>= total-deposit TIER_SILVER_THRESHOLD)
+        TIER_SILVER
+        TIER_BRONZE))))
 
 ;; Return the smaller of two uint values
 (define-private (min (a uint) (b uint))
