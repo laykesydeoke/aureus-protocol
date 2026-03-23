@@ -133,11 +133,21 @@
       
       ;; Track user allocation
       (let ((current-user-allocation (default-to u0 (map-get? user-protocol-allocations {user: tx-sender, protocol-id: optimal-protocol}))))
-        (map-set user-protocol-allocations 
+        (map-set user-protocol-allocations
           {user: tx-sender, protocol-id: optimal-protocol}
           (+ current-user-allocation amount))
       )
-      
+
+      ;; Update protocol performance tracking
+      (let ((current-perf (default-to {total-deposited: u0, total-yield-generated: u0, deposit-count: u0}
+              (map-get? protocol-performance optimal-protocol))))
+        (map-set protocol-performance optimal-protocol {
+          total-deposited: (+ (get total-deposited current-perf) amount),
+          total-yield-generated: (get total-yield-generated current-perf),
+          deposit-count: (+ (get deposit-count current-perf) u1)
+        })
+      )
+
       (print {event: "deposit-to-protocol", protocol: optimal-protocol, amount: amount, user: tx-sender})
       (ok optimal-protocol)
     )
