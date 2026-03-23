@@ -51,6 +51,11 @@
 
 (define-map protocol-balances {protocol-id: uint, token: principal} uint)
 (define-map user-protocol-allocations {user: principal, protocol-id: uint} uint)
+(define-map protocol-performance uint {
+  total-deposited: uint,
+  total-yield-generated: uint,
+  deposit-count: uint
+})
 
 ;; public functions
 
