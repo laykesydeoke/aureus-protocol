@@ -1,5 +1,10 @@
-var API_URL = 'https://api.testnet.hiro.so';
-var CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+var CONFIG = {
+    apiUrl: (window.AUREUS_API_URL || 'https://api.testnet.hiro.so'),
+    contractAddress: (window.AUREUS_CONTRACT_ADDRESS || 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM'),
+    network: (window.AUREUS_NETWORK || 'testnet')
+};
+var API_URL = CONFIG.apiUrl;
+var CONTRACT_ADDRESS = CONFIG.contractAddress;
 var userAddress = null;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -12,27 +17,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function checkExistingSession() {
     try {
-        var session = localStorage.getItem('blockstack-session');
-        if (session) {
-            var parsed = JSON.parse(session);
-            if (parsed && parsed.userData) {
-                var addr = parsed.userData.profile &&
-                    parsed.userData.profile.stxAddress &&
-                    parsed.userData.profile.stxAddress.testnet;
-                if (addr) {
-                    userAddress = addr;
-                    onConnected(addr);
+        // Check modern stacks-session key first, fall back to legacy blockstack-session
+        var sessionKeys = ['stacks-session', 'blockstack-session'];
+        for (var i = 0; i < sessionKeys.length; i++) {
+            var session = localStorage.getItem(sessionKeys[i]);
+            if (session) {
+                var parsed = JSON.parse(session);
+                if (parsed && parsed.userData) {
+                    var addrKey = CONFIG.network === 'mainnet' ? 'mainnet' : 'testnet';
+                    var addr = parsed.userData.profile &&
+                        parsed.userData.profile.stxAddress &&
+                        parsed.userData.profile.stxAddress[addrKey];
+                    if (addr) {
+                        userAddress = addr;
+                        onConnected(addr);
+                        break;
+                    }
                 }
             }
         }
     } catch (e) {
-        // No session
+        console.warn('Session restore failed:', e);
     }
 }
 
 function handleWalletClick() {
     var btn = document.getElementById('walletBtn');
     if (userAddress) {
+        localStorage.removeItem('stacks-session');
         localStorage.removeItem('blockstack-session');
         userAddress = null;
         btn.textContent = 'Connect Wallet';
@@ -88,17 +100,28 @@ function onConnected(address) {
 }
 
 function loadProtocolRates() {
-    callReadOnly('protocol-adapter', 'get-all-protocol-rates', [])
-        .then(function (data) {
-            if (data && data.okay && data.result) {
-                updateRates(data.result);
-            } else {
+    try {
+        callReadOnly('protocol-adapter', 'get-all-protocol-rates', [])
+            .then(function (data) {
+                try {
+                    if (data && data.okay && data.result) {
+                        updateRates(data.result);
+                    } else {
+                        setDefaultRates();
+                    }
+                } catch (parseErr) {
+                    console.error('Error parsing protocol rates:', parseErr);
+                    setDefaultRates();
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load protocol rates:', err);
                 setDefaultRates();
-            }
-        })
-        .catch(function () {
-            setDefaultRates();
-        });
+            });
+    } catch (err) {
+        console.error('loadProtocolRates error:', err);
+        setDefaultRates();
+    }
 }
 
 function updateRates(rates) {
@@ -129,39 +152,86 @@ function setDefaultRates() {
 }
 
 function loadVaultMetrics() {
-    callReadOnly('yield-aggregator', 'get-total-deposits', [])
-        .then(function (data) {
-            var tvl = document.getElementById('tvl');
-            if (tvl && data && data.okay && data.result) {
-                tvl.textContent = (parseInt(data.result, 16) / 100000000).toFixed(2) + ' sBTC';
-            }
-        })
-        .catch(function () {
-            var tvl = document.getElementById('tvl');
-            if (tvl) tvl.textContent = '0 sBTC';
-        });
+    try {
+        callReadOnly('yield-aggregator', 'get-total-deposits', [])
+            .then(function (data) {
+                try {
+                    var tvl = document.getElementById('tvl');
+                    if (tvl && data && data.okay && data.result) {
+                        var rawHex = data.result.replace(/^0x0[0-9a-f]/, '');
+                        tvl.textContent = (parseInt(rawHex, 16) / 100000000).toFixed(2) + ' sBTC';
+                    }
+                } catch (parseErr) {
+                    console.error('Error parsing vault metrics:', parseErr);
+                    var tvl = document.getElementById('tvl');
+                    if (tvl) tvl.textContent = '0 sBTC';
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load vault metrics:', err);
+                var tvl = document.getElementById('tvl');
+                if (tvl) tvl.textContent = '0 sBTC';
+            });
+    } catch (err) {
+        console.error('loadVaultMetrics error:', err);
+    }
+}
+
+function encodePrincipal(address) {
+    // Encode a principal as a Clarity value for read-only calls
+    return '0x0516' + address;
+}
+
+function parseUintResult(hexResult) {
+    // Parse a Clarity uint response (strips leading type byte and converts)
+    try {
+        var stripped = hexResult.replace(/^0x0[0-9a-f]/, '');
+        return parseInt(stripped, 16);
+    } catch (e) {
+        return 0;
+    }
 }
 
 function loadUserData(address) {
-    callReadOnly('yield-aggregator', 'get-user-deposit', [
-        '0x0616' + address
-    ])
-        .then(function (data) {
-            if (data && data.okay && data.result) {
-                var el = document.getElementById('userDeposit');
-                if (el) el.textContent = (parseInt(data.result, 16) / 100000000).toFixed(4);
-            }
-        });
+    try {
+        callReadOnly('yield-aggregator', 'get-user-deposit', [encodePrincipal(address)])
+            .then(function (data) {
+                try {
+                    if (data && data.okay && data.result) {
+                        var el = document.getElementById('userDeposit');
+                        if (el) el.textContent = (parseUintResult(data.result) / 100000000).toFixed(4);
+                    }
+                } catch (e) {
+                    console.error('Error parsing user deposit:', e);
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load user deposit:', err);
+            });
 
-    callReadOnly('yield-aggregator', 'get-user-yield', [
-        '0x0616' + address
-    ])
-        .then(function (data) {
-            if (data && data.okay && data.result) {
-                var el = document.getElementById('userYield');
-                if (el) el.textContent = (parseInt(data.result, 16) / 100000000).toFixed(4);
-            }
-        });
+        callReadOnly('yield-aggregator', 'get-user-yield', [encodePrincipal(address)])
+            .then(function (data) {
+                try {
+                    if (data && data.okay && data.result) {
+                        var el = document.getElementById('userYield');
+                        if (el) el.textContent = (parseUintResult(data.result) / 100000000).toFixed(4);
+                    }
+                } catch (e) {
+                    console.error('Error parsing user yield:', e);
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load user yield:', err);
+            });
+    } catch (err) {
+        console.error('loadUserData error:', err);
+    }
+}
+
+function uintToClarity(n) {
+    // Encode a uint as Clarity value bytes (type byte 0x01 + 16 byte big-endian)
+    var hex = Math.floor(n).toString(16);
+    return '0x01' + hex.padStart(32, '0');
 }
 
 function handleDeposit() {
@@ -183,8 +253,8 @@ function handleDeposit() {
         contractName: 'yield-aggregator',
         functionName: 'deposit-sbtc',
         functionArgs: [
-            '0x01' + microAmount.toString(16).padStart(32, '0'),
-            CONTRACT_ADDRESS + '.mock-sbtc'
+            uintToClarity(microAmount),
+            '0x0616' + CONTRACT_ADDRESS + '0a' + 'mock-sbtc'.length.toString(16).padStart(2, '0') + Buffer.from('mock-sbtc').toString('hex')
         ],
         appDetails: {
             name: 'Aureus Protocol',
@@ -193,6 +263,7 @@ function handleDeposit() {
         onFinish: function (data) {
             alert('Deposit submitted! TX: ' + data.txId);
             amountInput.value = '';
+            loadVaultMetrics();
         },
         onCancel: function () {
             console.log('Deposit cancelled');
@@ -212,13 +283,22 @@ function handleWithdraw() {
         return;
     }
 
+    var amountInput = document.getElementById('depositAmount');
+    var amount = parseFloat(amountInput.value);
+    if (!amount || amount <= 0) {
+        alert('Enter withdrawal amount');
+        return;
+    }
+
+    var microAmount = Math.floor(amount * 100000000);
+
     var txOptions = {
         contractAddress: CONTRACT_ADDRESS,
         contractName: 'yield-aggregator',
         functionName: 'withdraw-sbtc',
         functionArgs: [
-            '0x01' + 'ffffffffffffffffffffffffffffffff',
-            CONTRACT_ADDRESS + '.mock-sbtc'
+            uintToClarity(microAmount),
+            '0x0616' + CONTRACT_ADDRESS + '0a' + 'mock-sbtc'.length.toString(16).padStart(2, '0') + Buffer.from('mock-sbtc').toString('hex')
         ],
         appDetails: {
             name: 'Aureus Protocol',
@@ -226,6 +306,9 @@ function handleWithdraw() {
         },
         onFinish: function (data) {
             alert('Withdrawal submitted! TX: ' + data.txId);
+            amountInput.value = '';
+            loadVaultMetrics();
+            loadUserData(userAddress);
         },
         onCancel: function () {
             console.log('Withdrawal cancelled');
