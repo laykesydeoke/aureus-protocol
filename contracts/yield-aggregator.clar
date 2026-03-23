@@ -3537,3 +3537,7 @@
   (match (map-get? slug-gen-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-slug-gen-owner (id uint))
+  (match (map-get? slug-gen-registry id)
+    entry (ok (get owner entry))
+    (err u1581)))
