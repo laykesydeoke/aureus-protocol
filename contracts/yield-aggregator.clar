@@ -3533,3 +3533,7 @@
   (map-get? slug-gen-registry id))
 (define-read-only (get-slug-gen-count)
   (ok (var-get slug-gen-counter)))
+(define-read-only (is-slug-gen-active (id uint))
+  (match (map-get? slug-gen-registry id)
+    entry (get active entry)
+    false))
