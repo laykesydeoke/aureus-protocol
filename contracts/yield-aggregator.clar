@@ -969,3 +969,14 @@
       (var-set ordrt-cnt id) (ok id))))
 (define-read-only (get-ordrt-entry (id uint))
   (map-get? ordrt-log id))
+
+;; stlflw tracking
+(define-map stlflw-log uint { v: uint, at: uint })
+(define-data-var stlflw-cnt uint u0)
+(define-public (log-stlflw (val uint))
+  (begin (asserts! (> val u0) (err u4600))
+    (let ((id (+ (var-get stlflw-cnt) u1)))
+      (map-set stlflw-log id { v: val, at: stacks-block-height })
+      (var-set stlflw-cnt id) (ok id))))
+(define-read-only (get-stlflw-entry (id uint))
+  (map-get? stlflw-log id))
