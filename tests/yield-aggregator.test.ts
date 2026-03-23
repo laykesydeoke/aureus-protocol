@@ -290,6 +290,60 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
     });
   });
 
+  describe("Deposit Tiers and Caps", () => {
+    it("user tier starts at BRONZE (0)", () => {
+      const tier = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tier.result).toStrictEqual(Cl.ok(Cl.uint(0)));
+    });
+
+    it("depositing above silver threshold sets tier to SILVER", () => {
+      // Mint enough for silver threshold (10M sats)
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(10_000_000), Cl.principal(alice)], deployer);
+
+      const depositResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "deposit-sbtc",
+        [Cl.uint(10_000_000), mockSbtc],
+        alice
+      );
+      expect(depositResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
+
+      const tier = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier", [Cl.principal(alice)], deployer);
+      expect(tier.result).toStrictEqual(Cl.ok(Cl.uint(1))); // TIER_SILVER
+    });
+
+    it("deposit cap prevents exceeding max-deposit-per-user", () => {
+      // Set a low cap
+      simnet.callPublicFn("yield-aggregator", "set-max-deposit-per-user", [Cl.uint(50_000)], deployer);
+
+      const depositResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "deposit-sbtc",
+        [Cl.uint(100_000), mockSbtc],
+        alice
+      );
+      expect(depositResult.result).toStrictEqual(Cl.error(Cl.uint(104))); // ERR_INVALID_AMOUNT
+    });
+
+    it("owner can update deposit cap", () => {
+      const setResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "set-max-deposit-per-user",
+        [Cl.uint(1_000_000_000)],
+        deployer
+      );
+      expect(setResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
+
+      const cap = simnet.callReadOnlyFn("yield-aggregator", "get-max-deposit-per-user", [], deployer);
+      expect(cap.result).toStrictEqual(Cl.ok(Cl.uint(1_000_000_000)));
+    });
+
+    it("get-max-deposit-per-user returns the default", () => {
+      const cap = simnet.callReadOnlyFn("yield-aggregator", "get-max-deposit-per-user", [], deployer);
+      expect(cap.result).toStrictEqual(Cl.ok(Cl.uint(500_000_000))); // 500M sats default
+    });
+  });
+
   describe("Read-Only Functions", () => {
     beforeEach(() => {
       simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(150_000), mockSbtc], alice);
