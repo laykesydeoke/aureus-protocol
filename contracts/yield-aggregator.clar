@@ -3547,3 +3547,9 @@
 ;; url-encode module
 (define-map url-encode-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var url-encode-counter uint u0)
+(define-public (create-url-encode (val uint))
+  (let ((id (+ (var-get url-encode-counter) u1)))
+    (asserts! (> val u0) (err u1590))
+    (map-set url-encode-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set url-encode-counter id)
+    (ok id)))
