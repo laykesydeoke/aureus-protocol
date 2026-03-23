@@ -3448,3 +3448,9 @@
 ;; number-fmt module
 (define-map number-fmt-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var number-fmt-counter uint u0)
+(define-public (create-number-fmt (val uint))
+  (let ((id (+ (var-get number-fmt-counter) u1)))
+    (asserts! (> val u0) (err u1560))
+    (map-set number-fmt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set number-fmt-counter id)
+    (ok id)))
