@@ -1,5 +1,10 @@
-var API_URL = 'https://api.testnet.hiro.so';
-var CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+var CONFIG = {
+    apiUrl: (window.AUREUS_API_URL || 'https://api.testnet.hiro.so'),
+    contractAddress: (window.AUREUS_CONTRACT_ADDRESS || 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM'),
+    network: (window.AUREUS_NETWORK || 'testnet')
+};
+var API_URL = CONFIG.apiUrl;
+var CONTRACT_ADDRESS = CONFIG.contractAddress;
 var userAddress = null;
 
 document.addEventListener('DOMContentLoaded', function () {
