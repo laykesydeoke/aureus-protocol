@@ -3331,3 +3331,7 @@
   (let ((entry (unwrap! (map-get? timezone-svc-registry id) (err u1521))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1522))
     (ok (map-set timezone-svc-registry id (merge entry {active: false})))))
+(define-read-only (get-timezone-svc-entry (id uint))
+  (map-get? timezone-svc-registry id))
+(define-read-only (get-timezone-svc-count)
+  (ok (var-get timezone-svc-counter)))
