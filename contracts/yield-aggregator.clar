@@ -1112,3 +1112,14 @@
       (var-set rskpar-cnt id) (ok id))))
 (define-read-only (get-rskpar-entry (id uint))
   (map-get? rskpar-log id))
+
+;; drwlim tracking
+(define-map drwlim-log uint { v: uint, at: uint })
+(define-data-var drwlim-cnt uint u0)
+(define-public (log-drwlim (val uint))
+  (begin (asserts! (> val u0) (err u5900))
+    (let ((id (+ (var-get drwlim-cnt) u1)))
+      (map-set drwlim-log id { v: val, at: stacks-block-height })
+      (var-set drwlim-cnt id) (ok id))))
+(define-read-only (get-drwlim-entry (id uint))
+  (map-get? drwlim-log id))
