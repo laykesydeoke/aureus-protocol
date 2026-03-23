@@ -3302,3 +3302,7 @@
   (map-get? l10n-mgr-registry id))
 (define-read-only (get-l10n-mgr-count)
   (ok (var-get l10n-mgr-counter)))
+(define-read-only (is-l10n-mgr-active (id uint))
+  (match (map-get? l10n-mgr-registry id)
+    entry (get active entry)
+    false))
