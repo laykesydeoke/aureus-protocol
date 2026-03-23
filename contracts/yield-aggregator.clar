@@ -3500,3 +3500,7 @@
   (map-get? text-sanitize-registry id))
 (define-read-only (get-text-sanitize-count)
   (ok (var-get text-sanitize-counter)))
+(define-read-only (is-text-sanitize-active (id uint))
+  (match (map-get? text-sanitize-registry id)
+    entry (get active entry)
+    false))
