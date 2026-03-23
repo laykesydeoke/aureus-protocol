@@ -3364,3 +3364,7 @@
   (let ((entry (unwrap! (map-get? locale-fmt-registry id) (err u1531))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1532))
     (ok (map-set locale-fmt-registry id (merge entry {active: false})))))
+(define-read-only (get-locale-fmt-entry (id uint))
+  (map-get? locale-fmt-registry id))
+(define-read-only (get-locale-fmt-count)
+  (ok (var-get locale-fmt-counter)))
