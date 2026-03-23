@@ -26,6 +26,7 @@
 (define-constant ERR_DEPOSIT_FAILED (err u105))
 (define-constant ERR_WITHDRAWAL_FAILED (err u106))
 (define-constant ERR_YIELD_CALCULATION_FAILED (err u107))
+(define-constant ERR_CONTRACT_PAUSED (err u108))
 
 ;; data vars
 (define-data-var contract-initialized bool false)
@@ -75,7 +76,7 @@
     (current-user-deposit (default-to u0 (map-get? user-deposits tx-sender)))
   )
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
-    (asserts! (not (var-get emergency-pause)) ERR_UNAUTHORIZED)
+    (asserts! (not (var-get emergency-pause)) ERR_CONTRACT_PAUSED)
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
     (asserts! (<= (+ current-user-deposit amount) (var-get max-deposit-per-user)) ERR_INVALID_AMOUNT)
@@ -110,7 +111,7 @@
     (total-available (+ user-deposit user-yield))
   )
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
-    (asserts! (not (var-get emergency-pause)) ERR_UNAUTHORIZED)
+    (asserts! (not (var-get emergency-pause)) ERR_CONTRACT_PAUSED)
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
 
