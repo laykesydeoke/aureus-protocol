@@ -3382,3 +3382,9 @@
 ;; date-parse module
 (define-map date-parse-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var date-parse-counter uint u0)
+(define-public (create-date-parse (val uint))
+  (let ((id (+ (var-get date-parse-counter) u1)))
+    (asserts! (> val u0) (err u1540))
+    (map-set date-parse-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set date-parse-counter id)
+    (ok id)))
