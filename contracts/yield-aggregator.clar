@@ -1090,3 +1090,14 @@
       (var-set volsrf-cnt id) (ok id))))
 (define-read-only (get-volsrf-entry (id uint))
   (map-get? volsrf-log id))
+
+;; grkcal tracking
+(define-map grkcal-log uint { v: uint, at: uint })
+(define-data-var grkcal-cnt uint u0)
+(define-public (log-grkcal (val uint))
+  (begin (asserts! (> val u0) (err u5700))
+    (let ((id (+ (var-get grkcal-cnt) u1)))
+      (map-set grkcal-log id { v: val, at: stacks-block-height })
+      (var-set grkcal-cnt id) (ok id))))
+(define-read-only (get-grkcal-entry (id uint))
+  (map-get? grkcal-log id))
