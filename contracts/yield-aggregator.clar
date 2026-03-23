@@ -79,7 +79,7 @@
   )
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
     (asserts! (not (var-get emergency-pause)) ERR_CONTRACT_PAUSED)
-    (asserts! (> amount u0) ERR_INVALID_AMOUNT)
+    (asserts! (>= amount (var-get min-deposit-amount)) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
     (asserts! (<= (+ current-user-deposit amount) (var-get max-deposit-per-user)) ERR_INVALID_AMOUNT)
     (asserts! (<= (+ (var-get total-deposits) amount) (var-get max-total-deposits)) ERR_INVALID_AMOUNT)
