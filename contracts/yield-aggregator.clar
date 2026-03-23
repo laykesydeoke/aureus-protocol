@@ -3261,3 +3261,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1502))
     (asserts! (get active entry) (err u1503))
     (ok (map-set i18n-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-i18n-svc (id uint))
+  (let ((entry (unwrap! (map-get? i18n-svc-registry id) (err u1501))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1502))
+    (ok (map-set i18n-svc-registry id (merge entry {active: false})))))
