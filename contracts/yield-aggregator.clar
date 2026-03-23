@@ -1101,3 +1101,14 @@
       (var-set grkcal-cnt id) (ok id))))
 (define-read-only (get-grkcal-entry (id uint))
   (map-get? grkcal-log id))
+
+;; rskpar tracking
+(define-map rskpar-log uint { v: uint, at: uint })
+(define-data-var rskpar-cnt uint u0)
+(define-public (log-rskpar (val uint))
+  (begin (asserts! (> val u0) (err u5800))
+    (let ((id (+ (var-get rskpar-cnt) u1)))
+      (map-set rskpar-log id { v: val, at: stacks-block-height })
+      (var-set rskpar-cnt id) (ok id))))
+(define-read-only (get-rskpar-entry (id uint))
+  (map-get? rskpar-log id))
