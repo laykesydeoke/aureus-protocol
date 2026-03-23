@@ -3322,3 +3322,8 @@
     (map-set timezone-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set timezone-svc-counter id)
     (ok id)))
+(define-public (update-timezone-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? timezone-svc-registry id) (err u1521))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1522))
+    (asserts! (get active entry) (err u1523))
+    (ok (map-set timezone-svc-registry id (merge entry {value: new-val})))))
