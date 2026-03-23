@@ -3426,3 +3426,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1552))
     (asserts! (get active entry) (err u1553))
     (ok (map-set currency-fmt-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-currency-fmt (id uint))
+  (let ((entry (unwrap! (map-get? currency-fmt-registry id) (err u1551))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1552))
+    (ok (map-set currency-fmt-registry id (merge entry {active: false})))))
