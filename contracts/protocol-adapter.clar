@@ -330,6 +330,42 @@
   })
 )
 
+;; Get protocol performance data
+(define-read-only (get-protocol-performance (protocol-id uint))
+  (ok (default-to {total-deposited: u0, total-yield-generated: u0, deposit-count: u0}
+        (map-get? protocol-performance protocol-id)))
+)
+
+;; Get best performing protocol by total yield generated
+(define-read-only (get-best-performing-protocol)
+  (let (
+    (zest-perf (default-to {total-deposited: u0, total-yield-generated: u0, deposit-count: u0} (map-get? protocol-performance PROTOCOL_ZEST)))
+    (velar-perf (default-to {total-deposited: u0, total-yield-generated: u0, deposit-count: u0} (map-get? protocol-performance PROTOCOL_VELAR)))
+    (alex-perf (default-to {total-deposited: u0, total-yield-generated: u0, deposit-count: u0} (map-get? protocol-performance PROTOCOL_ALEX)))
+    (stacking-perf (default-to {total-deposited: u0, total-yield-generated: u0, deposit-count: u0} (map-get? protocol-performance PROTOCOL_STACKINGDAO)))
+  )
+    (let (
+      (best-yield (fold max (list
+        (get total-yield-generated zest-perf)
+        (get total-yield-generated velar-perf)
+        (get total-yield-generated alex-perf)
+        (get total-yield-generated stacking-perf)
+      ) u0))
+    )
+      (if (is-eq best-yield (get total-yield-generated zest-perf))
+        (ok PROTOCOL_ZEST)
+        (if (is-eq best-yield (get total-yield-generated velar-perf))
+          (ok PROTOCOL_VELAR)
+          (if (is-eq best-yield (get total-yield-generated alex-perf))
+            (ok PROTOCOL_ALEX)
+            (ok PROTOCOL_STACKINGDAO)
+          )
+        )
+      )
+    )
+  )
+)
+
 ;; private functions
 
 ;; Find maximum value in a list
