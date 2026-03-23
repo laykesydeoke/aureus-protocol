@@ -182,6 +182,22 @@
   )
 )
 
+;; Admin: set per-user deposit cap
+(define-public (set-max-deposit-per-user (new-max uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (> new-max u0) ERR_INVALID_AMOUNT)
+    (var-set max-deposit-per-user new-max)
+    (ok true)))
+
+;; Admin: set global TVL cap
+(define-public (set-max-total-deposits (new-max uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (> new-max u0) ERR_INVALID_AMOUNT)
+    (var-set max-total-deposits new-max)
+    (ok true)))
+
 ;; read only functions
 
 ;; Get user deposit balance
