@@ -3335,3 +3335,7 @@
   (map-get? timezone-svc-registry id))
 (define-read-only (get-timezone-svc-count)
   (ok (var-get timezone-svc-counter)))
+(define-read-only (is-timezone-svc-active (id uint))
+  (match (map-get? timezone-svc-registry id)
+    entry (get active entry)
+    false))
