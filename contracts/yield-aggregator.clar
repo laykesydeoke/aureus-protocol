@@ -1079,3 +1079,14 @@
       (var-set prtdlt-cnt id) (ok id))))
 (define-read-only (get-prtdlt-entry (id uint))
   (map-get? prtdlt-log id))
+
+;; volsrf tracking
+(define-map volsrf-log uint { v: uint, at: uint })
+(define-data-var volsrf-cnt uint u0)
+(define-public (log-volsrf (val uint))
+  (begin (asserts! (> val u0) (err u5600))
+    (let ((id (+ (var-get volsrf-cnt) u1)))
+      (map-set volsrf-log id { v: val, at: stacks-block-height })
+      (var-set volsrf-cnt id) (ok id))))
+(define-read-only (get-volsrf-entry (id uint))
+  (map-get? volsrf-log id))
