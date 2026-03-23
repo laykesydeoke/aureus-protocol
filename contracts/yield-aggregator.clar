@@ -3477,3 +3477,7 @@
     (err u1561)))
 (define-read-only (get-number-fmt-value (id uint))
   (default-to u0 (get value (map-get? number-fmt-registry id))))
+
+;; text-sanitize module
+(define-map text-sanitize-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var text-sanitize-counter uint u0)
