@@ -228,6 +228,12 @@ function loadUserData(address) {
     }
 }
 
+function uintToClarity(n) {
+    // Encode a uint as Clarity value bytes (type byte 0x01 + 16 byte big-endian)
+    var hex = Math.floor(n).toString(16);
+    return '0x01' + hex.padStart(32, '0');
+}
+
 function handleDeposit() {
     var amountInput = document.getElementById('depositAmount');
     var amount = parseFloat(amountInput.value);
@@ -247,8 +253,8 @@ function handleDeposit() {
         contractName: 'yield-aggregator',
         functionName: 'deposit-sbtc',
         functionArgs: [
-            '0x01' + microAmount.toString(16).padStart(32, '0'),
-            CONTRACT_ADDRESS + '.mock-sbtc'
+            uintToClarity(microAmount),
+            '0x0616' + CONTRACT_ADDRESS + '0a' + 'mock-sbtc'.length.toString(16).padStart(2, '0') + Buffer.from('mock-sbtc').toString('hex')
         ],
         appDetails: {
             name: 'Aureus Protocol',
@@ -257,6 +263,7 @@ function handleDeposit() {
         onFinish: function (data) {
             alert('Deposit submitted! TX: ' + data.txId);
             amountInput.value = '';
+            loadVaultMetrics();
         },
         onCancel: function () {
             console.log('Deposit cancelled');
