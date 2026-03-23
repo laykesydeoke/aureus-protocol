@@ -64,15 +64,15 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
     it("prevents deposits when contract is paused", () => {
       // Pause the contract
       simnet.callPublicFn("yield-aggregator", "set-emergency-pause", [Cl.bool(true)], deployer);
-      
+
       const depositResult = simnet.callPublicFn(
-        "yield-aggregator", 
-        "deposit-sbtc", 
-        [Cl.uint(100_000), mockSbtc], 
+        "yield-aggregator",
+        "deposit-sbtc",
+        [Cl.uint(100_000), mockSbtc],
         alice
       );
-      
-      expect(depositResult.result).toStrictEqual(Cl.error(Cl.uint(100))); // ERR_UNAUTHORIZED
+
+      expect(depositResult.result).toStrictEqual(Cl.error(Cl.uint(108))); // ERR_CONTRACT_PAUSED
     });
 
     it("prevents zero amount deposits", () => {
@@ -128,7 +128,7 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
         alice
       );
 
-      expect(withdrawResult.result).toStrictEqual(Cl.error(Cl.uint(100))); // ERR_UNAUTHORIZED
+      expect(withdrawResult.result).toStrictEqual(Cl.error(Cl.uint(108))); // ERR_CONTRACT_PAUSED
     });
 
     it("allows withdrawals after unpause", () => {
