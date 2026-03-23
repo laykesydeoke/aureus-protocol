@@ -1024,3 +1024,14 @@
       (var-set pnltrk-cnt id) (ok id))))
 (define-read-only (get-pnltrk-entry (id uint))
   (map-get? pnltrk-log id))
+
+;; mrktmk tracking
+(define-map mrktmk-log uint { v: uint, at: uint })
+(define-data-var mrktmk-cnt uint u0)
+(define-public (log-mrktmk (val uint))
+  (begin (asserts! (> val u0) (err u5100))
+    (let ((id (+ (var-get mrktmk-cnt) u1)))
+      (map-set mrktmk-log id { v: val, at: stacks-block-height })
+      (var-set mrktmk-cnt id) (ok id))))
+(define-read-only (get-mrktmk-entry (id uint))
+  (map-get? mrktmk-log id))
