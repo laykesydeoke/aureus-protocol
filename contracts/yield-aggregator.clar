@@ -1123,3 +1123,14 @@
       (var-set drwlim-cnt id) (ok id))))
 (define-read-only (get-drwlim-entry (id uint))
   (map-get? drwlim-log id))
+
+;; rebtgr tracking
+(define-map rebtgr-log uint { v: uint, at: uint })
+(define-data-var rebtgr-cnt uint u0)
+(define-public (log-rebtgr (val uint))
+  (begin (asserts! (> val u0) (err u6000))
+    (let ((id (+ (var-get rebtgr-cnt) u1)))
+      (map-set rebtgr-log id { v: val, at: stacks-block-height })
+      (var-set rebtgr-cnt id) (ok id))))
+(define-read-only (get-rebtgr-entry (id uint))
+  (map-get? rebtgr-log id))
