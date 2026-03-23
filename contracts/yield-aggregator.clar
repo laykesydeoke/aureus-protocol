@@ -3529,3 +3529,7 @@
   (let ((entry (unwrap! (map-get? slug-gen-registry id) (err u1581))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1582))
     (ok (map-set slug-gen-registry id (merge entry {active: false})))))
+(define-read-only (get-slug-gen-entry (id uint))
+  (map-get? slug-gen-registry id))
+(define-read-only (get-slug-gen-count)
+  (ok (var-get slug-gen-counter)))
