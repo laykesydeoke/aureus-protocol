@@ -3393,3 +3393,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1542))
     (asserts! (get active entry) (err u1543))
     (ok (map-set date-parse-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-date-parse (id uint))
+  (let ((entry (unwrap! (map-get? date-parse-registry id) (err u1541))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1542))
+    (ok (map-set date-parse-registry id (merge entry {active: false})))))
