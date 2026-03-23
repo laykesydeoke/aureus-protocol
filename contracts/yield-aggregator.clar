@@ -1046,3 +1046,14 @@
       (var-set bsrsk-cnt id) (ok id))))
 (define-read-only (get-bsrsk-entry (id uint))
   (map-get? bsrsk-log id))
+
+;; fndrt tracking
+(define-map fndrt-log uint { v: uint, at: uint })
+(define-data-var fndrt-cnt uint u0)
+(define-public (log-fndrt (val uint))
+  (begin (asserts! (> val u0) (err u5300))
+    (let ((id (+ (var-get fndrt-cnt) u1)))
+      (map-set fndrt-log id { v: val, at: stacks-block-height })
+      (var-set fndrt-cnt id) (ok id))))
+(define-read-only (get-fndrt-entry (id uint))
+  (map-get? fndrt-log id))
