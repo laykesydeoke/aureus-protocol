@@ -3415,3 +3415,9 @@
 ;; currency-fmt module
 (define-map currency-fmt-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var currency-fmt-counter uint u0)
+(define-public (create-currency-fmt (val uint))
+  (let ((id (+ (var-get currency-fmt-counter) u1)))
+    (asserts! (> val u0) (err u1550))
+    (map-set currency-fmt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set currency-fmt-counter id)
+    (ok id)))
