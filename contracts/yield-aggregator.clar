@@ -3327,3 +3327,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1522))
     (asserts! (get active entry) (err u1523))
     (ok (map-set timezone-svc-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-timezone-svc (id uint))
+  (let ((entry (unwrap! (map-get? timezone-svc-registry id) (err u1521))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1522))
+    (ok (map-set timezone-svc-registry id (merge entry {active: false})))))
