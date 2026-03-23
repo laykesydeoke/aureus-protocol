@@ -3421,3 +3421,8 @@
     (map-set currency-fmt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set currency-fmt-counter id)
     (ok id)))
+(define-public (update-currency-fmt (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? currency-fmt-registry id) (err u1551))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1552))
+    (asserts! (get active entry) (err u1553))
+    (ok (map-set currency-fmt-registry id (merge entry {value: new-val})))))
