@@ -3430,3 +3430,7 @@
   (let ((entry (unwrap! (map-get? currency-fmt-registry id) (err u1551))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1552))
     (ok (map-set currency-fmt-registry id (merge entry {active: false})))))
+(define-read-only (get-currency-fmt-entry (id uint))
+  (map-get? currency-fmt-registry id))
+(define-read-only (get-currency-fmt-count)
+  (ok (var-get currency-fmt-counter)))
