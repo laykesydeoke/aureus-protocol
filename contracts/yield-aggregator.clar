@@ -3378,3 +3378,7 @@
     (err u1531)))
 (define-read-only (get-locale-fmt-value (id uint))
   (default-to u0 (get value (map-get? locale-fmt-registry id))))
+
+;; date-parse module
+(define-map date-parse-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var date-parse-counter uint u0)
