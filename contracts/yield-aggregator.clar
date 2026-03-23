@@ -3492,3 +3492,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1572))
     (asserts! (get active entry) (err u1573))
     (ok (map-set text-sanitize-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-text-sanitize (id uint))
+  (let ((entry (unwrap! (map-get? text-sanitize-registry id) (err u1571))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1572))
+    (ok (map-set text-sanitize-registry id (merge entry {active: false})))))
