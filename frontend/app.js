@@ -17,27 +17,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function checkExistingSession() {
     try {
-        var session = localStorage.getItem('blockstack-session');
-        if (session) {
-            var parsed = JSON.parse(session);
-            if (parsed && parsed.userData) {
-                var addr = parsed.userData.profile &&
-                    parsed.userData.profile.stxAddress &&
-                    parsed.userData.profile.stxAddress.testnet;
-                if (addr) {
-                    userAddress = addr;
-                    onConnected(addr);
+        // Check modern stacks-session key first, fall back to legacy blockstack-session
+        var sessionKeys = ['stacks-session', 'blockstack-session'];
+        for (var i = 0; i < sessionKeys.length; i++) {
+            var session = localStorage.getItem(sessionKeys[i]);
+            if (session) {
+                var parsed = JSON.parse(session);
+                if (parsed && parsed.userData) {
+                    var addrKey = CONFIG.network === 'mainnet' ? 'mainnet' : 'testnet';
+                    var addr = parsed.userData.profile &&
+                        parsed.userData.profile.stxAddress &&
+                        parsed.userData.profile.stxAddress[addrKey];
+                    if (addr) {
+                        userAddress = addr;
+                        onConnected(addr);
+                        break;
+                    }
                 }
             }
         }
     } catch (e) {
-        // No session
+        console.warn('Session restore failed:', e);
     }
 }
 
 function handleWalletClick() {
     var btn = document.getElementById('walletBtn');
     if (userAddress) {
+        localStorage.removeItem('stacks-session');
         localStorage.removeItem('blockstack-session');
         userAddress = null;
         btn.textContent = 'Connect Wallet';
