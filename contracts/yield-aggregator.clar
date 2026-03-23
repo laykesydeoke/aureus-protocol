@@ -3368,3 +3368,7 @@
   (map-get? locale-fmt-registry id))
 (define-read-only (get-locale-fmt-count)
   (ok (var-get locale-fmt-counter)))
+(define-read-only (is-locale-fmt-active (id uint))
+  (match (map-get? locale-fmt-registry id)
+    entry (get active entry)
+    false))
