@@ -55,6 +55,8 @@
 (define-data-var max-deposit-per-user uint u500000000) ;; 500M sats default cap
 ;; Global TVL cap
 (define-data-var max-total-deposits uint u5000000000) ;; 5B sats
+;; Minimum deposit amount (0.01 sBTC = 1,000,000 sats)
+(define-data-var min-deposit-amount uint u1000000)
 
 ;; public functions
 
@@ -77,7 +79,7 @@
   )
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
     (asserts! (not (var-get emergency-pause)) ERR_CONTRACT_PAUSED)
-    (asserts! (> amount u0) ERR_INVALID_AMOUNT)
+    (asserts! (>= amount (var-get min-deposit-amount)) ERR_INVALID_AMOUNT)
     (asserts! (>= current-balance amount) ERR_INSUFFICIENT_BALANCE)
     (asserts! (<= (+ current-user-deposit amount) (var-get max-deposit-per-user)) ERR_INVALID_AMOUNT)
     (asserts! (<= (+ (var-get total-deposits) amount) (var-get max-total-deposits)) ERR_INVALID_AMOUNT)
@@ -229,6 +231,15 @@
     (var-set max-total-deposits new-max)
     (ok true)))
 
+;; Admin: set minimum deposit amount
+(define-public (set-minimum-deposit (new-min uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (> new-min u0) ERR_INVALID_AMOUNT)
+    (var-set min-deposit-amount new-min)
+    (print {event: "min-deposit-updated", new-min: new-min, by: tx-sender})
+    (ok true)))
+
 ;; read only functions
 
 ;; Get user deposit balance
@@ -277,6 +288,10 @@
 (define-read-only (get-user-deposit-history (user principal))
   (ok (default-to (list) (map-get? deposit-history user)))
 )
+
+;; Get minimum deposit amount
+(define-read-only (get-minimum-deposit)
+  (ok (var-get min-deposit-amount)))
 
 ;; Get user share of total deposits as basis points (100 = 1%)
 (define-read-only (get-user-share (user principal))
