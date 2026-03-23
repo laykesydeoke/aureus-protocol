@@ -28,16 +28,19 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
   });
 
   describe("Adapter Initialization", () => {
-    it("allows deployer to initialize the adapter", () => {
-      const initResult = simnet.callPublicFn("protocol-adapter", "initialize-adapter", [], deployer);
-      expect(initResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
-      
-      // Check that protocols are initialized
+    it("verifies adapter is initialized with protocols", () => {
+      // Check that protocols are initialized (beforeEach already called initialize-adapter)
       const zestInfo = simnet.callReadOnlyFn("protocol-adapter", "get-protocol-info", [Cl.uint(PROTOCOL_ZEST)], deployer);
       expect(zestInfo.result).toBeOk();
-      
+
       const velarInfo = simnet.callReadOnlyFn("protocol-adapter", "get-protocol-info", [Cl.uint(PROTOCOL_VELAR)], deployer);
       expect(velarInfo.result).toBeOk();
+    });
+
+    it("prevents double initialization of adapter", () => {
+      // beforeEach already initialized, second call should fail
+      const initResult = simnet.callPublicFn("protocol-adapter", "initialize-adapter", [], deployer);
+      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(200))); // ERR_UNAUTHORIZED (already initialized)
     });
 
     it("prevents non-deployer from initializing adapter", () => {

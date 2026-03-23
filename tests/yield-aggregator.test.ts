@@ -235,6 +235,21 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
       expect(aliceYield.result).toStrictEqual(Cl.ok(Cl.uint(20_000)));
     });
 
+    it("correctly handles withdrawal from both deposit and yield", () => {
+      // Deposit
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(500000), mockSbtc], alice);
+      // Credit yield
+      simnet.callPublicFn("yield-aggregator", "credit-user-yield", [Cl.principal(alice), Cl.uint(100000)], deployer);
+      // Withdraw more than deposit but less than total
+      const { result } = simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(550000), mockSbtc], alice);
+      expect(result).toBeOk(Cl.bool(true));
+      // Verify deposit is 0, yield is 50000
+      const deposit = simnet.callReadOnlyFn("yield-aggregator", "get-user-deposit", [Cl.principal(alice)], alice);
+      expect(deposit.result).toBeOk(Cl.uint(0));
+      const yieldBal = simnet.callReadOnlyFn("yield-aggregator", "get-user-yield", [Cl.principal(alice)], alice);
+      expect(yieldBal.result).toBeOk(Cl.uint(50000));
+    });
+
     it("prevents non-owner from crediting yield", () => {
       simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], alice);
 

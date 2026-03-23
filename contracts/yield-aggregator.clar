@@ -97,14 +97,15 @@
       success (begin
         ;; Update user balances
         (if (<= amount user-deposit)
-          (map-set user-deposits caller (- user-deposit amount))
+          (begin
+            (map-set user-deposits caller (- user-deposit amount))
+            (map-set user-yield-earned caller user-yield))
           (begin
             (map-set user-deposits caller u0)
-            (map-set user-yield-earned caller (- total-available amount))
-          )
+            (map-set user-yield-earned caller (- user-yield (- amount user-deposit))))
         )
         ;; Update total deposits
-        (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
+        (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
         (print {event: "withdrawal", user: caller, amount: amount})
         (ok true)
       )
@@ -198,6 +199,11 @@
 )
 
 ;; private functions
+
+;; Return the smaller of two uint values
+(define-private (min (a uint) (b uint))
+  (if (< a b) a b)
+)
 
 ;; Calculate proportional yield for a user
 (define-private (calculate-user-yield (user principal) (total-yield uint))
