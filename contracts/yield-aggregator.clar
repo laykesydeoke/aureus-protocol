@@ -3496,3 +3496,7 @@
   (let ((entry (unwrap! (map-get? text-sanitize-registry id) (err u1571))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1572))
     (ok (map-set text-sanitize-registry id (merge entry {active: false})))))
+(define-read-only (get-text-sanitize-entry (id uint))
+  (map-get? text-sanitize-registry id))
+(define-read-only (get-text-sanitize-count)
+  (ok (var-get text-sanitize-counter)))
