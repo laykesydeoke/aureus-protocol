@@ -110,6 +110,7 @@
     (total-available (+ user-deposit user-yield))
   )
     (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
+    (asserts! (not (var-get emergency-pause)) ERR_UNAUTHORIZED)
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
 
