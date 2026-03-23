@@ -38,9 +38,9 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
     });
 
     it("prevents double initialization of adapter", () => {
-      // beforeEach already initialized, second call should fail
+      // beforeEach already initialized, second call should fail with ERR_ALREADY_INITIALIZED
       const initResult = simnet.callPublicFn("protocol-adapter", "initialize-adapter", [], deployer);
-      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(200))); // ERR_UNAUTHORIZED (already initialized)
+      expect(initResult.result).toStrictEqual(Cl.error(Cl.uint(208))); // ERR_ALREADY_INITIALIZED
     });
 
     it("prevents non-deployer from initializing adapter", () => {

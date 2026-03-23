@@ -26,6 +26,7 @@
 (define-constant ERR_WITHDRAWAL_FAILED (err u205))
 (define-constant ERR_INSUFFICIENT_LIQUIDITY (err u206))
 (define-constant ERR_PROTOCOL_PAUSED (err u207))
+(define-constant ERR_ALREADY_INITIALIZED (err u208))
 
 ;; Protocol identifiers
 (define-constant PROTOCOL_ZEST u1)
@@ -37,7 +38,6 @@
 (define-data-var active-protocol uint PROTOCOL_ZEST)
 (define-data-var total-protocols uint u4)
 (define-data-var adapter-paused bool false)
-(define-data-var rebalancing-threshold uint u500) ;; 5% threshold
 (define-data-var adapter-initialized bool false)
 
 ;; data maps
@@ -58,7 +58,7 @@
 (define-public (initialize-adapter)
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
-    (asserts! (not (var-get adapter-initialized)) ERR_UNAUTHORIZED)
+    (asserts! (not (var-get adapter-initialized)) ERR_ALREADY_INITIALIZED)
 
     ;; Initialize default protocols
     (map-set protocol-info PROTOCOL_ZEST {
