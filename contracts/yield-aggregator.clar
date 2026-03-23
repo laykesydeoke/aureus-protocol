@@ -55,6 +55,8 @@
 (define-data-var max-deposit-per-user uint u500000000) ;; 500M sats default cap
 ;; Global TVL cap
 (define-data-var max-total-deposits uint u5000000000) ;; 5B sats
+;; Minimum deposit amount (0.01 sBTC = 1,000,000 sats)
+(define-data-var min-deposit-amount uint u1000000)
 
 ;; public functions
 
