@@ -1002,3 +1002,14 @@
       (var-set explim-cnt id) (ok id))))
 (define-read-only (get-explim-entry (id uint))
   (map-get? explim-log id))
+
+;; hdgrat tracking
+(define-map hdgrat-log uint { v: uint, at: uint })
+(define-data-var hdgrat-cnt uint u0)
+(define-public (log-hdgrat (val uint))
+  (begin (asserts! (> val u0) (err u4900))
+    (let ((id (+ (var-get hdgrat-cnt) u1)))
+      (map-set hdgrat-log id { v: val, at: stacks-block-height })
+      (var-set hdgrat-cnt id) (ok id))))
+(define-read-only (get-hdgrat-entry (id uint))
+  (map-get? hdgrat-log id))
