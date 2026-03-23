@@ -38,7 +38,6 @@
 (define-data-var active-protocol uint PROTOCOL_ZEST)
 (define-data-var total-protocols uint u4)
 (define-data-var adapter-paused bool false)
-(define-data-var rebalancing-threshold uint u500) ;; 5% threshold
 (define-data-var adapter-initialized bool false)
 
 ;; data maps
