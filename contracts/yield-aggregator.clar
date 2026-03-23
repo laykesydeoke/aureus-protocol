@@ -3283,3 +3283,9 @@
 ;; l10n-mgr module
 (define-map l10n-mgr-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var l10n-mgr-counter uint u0)
+(define-public (create-l10n-mgr (val uint))
+  (let ((id (+ (var-get l10n-mgr-counter) u1)))
+    (asserts! (> val u0) (err u1510))
+    (map-set l10n-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set l10n-mgr-counter id)
+    (ok id)))
