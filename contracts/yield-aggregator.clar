@@ -217,6 +217,16 @@
 
 ;; private functions
 
+;; Determine user deposit tier based on total deposit amount
+(define-private (calculate-tier (total-deposit uint))
+  (if (>= total-deposit TIER_PLATINUM_THRESHOLD)
+    TIER_PLATINUM
+    (if (>= total-deposit TIER_GOLD_THRESHOLD)
+      TIER_GOLD
+      (if (>= total-deposit TIER_SILVER_THRESHOLD)
+        TIER_SILVER
+        TIER_BRONZE))))
+
 ;; Return the smaller of two uint values
 (define-private (min (a uint) (b uint))
   (if (< a b) a b)
