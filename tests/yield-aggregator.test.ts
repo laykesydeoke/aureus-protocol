@@ -16,9 +16,11 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
     // Mint mock sBTC to test users
     simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(1_000_000_000), Cl.principal(alice)], deployer);
     simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(1_000_000_000), Cl.principal(bob)], deployer);
-    
+
     // Initialize the yield aggregator
     simnet.callPublicFn("yield-aggregator", "initialize", [], deployer);
+    // Lower minimum deposit for general tests
+    simnet.callPublicFn("yield-aggregator", "set-minimum-deposit", [Cl.uint(1)], deployer);
   });
 
   describe("Contract Initialization", () => {
@@ -473,6 +475,60 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
     it("returns empty deposit history initially", () => {
       const history = simnet.callReadOnlyFn("yield-aggregator", "get-user-deposit-history", [Cl.principal(bob)], deployer);
       expect(history.result).toStrictEqual(Cl.ok(Cl.list([])));
+    });
+  });
+
+  describe("Minimum Deposit Enforcement", () => {
+    it("get-minimum-deposit returns default value", () => {
+      // Reset to default minimum (beforeEach sets to 1, so set back to default for this test)
+      simnet.callPublicFn("yield-aggregator", "set-minimum-deposit", [Cl.uint(1_000_000)], deployer);
+      const min = simnet.callReadOnlyFn("yield-aggregator", "get-minimum-deposit", [], deployer);
+      expect(min.result).toStrictEqual(Cl.ok(Cl.uint(1_000_000)));
+    });
+
+    it("enforces minimum deposit amount", () => {
+      simnet.callPublicFn("yield-aggregator", "set-minimum-deposit", [Cl.uint(1_000_000)], deployer);
+      const depositResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "deposit-sbtc",
+        [Cl.uint(500_000), mockSbtc], // Below 1M minimum
+        alice
+      );
+      expect(depositResult.result).toStrictEqual(Cl.error(Cl.uint(104))); // ERR_INVALID_AMOUNT
+    });
+
+    it("allows deposit at exactly minimum amount", () => {
+      simnet.callPublicFn("yield-aggregator", "set-minimum-deposit", [Cl.uint(1_000_000)], deployer);
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(1_000_000), Cl.principal(alice)], deployer);
+      const depositResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "deposit-sbtc",
+        [Cl.uint(1_000_000), mockSbtc],
+        alice
+      );
+      expect(depositResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
+    });
+
+    it("owner can update minimum deposit", () => {
+      const setResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "set-minimum-deposit",
+        [Cl.uint(500_000)],
+        deployer
+      );
+      expect(setResult.result).toStrictEqual(Cl.ok(Cl.bool(true)));
+      const min = simnet.callReadOnlyFn("yield-aggregator", "get-minimum-deposit", [], deployer);
+      expect(min.result).toStrictEqual(Cl.ok(Cl.uint(500_000)));
+    });
+
+    it("non-owner cannot set minimum deposit", () => {
+      const setResult = simnet.callPublicFn(
+        "yield-aggregator",
+        "set-minimum-deposit",
+        [Cl.uint(100)],
+        alice
+      );
+      expect(setResult.result).toStrictEqual(Cl.error(Cl.uint(100)));
     });
   });
 });
