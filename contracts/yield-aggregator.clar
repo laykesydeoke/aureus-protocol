@@ -3355,3 +3355,8 @@
     (map-set locale-fmt-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set locale-fmt-counter id)
     (ok id)))
+(define-public (update-locale-fmt (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? locale-fmt-registry id) (err u1531))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1532))
+    (asserts! (get active entry) (err u1533))
+    (ok (map-set locale-fmt-registry id (merge entry {value: new-val})))))
