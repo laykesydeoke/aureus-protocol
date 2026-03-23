@@ -3434,3 +3434,7 @@
   (map-get? currency-fmt-registry id))
 (define-read-only (get-currency-fmt-count)
   (ok (var-get currency-fmt-counter)))
+(define-read-only (is-currency-fmt-active (id uint))
+  (match (map-get? currency-fmt-registry id)
+    entry (get active entry)
+    false))
