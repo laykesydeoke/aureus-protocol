@@ -97,11 +97,12 @@
       success (begin
         ;; Update user balances
         (if (<= amount user-deposit)
-          (map-set user-deposits caller (- user-deposit amount))
+          (begin
+            (map-set user-deposits caller (- user-deposit amount))
+            (map-set user-yield-earned caller user-yield))
           (begin
             (map-set user-deposits caller u0)
-            (map-set user-yield-earned caller (- total-available amount))
-          )
+            (map-set user-yield-earned caller (- user-yield (- amount user-deposit))))
         )
         ;; Update total deposits
         (var-set total-deposits (- (var-get total-deposits) (if (<= amount user-deposit) amount user-deposit)))
