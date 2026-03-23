@@ -3289,3 +3289,8 @@
     (map-set l10n-mgr-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set l10n-mgr-counter id)
     (ok id)))
+(define-public (update-l10n-mgr (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? l10n-mgr-registry id) (err u1511))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1512))
+    (asserts! (get active entry) (err u1513))
+    (ok (map-set l10n-mgr-registry id (merge entry {value: new-val})))))
