@@ -3345,3 +3345,7 @@
     (err u1521)))
 (define-read-only (get-timezone-svc-value (id uint))
   (default-to u0 (get value (map-get? timezone-svc-registry id))))
+
+;; locale-fmt module
+(define-map locale-fmt-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var locale-fmt-counter uint u0)
