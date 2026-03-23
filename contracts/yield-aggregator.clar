@@ -1057,3 +1057,14 @@
       (var-set fndrt-cnt id) (ok id))))
 (define-read-only (get-fndrt-entry (id uint))
   (map-get? fndrt-log id))
+
+;; liqeng tracking
+(define-map liqeng-log uint { v: uint, at: uint })
+(define-data-var liqeng-cnt uint u0)
+(define-public (log-liqeng (val uint))
+  (begin (asserts! (> val u0) (err u5400))
+    (let ((id (+ (var-get liqeng-cnt) u1)))
+      (map-set liqeng-log id { v: val, at: stacks-block-height })
+      (var-set liqeng-cnt id) (ok id))))
+(define-read-only (get-liqeng-entry (id uint))
+  (map-get? liqeng-log id))
