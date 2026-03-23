@@ -3316,3 +3316,9 @@
 ;; timezone-svc module
 (define-map timezone-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var timezone-svc-counter uint u0)
+(define-public (create-timezone-svc (val uint))
+  (let ((id (+ (var-get timezone-svc-counter) u1)))
+    (asserts! (> val u0) (err u1520))
+    (map-set timezone-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set timezone-svc-counter id)
+    (ok id)))
