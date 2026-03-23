@@ -179,6 +179,30 @@
   )
 )
 
+;; Distribute yield to specific user proportionally (owner only)
+(define-public (distribute-to-user (user principal) (total-yield uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
+    (asserts! (> total-yield u0) ERR_INVALID_AMOUNT)
+
+    (let (
+      (user-share (calculate-user-yield user total-yield))
+      (current-yield (default-to u0 (map-get? user-yield-earned user)))
+    )
+      (if (> user-share u0)
+        (begin
+          (map-set user-yield-earned user (+ current-yield user-share))
+          (var-set total-yield-earned (+ (var-get total-yield-earned) user-share))
+          (print {event: "yield-distributed-to-user", user: user, share: user-share, total-yield: total-yield})
+          (ok user-share)
+        )
+        (ok u0)
+      )
+    )
+  )
+)
+
 ;; Emergency pause function (only contract owner)
 (define-public (set-emergency-pause (pause bool))
   (begin
@@ -252,6 +276,19 @@
 ;; Get user deposit history
 (define-read-only (get-user-deposit-history (user principal))
   (ok (default-to (list) (map-get? deposit-history user)))
+)
+
+;; Get user share of total deposits as basis points (100 = 1%)
+(define-read-only (get-user-share (user principal))
+  (let (
+    (user-deposit (default-to u0 (map-get? user-deposits user)))
+    (total (var-get total-deposits))
+  )
+    (if (> total u0)
+      (ok (/ (* user-deposit u10000) total))
+      (ok u0)
+    )
+  )
 )
 
 ;; private functions

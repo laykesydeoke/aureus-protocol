@@ -245,6 +245,41 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
     });
   });
 
+  describe("Yield Distribution Logic", () => {
+    beforeEach(() => {
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(200_000), mockSbtc], alice);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], bob);
+    });
+
+    it("distribute-to-user credits proportional yield", () => {
+      const result = simnet.callPublicFn(
+        "yield-aggregator",
+        "distribute-to-user",
+        [Cl.principal(alice), Cl.uint(30_000)],
+        deployer
+      );
+      expect(result.result).toBeOk(Cl.uint(20_000)); // 200k/300k * 30k = 20k
+
+      const aliceYield = simnet.callReadOnlyFn("yield-aggregator", "get-user-yield", [Cl.principal(alice)], deployer);
+      expect(aliceYield.result).toStrictEqual(Cl.ok(Cl.uint(20_000)));
+    });
+
+    it("get-user-share returns correct basis points", () => {
+      const share = simnet.callReadOnlyFn("yield-aggregator", "get-user-share", [Cl.principal(alice)], deployer);
+      expect(share.result).toStrictEqual(Cl.ok(Cl.uint(6666)));
+    });
+
+    it("distribute-to-user rejects non-owner", () => {
+      const result = simnet.callPublicFn(
+        "yield-aggregator",
+        "distribute-to-user",
+        [Cl.principal(alice), Cl.uint(10_000)],
+        alice
+      );
+      expect(result.result).toStrictEqual(Cl.error(Cl.uint(100)));
+    });
+  });
+
   describe("Per-User Yield Credit", () => {
     it("credits yield proportionally to user deposits", () => {
       simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(200_000), mockSbtc], alice);
