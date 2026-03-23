@@ -3246,3 +3246,7 @@
     (err u1491)))
 (define-read-only (get-csrf-token-value (id uint))
   (default-to u0 (get value (map-get? csrf-token-registry id))))
+
+;; i18n-svc module
+(define-map i18n-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
+(define-data-var i18n-svc-counter uint u0)
