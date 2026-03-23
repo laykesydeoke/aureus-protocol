@@ -85,6 +85,8 @@
     (match (contract-call? token transfer amount tx-sender (as-contract tx-sender) none)
       success (begin
         (map-set user-deposits tx-sender (+ current-user-deposit amount))
+        ;; Update user tier
+        (map-set user-tier tx-sender (calculate-tier (+ current-user-deposit amount)))
         (var-set total-deposits (+ (var-get total-deposits) amount))
         (let ((current-history (default-to (list) (map-get? deposit-history tx-sender))))
           (map-set deposit-history tx-sender
