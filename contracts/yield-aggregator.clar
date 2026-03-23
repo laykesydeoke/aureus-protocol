@@ -3250,3 +3250,9 @@
 ;; i18n-svc module
 (define-map i18n-svc-registry uint {owner: principal, value: uint, active: bool, created: uint})
 (define-data-var i18n-svc-counter uint u0)
+(define-public (create-i18n-svc (val uint))
+  (let ((id (+ (var-get i18n-svc-counter) u1)))
+    (asserts! (> val u0) (err u1500))
+    (map-set i18n-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
+    (var-set i18n-svc-counter id)
+    (ok id)))
