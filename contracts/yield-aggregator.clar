@@ -991,3 +991,14 @@
       (var-set colmgr-cnt id) (ok id))))
 (define-read-only (get-colmgr-entry (id uint))
   (map-get? colmgr-log id))
+
+;; explim tracking
+(define-map explim-log uint { v: uint, at: uint })
+(define-data-var explim-cnt uint u0)
+(define-public (log-explim (val uint))
+  (begin (asserts! (> val u0) (err u4800))
+    (let ((id (+ (var-get explim-cnt) u1)))
+      (map-set explim-log id { v: val, at: stacks-block-height })
+      (var-set explim-cnt id) (ok id))))
+(define-read-only (get-explim-entry (id uint))
+  (map-get? explim-log id))
