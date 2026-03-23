@@ -38,6 +38,7 @@
 (define-data-var total-protocols uint u4)
 (define-data-var adapter-paused bool false)
 (define-data-var rebalancing-threshold uint u500) ;; 5% threshold
+(define-data-var adapter-initialized bool false)
 
 ;; data maps
 (define-map protocol-info uint {
@@ -57,7 +58,8 @@
 (define-public (initialize-adapter)
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
-    
+    (asserts! (not (var-get adapter-initialized)) ERR_UNAUTHORIZED)
+
     ;; Initialize default protocols
     (map-set protocol-info PROTOCOL_ZEST {
       name: "Zest Protocol",
@@ -91,6 +93,7 @@
       last-updated: stacks-block-height
     })
     
+    (var-set adapter-initialized true)
     (print {event: "adapter-initialized", protocols: u4})
     (ok true)
   )
@@ -102,6 +105,7 @@
     (optimal-protocol (unwrap-panic (get-optimal-protocol)))
     (protocol-details (unwrap-panic (map-get? protocol-info optimal-protocol)))
   )
+    (asserts! (var-get adapter-initialized) ERR_PROTOCOL_NOT_FOUND)
     (asserts! (not (var-get adapter-paused)) ERR_PROTOCOL_PAUSED)
     (asserts! (> amount u0) ERR_INVALID_PROTOCOL)
     (asserts! (get is-active protocol-details) ERR_INVALID_PROTOCOL)
