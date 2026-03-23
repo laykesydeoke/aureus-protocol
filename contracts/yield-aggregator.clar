@@ -3360,3 +3360,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1532))
     (asserts! (get active entry) (err u1533))
     (ok (map-set locale-fmt-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-locale-fmt (id uint))
+  (let ((entry (unwrap! (map-get? locale-fmt-registry id) (err u1531))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1532))
+    (ok (map-set locale-fmt-registry id (merge entry {active: false})))))
