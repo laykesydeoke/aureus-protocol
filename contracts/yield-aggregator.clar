@@ -3438,3 +3438,7 @@
   (match (map-get? currency-fmt-registry id)
     entry (get active entry)
     false))
+(define-read-only (get-currency-fmt-owner (id uint))
+  (match (map-get? currency-fmt-registry id)
+    entry (ok (get owner entry))
+    (err u1551)))
