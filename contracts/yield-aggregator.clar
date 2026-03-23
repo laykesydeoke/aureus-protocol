@@ -3558,3 +3558,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1592))
     (asserts! (get active entry) (err u1593))
     (ok (map-set url-encode-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-url-encode (id uint))
+  (let ((entry (unwrap! (map-get? url-encode-registry id) (err u1591))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1592))
+    (ok (map-set url-encode-registry id (merge entry {active: false})))))
