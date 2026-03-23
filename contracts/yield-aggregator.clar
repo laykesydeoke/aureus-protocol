@@ -3467,3 +3467,7 @@
   (map-get? number-fmt-registry id))
 (define-read-only (get-number-fmt-count)
   (ok (var-get number-fmt-counter)))
+(define-read-only (is-number-fmt-active (id uint))
+  (match (map-get? number-fmt-registry id)
+    entry (get active entry)
+    false))
