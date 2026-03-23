@@ -3459,3 +3459,7 @@
     (asserts! (is-eq tx-sender (get owner entry)) (err u1562))
     (asserts! (get active entry) (err u1563))
     (ok (map-set number-fmt-registry id (merge entry {value: new-val})))))
+(define-public (deactivate-number-fmt (id uint))
+  (let ((entry (unwrap! (map-get? number-fmt-registry id) (err u1561))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1562))
+    (ok (map-set number-fmt-registry id (merge entry {active: false})))))
