@@ -33,11 +33,13 @@
 (define-data-var total-deposits uint u0)
 (define-data-var total-yield-earned uint u0)
 (define-data-var emergency-pause bool false)
+(define-data-var withdrawal-counter uint u0)
 
 ;; data maps
 (define-map user-deposits principal uint)
 (define-map user-yield-earned principal uint)
 (define-map deposit-history principal (list 100 {amount: uint, timestamp: uint, block-height: uint}))
+(define-map withdrawal-history uint {user: principal, amount: uint, block-height: uint})
 
 ;; Deposit tiers for yield bonus
 (define-constant TIER_BRONZE u0)
@@ -135,6 +137,12 @@
           (map-set user-tier caller (calculate-tier new-deposit))
           ;; Update total deposits
           (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
+          ;; Record withdrawal in history
+          (let ((withdrawal-id (var-get withdrawal-counter)))
+            (map-set withdrawal-history withdrawal-id
+              {user: caller, amount: amount, block-height: stacks-block-height})
+            (var-set withdrawal-counter (+ withdrawal-id u1))
+          )
           (print {event: "withdrawal", user: caller, amount: amount, new-tier: (calculate-tier new-deposit)})
           (ok true)
         )
@@ -292,6 +300,14 @@
 ;; Get minimum deposit amount
 (define-read-only (get-minimum-deposit)
   (ok (var-get min-deposit-amount)))
+
+;; Get withdrawal record by ID
+(define-read-only (get-withdrawal-record (id uint))
+  (ok (map-get? withdrawal-history id)))
+
+;; Get total withdrawal count
+(define-read-only (get-withdrawal-count)
+  (ok (var-get withdrawal-counter)))
 
 ;; Get user share of total deposits as basis points (100 = 1%)
 (define-read-only (get-user-share (user principal))

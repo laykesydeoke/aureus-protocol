@@ -531,4 +531,39 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
       expect(setResult.result).toStrictEqual(Cl.error(Cl.uint(100)));
     });
   });
+
+  describe("Withdrawal History", () => {
+    beforeEach(() => {
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(5_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(5_000_000), mockSbtc], alice);
+    });
+
+    it("withdrawal count starts at zero before any withdrawal", () => {
+      const count = simnet.callReadOnlyFn("yield-aggregator", "get-withdrawal-count", [], deployer);
+      expect(count.result).toStrictEqual(Cl.ok(Cl.uint(0)));
+    });
+
+    it("records withdrawal in history after withdraw", () => {
+      simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(1_000_000), mockSbtc], alice);
+
+      const count = simnet.callReadOnlyFn("yield-aggregator", "get-withdrawal-count", [], deployer);
+      expect(count.result).toStrictEqual(Cl.ok(Cl.uint(1)));
+
+      const record = simnet.callReadOnlyFn("yield-aggregator", "get-withdrawal-record", [Cl.uint(0)], deployer);
+      expect(record.result).toBeOk();
+    });
+
+    it("increments counter for each withdrawal", () => {
+      simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(1_000_000), mockSbtc], alice);
+      simnet.callPublicFn("yield-aggregator", "withdraw-sbtc", [Cl.uint(1_000_000), mockSbtc], alice);
+
+      const count = simnet.callReadOnlyFn("yield-aggregator", "get-withdrawal-count", [], deployer);
+      expect(count.result).toStrictEqual(Cl.ok(Cl.uint(2)));
+    });
+
+    it("returns none for non-existent withdrawal record", () => {
+      const record = simnet.callReadOnlyFn("yield-aggregator", "get-withdrawal-record", [Cl.uint(99)], deployer);
+      expect(record.result).toStrictEqual(Cl.ok(Cl.none()));
+    });
+  });
 });
