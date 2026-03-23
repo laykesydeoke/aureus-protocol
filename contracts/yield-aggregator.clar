@@ -3401,3 +3401,7 @@
   (map-get? date-parse-registry id))
 (define-read-only (get-date-parse-count)
   (ok (var-get date-parse-counter)))
+(define-read-only (is-date-parse-active (id uint))
+  (match (map-get? date-parse-registry id)
+    entry (get active entry)
+    false))
