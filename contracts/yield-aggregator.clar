@@ -33,11 +33,13 @@
 (define-data-var total-deposits uint u0)
 (define-data-var total-yield-earned uint u0)
 (define-data-var emergency-pause bool false)
+(define-data-var withdrawal-counter uint u0)
 
 ;; data maps
 (define-map user-deposits principal uint)
 (define-map user-yield-earned principal uint)
 (define-map deposit-history principal (list 100 {amount: uint, timestamp: uint, block-height: uint}))
+(define-map withdrawal-history uint {user: principal, amount: uint, block-height: uint})
 
 ;; Deposit tiers for yield bonus
 (define-constant TIER_BRONZE u0)
