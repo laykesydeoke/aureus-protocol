@@ -1068,3 +1068,14 @@
       (var-set liqeng-cnt id) (ok id))))
 (define-read-only (get-liqeng-entry (id uint))
   (map-get? liqeng-log id))
+
+;; prtdlt tracking
+(define-map prtdlt-log uint { v: uint, at: uint })
+(define-data-var prtdlt-cnt uint u0)
+(define-public (log-prtdlt (val uint))
+  (begin (asserts! (> val u0) (err u5500))
+    (let ((id (+ (var-get prtdlt-cnt) u1)))
+      (map-set prtdlt-log id { v: val, at: stacks-block-height })
+      (var-set prtdlt-cnt id) (ok id))))
+(define-read-only (get-prtdlt-entry (id uint))
+  (map-get? prtdlt-log id))
