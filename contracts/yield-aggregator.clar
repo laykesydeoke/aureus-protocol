@@ -3562,3 +3562,7 @@
   (let ((entry (unwrap! (map-get? url-encode-registry id) (err u1591))))
     (asserts! (is-eq tx-sender (get owner entry)) (err u1592))
     (ok (map-set url-encode-registry id (merge entry {active: false})))))
+(define-read-only (get-url-encode-entry (id uint))
+  (map-get? url-encode-registry id))
+(define-read-only (get-url-encode-count)
+  (ok (var-get url-encode-counter)))
