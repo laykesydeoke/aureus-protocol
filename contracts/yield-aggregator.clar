@@ -3256,3 +3256,8 @@
     (map-set i18n-svc-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set i18n-svc-counter id)
     (ok id)))
+(define-public (update-i18n-svc (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? i18n-svc-registry id) (err u1501))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1502))
+    (asserts! (get active entry) (err u1503))
+    (ok (map-set i18n-svc-registry id (merge entry {value: new-val})))))
