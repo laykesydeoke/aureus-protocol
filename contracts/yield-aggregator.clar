@@ -3475,3 +3475,5 @@
   (match (map-get? number-fmt-registry id)
     entry (ok (get owner entry))
     (err u1561)))
+(define-read-only (get-number-fmt-value (id uint))
+  (default-to u0 (get value (map-get? number-fmt-registry id))))
