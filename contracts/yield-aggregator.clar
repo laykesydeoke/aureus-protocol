@@ -3508,3 +3508,5 @@
   (match (map-get? text-sanitize-registry id)
     entry (ok (get owner entry))
     (err u1571)))
+(define-read-only (get-text-sanitize-value (id uint))
+  (default-to u0 (get value (map-get? text-sanitize-registry id))))
