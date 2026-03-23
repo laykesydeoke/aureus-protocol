@@ -936,3 +936,14 @@
       (var-set slpgrd-cnt id) (ok id))))
 (define-read-only (get-slpgrd-entry (id uint))
   (map-get? slpgrd-log id))
+
+;; possiz tracking
+(define-map possiz-log uint { v: uint, at: uint })
+(define-data-var possiz-cnt uint u0)
+(define-public (log-possiz (val uint))
+  (begin (asserts! (> val u0) (err u4300))
+    (let ((id (+ (var-get possiz-cnt) u1)))
+      (map-set possiz-log id { v: val, at: stacks-block-height })
+      (var-set possiz-cnt id) (ok id))))
+(define-read-only (get-possiz-entry (id uint))
+  (map-get? possiz-log id))
