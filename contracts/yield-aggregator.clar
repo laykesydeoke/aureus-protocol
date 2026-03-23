@@ -1013,3 +1013,14 @@
       (var-set hdgrat-cnt id) (ok id))))
 (define-read-only (get-hdgrat-entry (id uint))
   (map-get? hdgrat-log id))
+
+;; pnltrk tracking
+(define-map pnltrk-log uint { v: uint, at: uint })
+(define-data-var pnltrk-cnt uint u0)
+(define-public (log-pnltrk (val uint))
+  (begin (asserts! (> val u0) (err u5000))
+    (let ((id (+ (var-get pnltrk-cnt) u1)))
+      (map-set pnltrk-log id { v: val, at: stacks-block-height })
+      (var-set pnltrk-cnt id) (ok id))))
+(define-read-only (get-pnltrk-entry (id uint))
+  (map-get? pnltrk-log id))
