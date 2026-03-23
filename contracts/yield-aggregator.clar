@@ -3553,3 +3553,8 @@
     (map-set url-encode-registry id {owner: tx-sender, value: val, active: true, created: stacks-block-height})
     (var-set url-encode-counter id)
     (ok id)))
+(define-public (update-url-encode (id uint) (new-val uint))
+  (let ((entry (unwrap! (map-get? url-encode-registry id) (err u1591))))
+    (asserts! (is-eq tx-sender (get owner entry)) (err u1592))
+    (asserts! (get active entry) (err u1593))
+    (ok (map-set url-encode-registry id (merge entry {value: new-val})))))
