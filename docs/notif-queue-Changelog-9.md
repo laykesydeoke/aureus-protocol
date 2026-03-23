@@ -1,0 +1,11 @@
+# notif-queue - Changelog
+
+## notif-queue Changelog
+
+### v1.0.0
+- Initial notif-queue registry implementation
+- CRUD operations with owner controls
+- Active/inactive state management
+- Read-only query functions
+- Input validation and error handling
+- Comprehensive test suite
