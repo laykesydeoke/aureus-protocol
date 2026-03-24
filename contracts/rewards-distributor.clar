@@ -222,6 +222,6 @@
 (define-read-only (preview-user-reward (epoch-id uint) (user principal))
   (match (map-get? reward-epoch { epoch-id: epoch-id })
     epoch (ok (calculate-epoch-reward epoch-id user epoch))
-    (err ERR_EPOCH_NOT_FOUND)
+    (err u302)
   )
 )
