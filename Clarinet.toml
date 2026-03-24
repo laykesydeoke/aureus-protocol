@@ -6,6 +6,11 @@ telemetry = true
 cache_dir = './.cache'
 requirements = []
 
+[contracts.sip010-trait]
+path = 'contracts/sip010-trait.clar'
+clarity_version = 4
+epoch = 'latest'
+
 [contracts.mock-sbtc]
 path = 'contracts/mock-sbtc.clar'
 clarity_version = 4
