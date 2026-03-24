@@ -41,6 +41,12 @@
 (define-constant TIER_GOLD_THRESHOLD u50000000)   ;; 50M sats
 (define-constant TIER_PLATINUM_THRESHOLD u100000000) ;; 100M sats
 
+;; Tier-based yield bonus in basis points (added on top of base yield)
+(define-constant TIER_BONUS_BRONZE u0)       ;; 0% bonus
+(define-constant TIER_BONUS_SILVER u500)     ;; 5% bonus
+(define-constant TIER_BONUS_GOLD u1000)      ;; 10% bonus
+(define-constant TIER_BONUS_PLATINUM u2000)  ;; 20% bonus
+
 (define-map user-tier principal uint)
 
 ;; Per-user deposit cap
@@ -49,6 +55,13 @@
 (define-data-var max-total-deposits uint u5000000000) ;; 5B sats
 ;; Minimum deposit amount (0.01 sBTC = 1,000,000 sats)
 (define-data-var min-deposit-amount uint u1000000)
+
+;; Yield rate tracking - base APY in basis points (e.g. 500 = 5%)
+(define-data-var base-yield-rate uint u500)
+;; Last yield distribution block for rate calculation
+(define-data-var last-distribution-block uint u0)
+;; Total yield distributions count
+(define-data-var distribution-count uint u0)
 
 ;; public functions
 
@@ -174,7 +187,11 @@
 
     ;; Update total yield earned
     (var-set total-yield-earned (+ (var-get total-yield-earned) total-yield))
-    (print {event: "yield-distributed", amount: total-yield, total-yield: (var-get total-yield-earned)})
+    ;; Track distribution metadata
+    (var-set last-distribution-block stacks-block-height)
+    (var-set distribution-count (+ (var-get distribution-count) u1))
+    (print {event: "yield-distributed", amount: total-yield, total-yield: (var-get total-yield-earned),
+            distribution-number: (var-get distribution-count)})
     (ok true)
   )
 )
@@ -238,6 +255,43 @@
     (print {event: "min-deposit-updated", new-min: new-min, by: tx-sender})
     (ok true)))
 
+;; Admin: set base yield rate in basis points (max 50% = 5000 bps)
+(define-public (set-base-yield-rate (new-rate uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (<= new-rate u5000) ERR_INVALID_AMOUNT)
+    (var-set base-yield-rate new-rate)
+    (print {event: "yield-rate-updated", new-rate: new-rate, by: tx-sender})
+    (ok true)))
+
+;; Auto-compound: move earned yield into deposit balance
+;; This increases the user's principal, so future yield calculations
+;; are based on a larger deposit, creating a compounding effect.
+(define-public (auto-compound)
+  (let (
+    (caller tx-sender)
+    (user-yield (default-to u0 (map-get? user-yield-earned caller)))
+    (current-deposit (default-to u0 (map-get? user-deposits caller)))
+    (new-deposit (+ current-deposit user-yield))
+  )
+    (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
+    (asserts! (not (var-get emergency-pause)) ERR_CONTRACT_PAUSED)
+    (asserts! (> user-yield u0) ERR_INVALID_AMOUNT)
+    (asserts! (<= new-deposit (var-get max-deposit-per-user)) ERR_INVALID_AMOUNT)
+    (asserts! (<= (+ (var-get total-deposits) user-yield) (var-get max-total-deposits)) ERR_INVALID_AMOUNT)
+
+    ;; Move yield into deposit
+    (map-set user-deposits caller new-deposit)
+    (map-set user-yield-earned caller u0)
+    ;; Update tier based on new deposit total
+    (map-set user-tier caller (calculate-tier new-deposit))
+    ;; Increase total deposits by compounded yield
+    (var-set total-deposits (+ (var-get total-deposits) user-yield))
+    (print {event: "auto-compound", user: caller, compounded: user-yield, new-deposit: new-deposit})
+    (ok user-yield)
+  )
+)
+
 ;; read only functions
 
 ;; Get user deposit balance
@@ -282,6 +336,10 @@
 (define-read-only (get-max-total-deposits)
   (ok (var-get max-total-deposits)))
 
+;; Get yield bonus for a user based on their tier (basis points)
+(define-read-only (get-user-tier-bonus (user principal))
+  (ok (get-tier-bonus (default-to TIER_BRONZE (map-get? user-tier user)))))
+
 ;; Get user deposit history
 (define-read-only (get-user-deposit-history (user principal))
   (ok (default-to (list) (map-get? deposit-history user)))
@@ -299,6 +357,23 @@
 (define-read-only (get-withdrawal-count)
   (ok (var-get withdrawal-counter)))
 
+;; Get base yield rate (basis points)
+(define-read-only (get-base-yield-rate)
+  (ok (var-get base-yield-rate)))
+
+;; Get last distribution block
+(define-read-only (get-last-distribution-block)
+  (ok (var-get last-distribution-block)))
+
+;; Get total distribution count
+(define-read-only (get-distribution-count)
+  (ok (var-get distribution-count)))
+
+;; Get effective yield rate for a user (base + tier bonus, in basis points)
+(define-read-only (get-effective-yield-rate (user principal))
+  (let ((tier-bonus (get-tier-bonus (default-to TIER_BRONZE (map-get? user-tier user)))))
+    (ok (+ (var-get base-yield-rate) tier-bonus))))
+
 ;; Get user share of total deposits as basis points (100 = 1%)
 (define-read-only (get-user-share (user principal))
   (let (
@@ -309,6 +384,28 @@
       (ok (/ (* user-deposit u10000) total))
       (ok u0)
     )
+  )
+)
+
+;; Get comprehensive user portfolio summary
+(define-read-only (get-user-portfolio (user principal))
+  (let (
+    (deposit (default-to u0 (map-get? user-deposits user)))
+    (yield-earned (default-to u0 (map-get? user-yield-earned user)))
+    (tier (default-to TIER_BRONZE (map-get? user-tier user)))
+    (tier-bonus (get-tier-bonus tier))
+    (total (var-get total-deposits))
+    (share (if (> total u0) (/ (* deposit u10000) total) u0))
+  )
+    (ok {
+      deposit: deposit,
+      yield-earned: yield-earned,
+      total-balance: (+ deposit yield-earned),
+      tier: tier,
+      tier-bonus: tier-bonus,
+      effective-rate: (+ (var-get base-yield-rate) tier-bonus),
+      share-bps: share
+    })
   )
 )
 
@@ -334,14 +431,25 @@
   (if (< a b) a b)
 )
 
-;; Calculate proportional yield for a user
+;; Get yield bonus for a given tier (basis points)
+(define-private (get-tier-bonus (tier uint))
+  (if (is-eq tier TIER_PLATINUM) TIER_BONUS_PLATINUM
+    (if (is-eq tier TIER_GOLD) TIER_BONUS_GOLD
+      (if (is-eq tier TIER_SILVER) TIER_BONUS_SILVER
+        TIER_BONUS_BRONZE))))
+
+;; Calculate proportional yield for a user with tier bonus
 (define-private (calculate-user-yield (user principal) (total-yield uint))
   (let (
     (user-deposit (default-to u0 (map-get? user-deposits user)))
     (contract-total-deposits (var-get total-deposits))
+    (user-current-tier (default-to TIER_BRONZE (map-get? user-tier user)))
+    (tier-bonus (get-tier-bonus user-current-tier))
   )
     (if (> contract-total-deposits u0)
-      (/ (* user-deposit total-yield) contract-total-deposits)
+      (let ((base-yield (/ (* user-deposit total-yield) contract-total-deposits)))
+        ;; Apply tier bonus: base-yield * (10000 + bonus) / 10000
+        (/ (* base-yield (+ u10000 tier-bonus)) u10000))
       u0
     )
   )
