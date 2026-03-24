@@ -184,3 +184,44 @@
     )
   )
 )
+
+;; read only functions
+
+;; Get epoch details by epoch ID
+(define-read-only (get-epoch-details (epoch-id uint))
+  (ok (map-get? reward-epoch { epoch-id: epoch-id }))
+)
+
+;; Get user claim status for a specific epoch
+(define-read-only (get-user-claim-status (epoch-id uint) (user principal))
+  (ok (default-to { claimed: false, amount: u0 }
+        (map-get? user-claims { epoch-id: epoch-id, user: user })))
+)
+
+;; Get the current epoch ID (latest epoch number)
+(define-read-only (get-current-epoch)
+  (ok (var-get epoch-counter))
+)
+
+;; Get the block height when the current epoch started
+(define-read-only (get-current-epoch-start)
+  (ok (var-get current-epoch-start))
+)
+
+;; Check if the distributor has been initialized
+(define-read-only (is-initialized)
+  (ok (var-get distributor-initialized))
+)
+
+;; Get a user's deposit snapshot for a specific epoch
+(define-read-only (get-user-epoch-deposit (epoch-id uint) (user principal))
+  (ok (default-to u0 (map-get? epoch-user-deposits { epoch-id: epoch-id, user: user })))
+)
+
+;; Calculate how much a user would receive from a specific epoch (preview)
+(define-read-only (preview-user-reward (epoch-id uint) (user principal))
+  (match (map-get? reward-epoch { epoch-id: epoch-id })
+    epoch (ok (calculate-epoch-reward epoch-id user epoch))
+    (err ERR_EPOCH_NOT_FOUND)
+  )
+)
