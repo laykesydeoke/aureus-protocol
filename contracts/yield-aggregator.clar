@@ -56,6 +56,13 @@
 ;; Minimum deposit amount (0.01 sBTC = 1,000,000 sats)
 (define-data-var min-deposit-amount uint u1000000)
 
+;; Yield rate tracking - base APY in basis points (e.g. 500 = 5%)
+(define-data-var base-yield-rate uint u500)
+;; Last yield distribution block for rate calculation
+(define-data-var last-distribution-block uint u0)
+;; Total yield distributions count
+(define-data-var distribution-count uint u0)
+
 ;; public functions
 
 ;; Initialize the yield aggregator (only contract owner)
@@ -180,7 +187,11 @@
 
     ;; Update total yield earned
     (var-set total-yield-earned (+ (var-get total-yield-earned) total-yield))
-    (print {event: "yield-distributed", amount: total-yield, total-yield: (var-get total-yield-earned)})
+    ;; Track distribution metadata
+    (var-set last-distribution-block stacks-block-height)
+    (var-set distribution-count (+ (var-get distribution-count) u1))
+    (print {event: "yield-distributed", amount: total-yield, total-yield: (var-get total-yield-earned),
+            distribution-number: (var-get distribution-count)})
     (ok true)
   )
 )
@@ -242,6 +253,15 @@
     (asserts! (> new-min u0) ERR_INVALID_AMOUNT)
     (var-set min-deposit-amount new-min)
     (print {event: "min-deposit-updated", new-min: new-min, by: tx-sender})
+    (ok true)))
+
+;; Admin: set base yield rate in basis points (max 50% = 5000 bps)
+(define-public (set-base-yield-rate (new-rate uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (<= new-rate u5000) ERR_INVALID_AMOUNT)
+    (var-set base-yield-rate new-rate)
+    (print {event: "yield-rate-updated", new-rate: new-rate, by: tx-sender})
     (ok true)))
 
 ;; Auto-compound: move earned yield into deposit balance
@@ -336,6 +356,23 @@
 ;; Get total withdrawal count
 (define-read-only (get-withdrawal-count)
   (ok (var-get withdrawal-counter)))
+
+;; Get base yield rate (basis points)
+(define-read-only (get-base-yield-rate)
+  (ok (var-get base-yield-rate)))
+
+;; Get last distribution block
+(define-read-only (get-last-distribution-block)
+  (ok (var-get last-distribution-block)))
+
+;; Get total distribution count
+(define-read-only (get-distribution-count)
+  (ok (var-get distribution-count)))
+
+;; Get effective yield rate for a user (base + tier bonus, in basis points)
+(define-read-only (get-effective-yield-rate (user principal))
+  (let ((tier-bonus (get-tier-bonus (default-to TIER_BRONZE (map-get? user-tier user)))))
+    (ok (+ (var-get base-yield-rate) tier-bonus))))
 
 ;; Get user share of total deposits as basis points (100 = 1%)
 (define-read-only (get-user-share (user principal))
