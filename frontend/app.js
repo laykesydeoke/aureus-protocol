@@ -445,9 +445,14 @@ function handleDeposit() {
             icon: window.location.origin + '/favicon.svg'
         },
         onFinish: function (data) {
-            alert('Deposit submitted! TX: ' + data.txId);
             amountInput.value = '';
-            loadVaultMetrics();
+            showTxStatus('Deposit pending: ' + data.txId, 'pending');
+            pollTxConfirmation(data.txId, function () {
+                showTxStatus('Deposit confirmed!', 'confirmed');
+                loadVaultMetrics();
+                loadUserData(userAddress);
+                loadContractEvents();
+            });
         },
         onCancel: function () {
             console.log('Deposit cancelled');
@@ -489,10 +494,14 @@ function handleWithdraw() {
             icon: window.location.origin + '/favicon.svg'
         },
         onFinish: function (data) {
-            alert('Withdrawal submitted! TX: ' + data.txId);
             amountInput.value = '';
-            loadVaultMetrics();
-            loadUserData(userAddress);
+            showTxStatus('Withdrawal pending: ' + data.txId, 'pending');
+            pollTxConfirmation(data.txId, function () {
+                showTxStatus('Withdrawal confirmed!', 'confirmed');
+                loadVaultMetrics();
+                loadUserData(userAddress);
+                loadContractEvents();
+            });
         },
         onCancel: function () {
             console.log('Withdrawal cancelled');
@@ -517,4 +526,59 @@ function callReadOnly(contract, fnName, args) {
             arguments: args || []
         })
     }).then(function (r) { return r.json(); });
+}
+
+/**
+ * Show transaction status message in the vault status area.
+ * @param {string} message - Status text to display
+ * @param {string} state - 'pending' or 'confirmed'
+ */
+function showTxStatus(message, state) {
+    var statusEl = document.getElementById('txStatus');
+    var textEl = document.getElementById('txStatusText');
+    if (!statusEl || !textEl) return;
+
+    textEl.textContent = message;
+    statusEl.className = 'tx-status tx-status-' + (state || 'pending');
+    statusEl.style.display = 'block';
+
+    if (state === 'confirmed') {
+        setTimeout(function () {
+            statusEl.style.display = 'none';
+        }, 5000);
+    }
+}
+
+/**
+ * Poll for transaction confirmation using getTransactionById.
+ * @param {string} txId - Transaction ID to poll
+ * @param {Function} onConfirmed - Callback when tx is confirmed
+ * @param {number} maxAttempts - Max polling attempts (default 30)
+ */
+function pollTxConfirmation(txId, onConfirmed, maxAttempts) {
+    var attempts = 0;
+    var max = maxAttempts || 30;
+    var intervalMs = 6000; // 6 second polling interval
+
+    function checkOnce() {
+        attempts++;
+        getTransactionById(txId)
+            .then(function (tx) {
+                if (tx && (tx.tx_status === 'success' || tx.tx_status === 'abort_by_response')) {
+                    if (typeof onConfirmed === 'function') onConfirmed(tx);
+                } else if (attempts < max) {
+                    setTimeout(checkOnce, intervalMs);
+                } else {
+                    showTxStatus('Transaction timed out. Check explorer.', 'error');
+                }
+            })
+            .catch(function (err) {
+                console.warn('TX poll error:', err);
+                if (attempts < max) {
+                    setTimeout(checkOnce, intervalMs);
+                }
+            });
+    }
+
+    setTimeout(checkOnce, intervalMs);
 }
