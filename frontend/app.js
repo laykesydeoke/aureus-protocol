@@ -538,17 +538,15 @@ function handleWithdraw() {
     }
 }
 
+/**
+ * Call a read-only Clarity function (legacy wrapper using callContractReadOnly).
+ * @param {string} contract - Contract name
+ * @param {string} fnName - Function name
+ * @param {Array} args - Encoded arguments
+ * @returns {Promise<object>}
+ */
 function callReadOnly(contract, fnName, args) {
-    var url = API_URL + '/v2/contracts/call-read/' +
-        CONTRACT_ADDRESS + '/' + contract + '/' + fnName;
-    return fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            sender: CONTRACT_ADDRESS,
-            arguments: args || []
-        })
-    }).then(function (r) { return r.json(); });
+    return callContractReadOnly(CONTRACT_ADDRESS, contract, fnName, args);
 }
 
 /**
