@@ -4,7 +4,7 @@
 ;; description: SIP-010 compliant mock token for testing Aureus Protocol
 
 ;; traits
-(impl-trait .yield-aggregator.sip-010-trait)
+(impl-trait .sip010-trait.sip-010-trait)
 
 ;; token definitions
 (define-fungible-token mock-sbtc)

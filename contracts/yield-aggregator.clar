@@ -4,17 +4,7 @@
 ;; description: Core yield optimization platform for institutional users
 
 ;; traits
-(define-trait sip-010-trait
-  (
-    (transfer (uint principal principal (optional (buff 34))) (response bool uint))
-    (get-name () (response (string-ascii 32) uint))
-    (get-symbol () (response (string-ascii 32) uint))
-    (get-decimals () (response uint uint))
-    (get-balance (principal) (response uint uint))
-    (get-total-supply () (response uint uint))
-    (get-token-uri () (response (optional (string-utf8 256)) uint))
-  )
-)
+(use-trait sip-010-trait .sip010-trait.sip-010-trait)
 
 ;; constants
 (define-constant CONTRACT_OWNER tx-sender)
@@ -119,8 +109,8 @@
     (asserts! (> amount u0) ERR_INVALID_AMOUNT)
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
 
-    ;; Transfer tokens back from contract vault to user
-    (match (as-contract (contract-call? token transfer amount tx-sender caller none))
+    ;; Transfer tokens back from contract vault to user via contract-as-sender helper
+    (match (vault-transfer token amount caller)
       success (begin
         ;; Update user balances
         (let ((new-deposit
@@ -323,6 +313,11 @@
 )
 
 ;; private functions
+
+;; Transfer tokens from vault (contract) to a recipient using as-contract
+(define-private (vault-transfer (token <sip-010-trait>) (amount uint) (recipient principal))
+  (as-contract (contract-call? token transfer amount tx-sender recipient none))
+)
 
 ;; Determine user deposit tier based on total deposit amount
 (define-private (calculate-tier (total-deposit uint))
