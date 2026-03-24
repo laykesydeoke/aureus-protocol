@@ -127,3 +127,40 @@
     (ok true)
   )
 )
+
+;; Claim rewards for a completed epoch
+;; Users call this after an epoch ends to receive their proportional reward share
+(define-public (claim-rewards (epoch-id uint) (token <sip-010-trait>))
+  (let (
+    (caller tx-sender)
+    (epoch (unwrap! (map-get? reward-epoch { epoch-id: epoch-id }) ERR_EPOCH_NOT_FOUND))
+    (existing-claim (default-to { claimed: false, amount: u0 }
+                      (map-get? user-claims { epoch-id: epoch-id, user: caller })))
+  )
+    ;; Epoch must have ended
+    (asserts! (>= stacks-block-height (get end-block epoch)) ERR_EPOCH_STILL_ACTIVE)
+    ;; User must not have already claimed
+    (asserts! (not (get claimed existing-claim)) ERR_ALREADY_CLAIMED)
+
+    (let (
+      (reward-share (calculate-epoch-reward epoch-id caller epoch))
+    )
+      ;; Must have non-zero reward
+      (asserts! (> reward-share u0) ERR_NOTHING_TO_CLAIM)
+
+      ;; Record the claim before transfer
+      (map-set user-claims { epoch-id: epoch-id, user: caller }
+        { claimed: true, amount: reward-share }
+      )
+
+      ;; Transfer reward tokens from contract vault to user
+      (match (as-contract (contract-call? token transfer reward-share tx-sender caller none))
+        success (begin
+          (print {event: "rewards-claimed", epoch-id: epoch-id, user: caller, amount: reward-share})
+          (ok reward-share)
+        )
+        error ERR_NOTHING_TO_CLAIM
+      )
+    )
+  )
+)
