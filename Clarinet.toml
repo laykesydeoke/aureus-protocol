@@ -36,6 +36,11 @@ path = 'contracts/staking-timelock.clar'
 clarity_version = 3
 epoch = '3.2'
 
+[contracts.fee-manager]
+path = 'contracts/fee-manager.clar'
+clarity_version = 3
+epoch = '3.2'
+
 [repl.analysis]
 passes = []
 
