@@ -9,22 +9,22 @@ requirements = []
 [contracts.sip010-trait]
 path = 'contracts/sip010-trait.clar'
 clarity_version = 3
-epoch = 'latest'
+epoch = '3.2'
 
 [contracts.mock-sbtc]
 path = 'contracts/mock-sbtc.clar'
 clarity_version = 3
-epoch = 'latest'
+epoch = '3.2'
 
 [contracts.protocol-adapter]
 path = 'contracts/protocol-adapter.clar'
 clarity_version = 3
-epoch = 'latest'
+epoch = '3.2'
 
 [contracts.yield-aggregator]
 path = 'contracts/yield-aggregator.clar'
 clarity_version = 3
-epoch = 'latest'
+epoch = '3.2'
 
 [repl.analysis]
 passes = []
