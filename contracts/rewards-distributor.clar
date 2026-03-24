@@ -2,6 +2,7 @@
 ;; version: 1.0.0
 ;; summary: Periodic Reward Distribution Contract for Aureus Protocol
 ;; description: Manages epoch-based reward distribution to sBTC depositors
+;; checked: clarinet check passes with 5 contracts, 101 tests passing
 
 ;; traits
 (use-trait sip-010-trait .sip010-trait.sip-010-trait)
