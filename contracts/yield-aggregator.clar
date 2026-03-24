@@ -387,6 +387,28 @@
   )
 )
 
+;; Get comprehensive user portfolio summary
+(define-read-only (get-user-portfolio (user principal))
+  (let (
+    (deposit (default-to u0 (map-get? user-deposits user)))
+    (yield-earned (default-to u0 (map-get? user-yield-earned user)))
+    (tier (default-to TIER_BRONZE (map-get? user-tier user)))
+    (tier-bonus (get-tier-bonus tier))
+    (total (var-get total-deposits))
+    (share (if (> total u0) (/ (* deposit u10000) total) u0))
+  )
+    (ok {
+      deposit: deposit,
+      yield-earned: yield-earned,
+      total-balance: (+ deposit yield-earned),
+      tier: tier,
+      tier-bonus: tier-bonus,
+      effective-rate: (+ (var-get base-yield-rate) tier-bonus),
+      share-bps: share
+    })
+  )
+)
+
 ;; private functions
 
 ;; Transfer tokens from vault (contract) to a recipient using as-contract
