@@ -7,6 +7,84 @@ var API_URL = CONFIG.apiUrl;
 var CONTRACT_ADDRESS = CONFIG.contractAddress;
 var userAddress = null;
 
+// ============================================================
+// Stacks API Helper Module
+// ============================================================
+
+/**
+ * Generic Stacks API fetcher with error handling and JSON parsing.
+ * @param {string} endpoint - Path relative to API_URL (e.g. '/extended/v1/...')
+ * @returns {Promise<object>} Parsed JSON response
+ */
+function fetchStacksApi(endpoint) {
+    return fetch(API_URL + endpoint, {
+        headers: { 'Content-Type': 'application/json' }
+    }).then(function (res) {
+        if (!res.ok) {
+            throw new Error('Stacks API error ' + res.status + ' for ' + endpoint);
+        }
+        return res.json();
+    }).catch(function (err) {
+        console.error('fetchStacksApi failed:', endpoint, err);
+        throw err;
+    });
+}
+
+/**
+ * Get STX balance for an address.
+ * @param {string} address - Stacks address
+ * @returns {Promise<object>} Balance object with balance, locked fields
+ */
+function getSTXBalance(address) {
+    return fetchStacksApi('/extended/v1/address/' + address + '/stx');
+}
+
+/**
+ * Get recent contract events for a contract ID.
+ * @param {string} contractId - Format: "address.contract-name"
+ * @param {number} limit - Number of events to fetch (default 20)
+ * @returns {Promise<object>} Events response
+ */
+function getContractEvents(contractId, limit) {
+    var l = limit || 20;
+    return fetchStacksApi('/extended/v1/contract/' + encodeURIComponent(contractId) + '/events?limit=' + l);
+}
+
+/**
+ * Call a read-only contract function via the Stacks v2 API.
+ * @param {string} addr - Contract deployer address
+ * @param {string} name - Contract name
+ * @param {string} fn - Function name
+ * @param {Array} args - Array of Clarity value hex strings
+ * @returns {Promise<object>} Result with okay and result fields
+ */
+function callContractReadOnly(addr, name, fn, args) {
+    var url = API_URL + '/v2/contracts/call-read/' + addr + '/' + name + '/' + fn;
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: addr, arguments: args || [] })
+    }).then(function (r) { return r.json(); });
+}
+
+/**
+ * Get a transaction by its ID.
+ * @param {string} txid - Transaction ID (with or without 0x prefix)
+ * @returns {Promise<object>} Transaction details
+ */
+function getTransactionById(txid) {
+    var id = txid.startsWith('0x') ? txid : '0x' + txid;
+    return fetchStacksApi('/extended/v1/tx/' + id);
+}
+
+/**
+ * Get current network info (block height, etc).
+ * @returns {Promise<object>} Network info object
+ */
+function getNetworkInfo() {
+    return fetchStacksApi('/v2/info');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('walletBtn').addEventListener('click', handleWalletClick);
     document.getElementById('depositBtn').addEventListener('click', handleDeposit);
