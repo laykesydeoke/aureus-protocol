@@ -376,6 +376,127 @@ footer {
     font-size: 0.8rem;
 }
 
+/* Transaction Status */
+.tx-status {
+    margin-top: 0.75rem;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+.tx-status-pending { background: rgba(201, 168, 76, 0.15); color: var(--gold); border: 1px solid var(--gold); }
+.tx-status-confirmed { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid var(--green); }
+.tx-status-error { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; }
+
+/* Transactions Section */
+.transactions {
+    padding: 3rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.transactions h2 {
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.tx-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.tx-list {
+    min-height: 80px;
+    margin-bottom: 1rem;
+}
+
+.tx-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+
+.tx-item:last-child { border-bottom: none; }
+
+.tx-type {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--gold);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    min-width: 100px;
+    text-align: center;
+}
+
+.tx-id {
+    color: var(--muted);
+    font-family: monospace;
+    font-size: 0.8rem;
+}
+
+.tx-log {
+    color: var(--text);
+    font-size: 0.78rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.tx-empty, .tx-loading {
+    color: var(--muted);
+    font-size: 0.88rem;
+    padding: 1rem 0;
+}
+
+/* Network Status Section */
+.network-status {
+    padding: 2rem 2rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.network-status h2 {
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.network-grid {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.network-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 160px;
+}
+
+.network-label {
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.network-val {
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
     .nav { padding: 0.8rem 1.2rem; }
@@ -386,4 +507,6 @@ footer {
     .metrics-grid { flex-direction: column; gap: 1.5rem; }
     .vault-actions { flex-direction: column; }
     .footer-grid { flex-direction: column; gap: 1.5rem; }
+    .network-grid { flex-direction: column; }
+    .tx-item { flex-wrap: wrap; }
 }

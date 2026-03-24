@@ -7,12 +7,96 @@ var API_URL = CONFIG.apiUrl;
 var CONTRACT_ADDRESS = CONFIG.contractAddress;
 var userAddress = null;
 
+// ============================================================
+// Stacks API Helper Module
+// ============================================================
+
+/**
+ * Generic Stacks API fetcher with error handling and JSON parsing.
+ * @param {string} endpoint - Path relative to API_URL (e.g. '/extended/v1/...')
+ * @returns {Promise<object>} Parsed JSON response
+ */
+function fetchStacksApi(endpoint) {
+    return fetch(API_URL + endpoint, {
+        headers: { 'Content-Type': 'application/json' }
+    }).then(function (res) {
+        if (!res.ok) {
+            throw new Error('Stacks API error ' + res.status + ' for ' + endpoint);
+        }
+        return res.json();
+    }).catch(function (err) {
+        console.error('fetchStacksApi failed:', endpoint, err);
+        throw err;
+    });
+}
+
+/**
+ * Get STX balance for an address.
+ * @param {string} address - Stacks address
+ * @returns {Promise<object>} Balance object with balance, locked fields
+ */
+function getSTXBalance(address) {
+    return fetchStacksApi('/extended/v1/address/' + address + '/stx');
+}
+
+/**
+ * Get recent contract events for a contract ID.
+ * @param {string} contractId - Format: "address.contract-name"
+ * @param {number} limit - Number of events to fetch (default 20)
+ * @returns {Promise<object>} Events response
+ */
+function getContractEvents(contractId, limit) {
+    var l = limit || 20;
+    return fetchStacksApi('/extended/v1/contract/' + encodeURIComponent(contractId) + '/events?limit=' + l);
+}
+
+/**
+ * Call a read-only contract function via the Stacks v2 API.
+ * @param {string} addr - Contract deployer address
+ * @param {string} name - Contract name
+ * @param {string} fn - Function name
+ * @param {Array} args - Array of Clarity value hex strings
+ * @returns {Promise<object>} Result with okay and result fields
+ */
+function callContractReadOnly(addr, name, fn, args) {
+    var url = API_URL + '/v2/contracts/call-read/' + addr + '/' + name + '/' + fn;
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: addr, arguments: args || [] })
+    }).then(function (r) { return r.json(); });
+}
+
+/**
+ * Get a transaction by its ID.
+ * @param {string} txid - Transaction ID (with or without 0x prefix)
+ * @returns {Promise<object>} Transaction details
+ */
+function getTransactionById(txid) {
+    var id = txid.startsWith('0x') ? txid : '0x' + txid;
+    return fetchStacksApi('/extended/v1/tx/' + id);
+}
+
+/**
+ * Get current network info (block height, etc).
+ * @returns {Promise<object>} Network info object
+ */
+function getNetworkInfo() {
+    return fetchStacksApi('/v2/info');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('walletBtn').addEventListener('click', handleWalletClick);
     document.getElementById('depositBtn').addEventListener('click', handleDeposit);
     document.getElementById('withdrawBtn').addEventListener('click', handleWithdraw);
+    var refreshBtn = document.getElementById('refreshTxBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadContractEvents);
     loadProtocolRates();
+    loadContractEvents();
+    loadNetworkStatus();
     checkExistingSession();
+    // Auto-refresh network status every 30 seconds
+    setInterval(loadNetworkStatus, 30000);
 });
 
 function checkExistingSession() {
@@ -97,6 +181,8 @@ function onConnected(address) {
     btn.classList.add('connected');
     loadUserData(address);
     loadVaultMetrics();
+    loadNetworkStatus();
+    loadContractEvents();
 }
 
 function loadProtocolRates() {
@@ -177,6 +263,108 @@ function loadVaultMetrics() {
     }
 }
 
+/**
+ * Load recent contract events from yield-aggregator and display in the transactions panel.
+ */
+function loadContractEvents() {
+    var contractId = CONTRACT_ADDRESS + '.yield-aggregator';
+    var listEl = document.getElementById('txList');
+    if (listEl) {
+        listEl.textContent = '';
+        var loadingP = document.createElement('p');
+        loadingP.className = 'tx-loading';
+        loadingP.textContent = 'Loading events...';
+        listEl.appendChild(loadingP);
+    }
+
+    getContractEvents(contractId, 10)
+        .then(function (data) {
+            renderContractEvents(data);
+        })
+        .catch(function (err) {
+            console.error('Failed to load contract events:', err);
+            if (listEl) {
+                listEl.textContent = '';
+                var emptyP = document.createElement('p');
+                emptyP.className = 'tx-empty';
+                emptyP.textContent = 'Could not load events. Check API connectivity.';
+                listEl.appendChild(emptyP);
+            }
+        });
+}
+
+/**
+ * Render contract events into the transactions panel using safe DOM methods.
+ * @param {object} data - API response with results array
+ */
+function renderContractEvents(data) {
+    var listEl = document.getElementById('txList');
+    if (!listEl) return;
+
+    listEl.textContent = '';
+
+    if (!data || !data.results || data.results.length === 0) {
+        var emptyP = document.createElement('p');
+        emptyP.className = 'tx-empty';
+        emptyP.textContent = 'No recent contract events found.';
+        listEl.appendChild(emptyP);
+        return;
+    }
+
+    data.results.forEach(function (event) {
+        var eventType = event.event_type || 'unknown';
+        var txId = event.tx_id || '';
+        var shortTx = txId ? txId.slice(0, 10) + '...' : 'N/A';
+        var contractLogRepr = '';
+        if (event.contract_log && event.contract_log.value) {
+            contractLogRepr = event.contract_log.value.repr || '';
+        }
+
+        var itemDiv = document.createElement('div');
+        itemDiv.className = 'tx-item';
+
+        var typeSpan = document.createElement('span');
+        typeSpan.className = 'tx-type';
+        typeSpan.textContent = eventType;
+        itemDiv.appendChild(typeSpan);
+
+        var idSpan = document.createElement('span');
+        idSpan.className = 'tx-id';
+        idSpan.title = txId;
+        idSpan.textContent = shortTx;
+        itemDiv.appendChild(idSpan);
+
+        if (contractLogRepr) {
+            var logSpan = document.createElement('span');
+            logSpan.className = 'tx-log';
+            logSpan.textContent = contractLogRepr.slice(0, 80);
+            itemDiv.appendChild(logSpan);
+        }
+
+        listEl.appendChild(itemDiv);
+    });
+}
+
+/**
+ * Load and display network status information.
+ */
+function loadNetworkStatus() {
+    getNetworkInfo()
+        .then(function (data) {
+            var blockEl = document.getElementById('blockHeight');
+            var versionEl = document.getElementById('serverVersion');
+            if (blockEl && data.stacks_tip_height != null) {
+                blockEl.textContent = data.stacks_tip_height.toLocaleString();
+            }
+            if (versionEl && data.server_version) {
+                versionEl.textContent = data.server_version;
+            }
+        })
+        .catch(function (err) {
+            console.error('Failed to load network status:', err);
+        });
+}
+
 function encodePrincipal(address) {
     // Encode a principal as a Clarity value for read-only calls
     return '0x0516' + address;
@@ -223,6 +411,25 @@ function loadUserData(address) {
             .catch(function (err) {
                 console.error('Failed to load user yield:', err);
             });
+
+        // Load STX balance from Stacks extended API
+        getSTXBalance(address)
+            .then(function (data) {
+                try {
+                    var el = document.getElementById('userStxBalance');
+                    if (el && data && data.balance != null) {
+                        var stx = parseInt(data.balance, 10) / 1000000;
+                        el.textContent = stx.toLocaleString(undefined, {maximumFractionDigits: 2}) + ' STX';
+                    }
+                } catch (e) {
+                    console.error('Error parsing STX balance:', e);
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load STX balance:', err);
+                var el = document.getElementById('userStxBalance');
+                if (el) el.textContent = '-- STX';
+            });
     } catch (err) {
         console.error('loadUserData error:', err);
     }
@@ -261,9 +468,14 @@ function handleDeposit() {
             icon: window.location.origin + '/favicon.svg'
         },
         onFinish: function (data) {
-            alert('Deposit submitted! TX: ' + data.txId);
             amountInput.value = '';
-            loadVaultMetrics();
+            showTxStatus('Deposit pending: ' + data.txId, 'pending');
+            pollTxConfirmation(data.txId, function () {
+                showTxStatus('Deposit confirmed!', 'confirmed');
+                loadVaultMetrics();
+                loadUserData(userAddress);
+                loadContractEvents();
+            });
         },
         onCancel: function () {
             console.log('Deposit cancelled');
@@ -305,10 +517,14 @@ function handleWithdraw() {
             icon: window.location.origin + '/favicon.svg'
         },
         onFinish: function (data) {
-            alert('Withdrawal submitted! TX: ' + data.txId);
             amountInput.value = '';
-            loadVaultMetrics();
-            loadUserData(userAddress);
+            showTxStatus('Withdrawal pending: ' + data.txId, 'pending');
+            pollTxConfirmation(data.txId, function () {
+                showTxStatus('Withdrawal confirmed!', 'confirmed');
+                loadVaultMetrics();
+                loadUserData(userAddress);
+                loadContractEvents();
+            });
         },
         onCancel: function () {
             console.log('Withdrawal cancelled');
@@ -322,15 +538,68 @@ function handleWithdraw() {
     }
 }
 
+/**
+ * Call a read-only Clarity function (legacy wrapper using callContractReadOnly).
+ * @param {string} contract - Contract name
+ * @param {string} fnName - Function name
+ * @param {Array} args - Encoded arguments
+ * @returns {Promise<object>}
+ */
 function callReadOnly(contract, fnName, args) {
-    var url = API_URL + '/v2/contracts/call-read/' +
-        CONTRACT_ADDRESS + '/' + contract + '/' + fnName;
-    return fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            sender: CONTRACT_ADDRESS,
-            arguments: args || []
-        })
-    }).then(function (r) { return r.json(); });
+    return callContractReadOnly(CONTRACT_ADDRESS, contract, fnName, args);
+}
+
+/**
+ * Show transaction status message in the vault status area.
+ * @param {string} message - Status text to display
+ * @param {string} state - 'pending' or 'confirmed'
+ */
+function showTxStatus(message, state) {
+    var statusEl = document.getElementById('txStatus');
+    var textEl = document.getElementById('txStatusText');
+    if (!statusEl || !textEl) return;
+
+    textEl.textContent = message;
+    statusEl.className = 'tx-status tx-status-' + (state || 'pending');
+    statusEl.style.display = 'block';
+
+    if (state === 'confirmed') {
+        setTimeout(function () {
+            statusEl.style.display = 'none';
+        }, 5000);
+    }
+}
+
+/**
+ * Poll for transaction confirmation using getTransactionById.
+ * @param {string} txId - Transaction ID to poll
+ * @param {Function} onConfirmed - Callback when tx is confirmed
+ * @param {number} maxAttempts - Max polling attempts (default 30)
+ */
+function pollTxConfirmation(txId, onConfirmed, maxAttempts) {
+    var attempts = 0;
+    var max = maxAttempts || 30;
+    var intervalMs = 6000; // 6 second polling interval
+
+    function checkOnce() {
+        attempts++;
+        getTransactionById(txId)
+            .then(function (tx) {
+                if (tx && (tx.tx_status === 'success' || tx.tx_status === 'abort_by_response')) {
+                    if (typeof onConfirmed === 'function') onConfirmed(tx);
+                } else if (attempts < max) {
+                    setTimeout(checkOnce, intervalMs);
+                } else {
+                    showTxStatus('Transaction timed out. Check explorer.', 'error');
+                }
+            })
+            .catch(function (err) {
+                console.warn('TX poll error:', err);
+                if (attempts < max) {
+                    setTimeout(checkOnce, intervalMs);
+                }
+            });
+    }
+
+    setTimeout(checkOnce, intervalMs);
 }

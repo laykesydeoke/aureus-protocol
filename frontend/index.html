@@ -29,6 +29,8 @@
             <li><a href="#features">Features</a></li>
             <li><a href="#protocols">Protocols</a></li>
             <li><a href="#vault">Vault</a></li>
+            <li><a href="#transactions">Activity</a></li>
+            <li><a href="#network">Network</a></li>
         </ul>
         <button id="walletBtn" class="btn-wallet">Connect Wallet</button>
     </nav>
@@ -131,13 +133,45 @@
             <div class="vault-info">
                 <p>Your Deposit: <strong id="userDeposit">--</strong> sBTC</p>
                 <p>Earned Yield: <strong id="userYield">--</strong> sBTC</p>
+                <p>STX Balance: <strong id="userStxBalance">--</strong> STX</p>
             </div>
             <div class="vault-actions">
                 <input type="number" id="depositAmount" placeholder="Amount in sBTC" min="0">
                 <button id="depositBtn" class="btn-gold">Deposit</button>
                 <button id="withdrawBtn" class="btn-outline-dark">Withdraw</button>
             </div>
+            <div id="txStatus" class="tx-status" style="display:none;">
+                <span id="txStatusText">Transaction pending...</span>
+            </div>
             <p class="vault-note">Connect wallet to interact with the vault</p>
+        </div>
+    </section>
+
+    <section id="transactions" class="transactions">
+        <h2>Recent Contract Events</h2>
+        <div class="tx-panel">
+            <div id="txList" class="tx-list">
+                <p class="tx-empty">No recent events. Connect wallet or wait for activity.</p>
+            </div>
+            <button id="refreshTxBtn" class="btn-outline">Refresh Events</button>
+        </div>
+    </section>
+
+    <section id="network" class="network-status">
+        <h2>Network Status</h2>
+        <div class="network-grid">
+            <div class="network-item">
+                <span class="network-label">Block Height</span>
+                <span id="blockHeight" class="network-val">--</span>
+            </div>
+            <div class="network-item">
+                <span class="network-label">Network</span>
+                <span id="networkName" class="network-val">Testnet</span>
+            </div>
+            <div class="network-item">
+                <span class="network-label">Server Version</span>
+                <span id="serverVersion" class="network-val">--</span>
+            </div>
         </div>
     </section>
 
