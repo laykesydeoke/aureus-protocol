@@ -8,17 +8,17 @@ requirements = []
 
 [contracts.sip010-trait]
 path = 'contracts/sip010-trait.clar'
-clarity_version = 4
+clarity_version = 3
 epoch = 'latest'
 
 [contracts.mock-sbtc]
 path = 'contracts/mock-sbtc.clar'
-clarity_version = 4
+clarity_version = 3
 epoch = 'latest'
 
 [contracts.protocol-adapter]
 path = 'contracts/protocol-adapter.clar'
-clarity_version = 4
+clarity_version = 3
 epoch = 'latest'
 
 [contracts.yield-aggregator]

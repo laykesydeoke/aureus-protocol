@@ -31,10 +31,10 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
     it("verifies adapter is initialized with protocols", () => {
       // Check that protocols are initialized (beforeEach already called initialize-adapter)
       const zestInfo = simnet.callReadOnlyFn("protocol-adapter", "get-protocol-info", [Cl.uint(PROTOCOL_ZEST)], deployer);
-      expect(zestInfo.result).toBeOk();
+      expect(zestInfo.result.type).toBe('ok'); // ClarityType.ResponseOk = 7
 
       const velarInfo = simnet.callReadOnlyFn("protocol-adapter", "get-protocol-info", [Cl.uint(PROTOCOL_VELAR)], deployer);
-      expect(velarInfo.result).toBeOk();
+      expect(velarInfo.result.type).toBe('ok'); // ClarityType.ResponseOk = 7
     });
 
     it("prevents double initialization of adapter", () => {
@@ -55,7 +55,7 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
 
     it("returns all protocol rates correctly", () => {
       const allRates = simnet.callReadOnlyFn("protocol-adapter", "get-all-protocol-rates", [], deployer);
-      expect(allRates.result).toBeOk();
+      expect(allRates.result.type).toBe('ok'); // ClarityType.ResponseOk
       // Verify the structure contains the expected yield rates
     });
   });
@@ -304,7 +304,7 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
 
     it("returns correct protocol info", () => {
       const protocolInfo = simnet.callReadOnlyFn("protocol-adapter", "get-protocol-info", [Cl.uint(PROTOCOL_ZEST)], deployer);
-      expect(protocolInfo.result).toBeOk();
+      expect(protocolInfo.result.type).toBe('ok'); // ClarityType.ResponseOk
       // The result should be a some() containing protocol details
     });
 
@@ -365,7 +365,7 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
         [Cl.uint(PROTOCOL_ZEST)],
         deployer
       );
-      expect(perf.result).toBeOk();
+      expect(perf.result.type).toBe('ok'); // ClarityType.ResponseOk
     });
 
     it("record-protocol-yield updates yield tracking", () => {
@@ -383,7 +383,7 @@ describe("Aureus Protocol - Protocol Adapter Tests", () => {
         [Cl.uint(PROTOCOL_ZEST)],
         deployer
       );
-      expect(perf.result).toBeOk();
+      expect(perf.result.type).toBe('ok'); // ClarityType.ResponseOk
     });
 
     it("get-best-performing-protocol returns a valid protocol", () => {

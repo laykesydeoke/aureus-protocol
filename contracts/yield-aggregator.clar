@@ -110,31 +110,34 @@
     (asserts! (<= amount total-available) ERR_INSUFFICIENT_BALANCE)
 
     ;; Transfer tokens back from contract vault to user via contract-as-sender helper
-    (try! (vault-transfer token amount caller))
-
-    ;; Update user balances
-    (let ((new-deposit
-      (if (<= amount user-deposit)
-        (begin
-          (map-set user-yield-earned caller user-yield)
-          (- user-deposit amount))
-        (begin
-          (map-set user-yield-earned caller (- user-yield (- amount user-deposit)))
-          u0)
-      )))
-      (map-set user-deposits caller new-deposit)
-      ;; Recalculate and update user tier based on new deposit
-      (map-set user-tier caller (calculate-tier new-deposit))
-      ;; Update total deposits
-      (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
-      ;; Record withdrawal in history
-      (let ((withdrawal-id (var-get withdrawal-counter)))
-        (map-set withdrawal-history withdrawal-id
-          {user: caller, amount: amount, block-height: stacks-block-height})
-        (var-set withdrawal-counter (+ withdrawal-id u1))
+    (match (vault-transfer token amount caller)
+      success (begin
+        ;; Update user balances
+        (let ((new-deposit
+          (if (<= amount user-deposit)
+            (begin
+              (map-set user-yield-earned caller user-yield)
+              (- user-deposit amount))
+            (begin
+              (map-set user-yield-earned caller (- user-yield (- amount user-deposit)))
+              u0)
+          )))
+          (map-set user-deposits caller new-deposit)
+          ;; Recalculate and update user tier based on new deposit
+          (map-set user-tier caller (calculate-tier new-deposit))
+          ;; Update total deposits
+          (var-set total-deposits (- (var-get total-deposits) (min amount user-deposit)))
+          ;; Record withdrawal in history
+          (let ((withdrawal-id (var-get withdrawal-counter)))
+            (map-set withdrawal-history withdrawal-id
+              {user: caller, amount: amount, block-height: stacks-block-height})
+            (var-set withdrawal-counter (+ withdrawal-id u1))
+          )
+          (print {event: "withdrawal", user: caller, amount: amount, new-tier: (calculate-tier new-deposit)})
+          (ok true)
+        )
       )
-      (print {event: "withdrawal", user: caller, amount: amount, new-tier: (calculate-tier new-deposit)})
-      (ok true)
+      error ERR_WITHDRAWAL_FAILED
     )
   )
 )
