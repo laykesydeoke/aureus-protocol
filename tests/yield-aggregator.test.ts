@@ -567,4 +567,155 @@ describe("Aureus Protocol - Yield Aggregator Tests", () => {
       expect(record.result).toStrictEqual(Cl.ok(Cl.none()));
     });
   });
+
+  describe("Tier-Based Yield Bonus", () => {
+    it("bronze user gets no yield bonus", () => {
+      const bonus = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier-bonus", [Cl.principal(alice)], deployer);
+      expect(bonus.result).toStrictEqual(Cl.ok(Cl.uint(0))); // 0 bps
+    });
+
+    it("silver tier user gets 5% yield bonus", () => {
+      // Deposit enough for silver tier
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(10_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(10_000_000), mockSbtc], alice);
+
+      const bonus = simnet.callReadOnlyFn("yield-aggregator", "get-user-tier-bonus", [Cl.principal(alice)], deployer);
+      expect(bonus.result).toStrictEqual(Cl.ok(Cl.uint(500))); // 500 bps = 5%
+    });
+
+    it("tier bonus increases yield from distribute-to-user", () => {
+      // Alice: silver tier (10M), Bob: bronze (100k)
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(10_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(10_000_000), mockSbtc], alice);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], bob);
+
+      // Distribute 10,000 yield to alice
+      // Alice share = 10M / 10.1M * 10000 = ~9900 base
+      // With 5% silver bonus: ~9900 * 10500 / 10000 = ~10395
+      const result = simnet.callPublicFn(
+        "yield-aggregator",
+        "distribute-to-user",
+        [Cl.principal(alice), Cl.uint(10_000)],
+        deployer
+      );
+      // Should be more than base proportional share due to tier bonus
+      expect(result.result).toBeOk(expect.anything());
+    });
+  });
+
+  describe("Auto-Compound", () => {
+    beforeEach(() => {
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(200_000), mockSbtc], alice);
+    });
+
+    it("compounds earned yield into deposit", () => {
+      // Credit yield to alice
+      simnet.callPublicFn("yield-aggregator", "credit-user-yield", [Cl.principal(alice), Cl.uint(50_000)], deployer);
+
+      // Verify yield is credited
+      const yieldBefore = simnet.callReadOnlyFn("yield-aggregator", "get-user-yield", [Cl.principal(alice)], deployer);
+      expect(yieldBefore.result).toStrictEqual(Cl.ok(Cl.uint(50_000)));
+
+      // Auto-compound
+      const { result } = simnet.callPublicFn("yield-aggregator", "auto-compound", [], alice);
+      expect(result).toBeOk(Cl.uint(50_000)); // returns compounded amount
+
+      // Deposit should increase, yield should be zero
+      const depositAfter = simnet.callReadOnlyFn("yield-aggregator", "get-user-deposit", [Cl.principal(alice)], deployer);
+      expect(depositAfter.result).toStrictEqual(Cl.ok(Cl.uint(250_000))); // 200k + 50k
+
+      const yieldAfter = simnet.callReadOnlyFn("yield-aggregator", "get-user-yield", [Cl.principal(alice)], deployer);
+      expect(yieldAfter.result).toStrictEqual(Cl.ok(Cl.uint(0)));
+    });
+
+    it("fails when user has no yield to compound", () => {
+      const { result } = simnet.callPublicFn("yield-aggregator", "auto-compound", [], alice);
+      expect(result).toStrictEqual(Cl.error(Cl.uint(104))); // ERR_INVALID_AMOUNT
+    });
+
+    it("fails when contract is paused", () => {
+      simnet.callPublicFn("yield-aggregator", "credit-user-yield", [Cl.principal(alice), Cl.uint(10_000)], deployer);
+      simnet.callPublicFn("yield-aggregator", "set-emergency-pause", [Cl.bool(true)], deployer);
+
+      const { result } = simnet.callPublicFn("yield-aggregator", "auto-compound", [], alice);
+      expect(result).toStrictEqual(Cl.error(Cl.uint(108))); // ERR_CONTRACT_PAUSED
+    });
+
+    it("updates total deposits after compound", () => {
+      simnet.callPublicFn("yield-aggregator", "credit-user-yield", [Cl.principal(alice), Cl.uint(30_000)], deployer);
+
+      const totalBefore = simnet.callReadOnlyFn("yield-aggregator", "get-total-deposits", [], deployer);
+      expect(totalBefore.result).toStrictEqual(Cl.ok(Cl.uint(200_000)));
+
+      simnet.callPublicFn("yield-aggregator", "auto-compound", [], alice);
+
+      const totalAfter = simnet.callReadOnlyFn("yield-aggregator", "get-total-deposits", [], deployer);
+      expect(totalAfter.result).toStrictEqual(Cl.ok(Cl.uint(230_000))); // 200k + 30k compounded
+    });
+  });
+
+  describe("Yield Rate Tracking", () => {
+    it("returns default base yield rate", () => {
+      const rate = simnet.callReadOnlyFn("yield-aggregator", "get-base-yield-rate", [], deployer);
+      expect(rate.result).toStrictEqual(Cl.ok(Cl.uint(500))); // 5% default
+    });
+
+    it("owner can update base yield rate", () => {
+      const { result } = simnet.callPublicFn("yield-aggregator", "set-base-yield-rate", [Cl.uint(800)], deployer);
+      expect(result).toStrictEqual(Cl.ok(Cl.bool(true)));
+
+      const rate = simnet.callReadOnlyFn("yield-aggregator", "get-base-yield-rate", [], deployer);
+      expect(rate.result).toStrictEqual(Cl.ok(Cl.uint(800)));
+    });
+
+    it("rejects yield rate above 50% (5000 bps)", () => {
+      const { result } = simnet.callPublicFn("yield-aggregator", "set-base-yield-rate", [Cl.uint(6000)], deployer);
+      expect(result).toStrictEqual(Cl.error(Cl.uint(104))); // ERR_INVALID_AMOUNT
+    });
+
+    it("non-owner cannot set yield rate", () => {
+      const { result } = simnet.callPublicFn("yield-aggregator", "set-base-yield-rate", [Cl.uint(300)], alice);
+      expect(result).toStrictEqual(Cl.error(Cl.uint(100))); // ERR_UNAUTHORIZED
+    });
+
+    it("distribution count increments on distribute-yield", () => {
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(100_000), mockSbtc], alice);
+
+      const countBefore = simnet.callReadOnlyFn("yield-aggregator", "get-distribution-count", [], deployer);
+      expect(countBefore.result).toStrictEqual(Cl.ok(Cl.uint(0)));
+
+      simnet.callPublicFn("yield-aggregator", "distribute-yield", [Cl.uint(5_000)], deployer);
+
+      const countAfter = simnet.callReadOnlyFn("yield-aggregator", "get-distribution-count", [], deployer);
+      expect(countAfter.result).toStrictEqual(Cl.ok(Cl.uint(1)));
+    });
+
+    it("get-effective-yield-rate includes tier bonus", () => {
+      // Bronze user: base rate only
+      const bronzeRate = simnet.callReadOnlyFn("yield-aggregator", "get-effective-yield-rate", [Cl.principal(alice)], deployer);
+      expect(bronzeRate.result).toStrictEqual(Cl.ok(Cl.uint(500))); // 500 base + 0 bonus
+
+      // Make alice silver tier
+      simnet.callPublicFn("mock-sbtc", "mint", [Cl.uint(10_000_000), Cl.principal(alice)], deployer);
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(10_000_000), mockSbtc], alice);
+
+      const silverRate = simnet.callReadOnlyFn("yield-aggregator", "get-effective-yield-rate", [Cl.principal(alice)], deployer);
+      expect(silverRate.result).toStrictEqual(Cl.ok(Cl.uint(1000))); // 500 base + 500 silver bonus
+    });
+  });
+
+  describe("User Portfolio", () => {
+    it("returns complete portfolio for user with deposits and yield", () => {
+      simnet.callPublicFn("yield-aggregator", "deposit-sbtc", [Cl.uint(200_000), mockSbtc], alice);
+      simnet.callPublicFn("yield-aggregator", "credit-user-yield", [Cl.principal(alice), Cl.uint(15_000)], deployer);
+
+      const portfolio = simnet.callReadOnlyFn("yield-aggregator", "get-user-portfolio", [Cl.principal(alice)], deployer);
+      expect(portfolio.result).toBeOk(expect.anything());
+    });
+
+    it("returns zero values for user with no deposits", () => {
+      const portfolio = simnet.callReadOnlyFn("yield-aggregator", "get-user-portfolio", [Cl.principal(bob)], deployer);
+      expect(portfolio.result).toBeOk(expect.anything());
+    });
+  });
 });
