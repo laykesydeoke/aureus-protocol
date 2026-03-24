@@ -82,4 +82,9 @@ plan:
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/yield-aggregator.clar
             clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: rewards-distributor
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/rewards-distributor.clar
+            clarity-version: 3
       epoch: "3.2"

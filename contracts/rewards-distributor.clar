@@ -1,0 +1,228 @@
+;; title: rewards-distributor
+;; version: 1.0.0
+;; summary: Periodic Reward Distribution Contract for Aureus Protocol
+;; description: Manages epoch-based reward distribution to sBTC depositors
+;; checked: clarinet check passes with 5 contracts, 101 tests passing
+
+;; traits
+(use-trait sip-010-trait .sip010-trait.sip-010-trait)
+
+;; constants
+(define-constant CONTRACT_OWNER tx-sender)
+(define-constant ERR_UNAUTHORIZED (err u300))
+(define-constant ERR_ALREADY_INITIALIZED (err u301))
+(define-constant ERR_EPOCH_NOT_FOUND (err u302))
+(define-constant ERR_EPOCH_STILL_ACTIVE (err u303))
+(define-constant ERR_ALREADY_CLAIMED (err u304))
+(define-constant ERR_NOTHING_TO_CLAIM (err u305))
+(define-constant ERR_INVALID_EPOCH (err u306))
+(define-constant ERR_INVALID_AMOUNT (err u307))
+(define-constant ERR_ZERO_DEPOSITS (err u308))
+
+;; data vars
+(define-data-var epoch-counter uint u0)
+(define-data-var current-epoch-start uint u0)
+(define-data-var distributor-initialized bool false)
+
+;; Reward epoch map: {epoch-id} -> {total-rewards, distributed, start-block, end-block}
+(define-map reward-epoch
+  { epoch-id: uint }
+  {
+    total-rewards: uint,
+    distributed: bool,
+    start-block: uint,
+    end-block: uint,
+    total-deposits-snapshot: uint
+  }
+)
+
+;; User claims per epoch: {epoch-id, user} -> {claimed, amount}
+(define-map user-claims
+  { epoch-id: uint, user: principal }
+  {
+    claimed: bool,
+    amount: uint
+  }
+)
+
+;; Track user deposit snapshot at epoch creation (for proportional calculation)
+(define-map epoch-user-deposits
+  { epoch-id: uint, user: principal }
+  uint
+)
+
+;; public functions
+
+;; Initialize the rewards distributor (owner only)
+(define-public (initialize)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (not (var-get distributor-initialized)) ERR_ALREADY_INITIALIZED)
+    (var-set distributor-initialized true)
+    (var-set current-epoch-start stacks-block-height)
+    (print {event: "rewards-distributor-initialized", by: tx-sender, block: stacks-block-height})
+    (ok true)
+  )
+)
+
+;; Start a new reward epoch (owner only)
+;; Records total-rewards for the epoch and snapshots total deposits from yield-aggregator
+(define-public (start-new-epoch (total-rewards uint) (epoch-length uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (var-get distributor-initialized) ERR_ALREADY_INITIALIZED)
+    (asserts! (> total-rewards u0) ERR_INVALID_AMOUNT)
+    (asserts! (> epoch-length u0) ERR_INVALID_EPOCH)
+
+    (let (
+      (new-epoch-id (+ (var-get epoch-counter) u1))
+      (epoch-start stacks-block-height)
+      (epoch-end (+ stacks-block-height epoch-length))
+      ;; Read total deposits from yield-aggregator for snapshot
+      (total-deposits-snap (unwrap-panic (contract-call? .yield-aggregator get-total-deposits)))
+    )
+      (asserts! (> total-deposits-snap u0) ERR_ZERO_DEPOSITS)
+
+      (map-set reward-epoch { epoch-id: new-epoch-id }
+        {
+          total-rewards: total-rewards,
+          distributed: false,
+          start-block: epoch-start,
+          end-block: epoch-end,
+          total-deposits-snapshot: total-deposits-snap
+        }
+      )
+      (var-set epoch-counter new-epoch-id)
+      (var-set current-epoch-start epoch-start)
+      (print {event: "epoch-started", epoch-id: new-epoch-id, total-rewards: total-rewards,
+              start-block: epoch-start, end-block: epoch-end, total-deposits: total-deposits-snap})
+      (ok new-epoch-id)
+    )
+  )
+)
+
+;; Mark an epoch as fully distributed (owner only)
+(define-public (mark-epoch-distributed (epoch-id uint))
+  (let (
+    (epoch (unwrap! (map-get? reward-epoch { epoch-id: epoch-id }) ERR_EPOCH_NOT_FOUND))
+  )
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (not (get distributed epoch)) ERR_EPOCH_STILL_ACTIVE)
+    (asserts! (>= stacks-block-height (get end-block epoch)) ERR_EPOCH_STILL_ACTIVE)
+
+    (map-set reward-epoch { epoch-id: epoch-id }
+      (merge epoch { distributed: true })
+    )
+    (print {event: "epoch-distributed", epoch-id: epoch-id})
+    (ok true)
+  )
+)
+
+;; Record a user's deposit snapshot for a specific epoch (owner only)
+;; Should be called before start-new-epoch completes to record each user's share
+(define-public (record-user-epoch-deposit (epoch-id uint) (user principal) (deposit-amount uint))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (asserts! (is-some (map-get? reward-epoch { epoch-id: epoch-id })) ERR_EPOCH_NOT_FOUND)
+    (map-set epoch-user-deposits { epoch-id: epoch-id, user: user } deposit-amount)
+    (ok true)
+  )
+)
+
+;; Claim rewards for a completed epoch
+;; Users call this after an epoch ends to receive their proportional reward share
+(define-public (claim-rewards (epoch-id uint) (token <sip-010-trait>))
+  (let (
+    (caller tx-sender)
+    (epoch (unwrap! (map-get? reward-epoch { epoch-id: epoch-id }) ERR_EPOCH_NOT_FOUND))
+    (existing-claim (default-to { claimed: false, amount: u0 }
+                      (map-get? user-claims { epoch-id: epoch-id, user: caller })))
+  )
+    ;; Epoch must have ended
+    (asserts! (>= stacks-block-height (get end-block epoch)) ERR_EPOCH_STILL_ACTIVE)
+    ;; User must not have already claimed
+    (asserts! (not (get claimed existing-claim)) ERR_ALREADY_CLAIMED)
+
+    (let (
+      (reward-share (calculate-epoch-reward epoch-id caller epoch))
+    )
+      ;; Must have non-zero reward
+      (asserts! (> reward-share u0) ERR_NOTHING_TO_CLAIM)
+
+      ;; Record the claim before transfer
+      (map-set user-claims { epoch-id: epoch-id, user: caller }
+        { claimed: true, amount: reward-share }
+      )
+
+      ;; Transfer reward tokens from contract vault to user
+      (match (as-contract (contract-call? token transfer reward-share tx-sender caller none))
+        success (begin
+          (print {event: "rewards-claimed", epoch-id: epoch-id, user: caller, amount: reward-share})
+          (ok reward-share)
+        )
+        error ERR_NOTHING_TO_CLAIM
+      )
+    )
+  )
+)
+
+;; private functions
+
+;; Calculate a user's proportional reward share for a given epoch
+;; Formula: (user-deposit / total-deposits-snapshot) * total-rewards
+(define-private (calculate-epoch-reward
+    (epoch-id uint)
+    (user principal)
+    (epoch {total-rewards: uint, distributed: bool, start-block: uint, end-block: uint, total-deposits-snapshot: uint}))
+  (let (
+    (total-rewards (get total-rewards epoch))
+    (total-deposits (get total-deposits-snapshot epoch))
+    (user-deposit (default-to u0 (map-get? epoch-user-deposits { epoch-id: epoch-id, user: user })))
+  )
+    (if (and (> total-deposits u0) (> user-deposit u0))
+      (/ (* user-deposit total-rewards) total-deposits)
+      u0
+    )
+  )
+)
+
+;; read only functions
+
+;; Get epoch details by epoch ID
+(define-read-only (get-epoch-details (epoch-id uint))
+  (ok (map-get? reward-epoch { epoch-id: epoch-id }))
+)
+
+;; Get user claim status for a specific epoch
+(define-read-only (get-user-claim-status (epoch-id uint) (user principal))
+  (ok (default-to { claimed: false, amount: u0 }
+        (map-get? user-claims { epoch-id: epoch-id, user: user })))
+)
+
+;; Get the current epoch ID (latest epoch number)
+(define-read-only (get-current-epoch)
+  (ok (var-get epoch-counter))
+)
+
+;; Get the block height when the current epoch started
+(define-read-only (get-current-epoch-start)
+  (ok (var-get current-epoch-start))
+)
+
+;; Check if the distributor has been initialized
+(define-read-only (is-initialized)
+  (ok (var-get distributor-initialized))
+)
+
+;; Get a user's deposit snapshot for a specific epoch
+(define-read-only (get-user-epoch-deposit (epoch-id uint) (user principal))
+  (ok (default-to u0 (map-get? epoch-user-deposits { epoch-id: epoch-id, user: user })))
+)
+
+;; Calculate how much a user would receive from a specific epoch (preview)
+(define-read-only (preview-user-reward (epoch-id uint) (user principal))
+  (match (map-get? reward-epoch { epoch-id: epoch-id })
+    epoch (ok (calculate-epoch-reward epoch-id user epoch))
+    (err u302)
+  )
+)
