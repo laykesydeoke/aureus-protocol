@@ -95,6 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadContractEvents();
     loadNetworkStatus();
     checkExistingSession();
+    // Auto-refresh network status every 30 seconds
+    setInterval(loadNetworkStatus, 30000);
 });
 
 function checkExistingSession() {
@@ -179,6 +181,8 @@ function onConnected(address) {
     btn.classList.add('connected');
     loadUserData(address);
     loadVaultMetrics();
+    loadNetworkStatus();
+    loadContractEvents();
 }
 
 function loadProtocolRates() {
