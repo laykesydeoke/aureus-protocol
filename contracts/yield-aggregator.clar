@@ -244,6 +244,34 @@
     (print {event: "min-deposit-updated", new-min: new-min, by: tx-sender})
     (ok true)))
 
+;; Auto-compound: move earned yield into deposit balance
+;; This increases the user's principal, so future yield calculations
+;; are based on a larger deposit, creating a compounding effect.
+(define-public (auto-compound)
+  (let (
+    (caller tx-sender)
+    (user-yield (default-to u0 (map-get? user-yield-earned caller)))
+    (current-deposit (default-to u0 (map-get? user-deposits caller)))
+    (new-deposit (+ current-deposit user-yield))
+  )
+    (asserts! (var-get contract-initialized) ERR_NOT_INITIALIZED)
+    (asserts! (not (var-get emergency-pause)) ERR_CONTRACT_PAUSED)
+    (asserts! (> user-yield u0) ERR_INVALID_AMOUNT)
+    (asserts! (<= new-deposit (var-get max-deposit-per-user)) ERR_INVALID_AMOUNT)
+    (asserts! (<= (+ (var-get total-deposits) user-yield) (var-get max-total-deposits)) ERR_INVALID_AMOUNT)
+
+    ;; Move yield into deposit
+    (map-set user-deposits caller new-deposit)
+    (map-set user-yield-earned caller u0)
+    ;; Update tier based on new deposit total
+    (map-set user-tier caller (calculate-tier new-deposit))
+    ;; Increase total deposits by compounded yield
+    (var-set total-deposits (+ (var-get total-deposits) user-yield))
+    (print {event: "auto-compound", user: caller, compounded: user-yield, new-deposit: new-deposit})
+    (ok user-yield)
+  )
+)
+
 ;; read only functions
 
 ;; Get user deposit balance
