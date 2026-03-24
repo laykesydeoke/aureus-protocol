@@ -407,6 +407,25 @@ function loadUserData(address) {
             .catch(function (err) {
                 console.error('Failed to load user yield:', err);
             });
+
+        // Load STX balance from Stacks extended API
+        getSTXBalance(address)
+            .then(function (data) {
+                try {
+                    var el = document.getElementById('userStxBalance');
+                    if (el && data && data.balance != null) {
+                        var stx = parseInt(data.balance, 10) / 1000000;
+                        el.textContent = stx.toLocaleString(undefined, {maximumFractionDigits: 2}) + ' STX';
+                    }
+                } catch (e) {
+                    console.error('Error parsing STX balance:', e);
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load STX balance:', err);
+                var el = document.getElementById('userStxBalance');
+                if (el) el.textContent = '-- STX';
+            });
     } catch (err) {
         console.error('loadUserData error:', err);
     }
