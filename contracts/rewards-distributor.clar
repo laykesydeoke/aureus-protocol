@@ -164,3 +164,23 @@
     )
   )
 )
+
+;; private functions
+
+;; Calculate a user's proportional reward share for a given epoch
+;; Formula: (user-deposit / total-deposits-snapshot) * total-rewards
+(define-private (calculate-epoch-reward
+    (epoch-id uint)
+    (user principal)
+    (epoch {total-rewards: uint, distributed: bool, start-block: uint, end-block: uint, total-deposits-snapshot: uint}))
+  (let (
+    (total-rewards (get total-rewards epoch))
+    (total-deposits (get total-deposits-snapshot epoch))
+    (user-deposit (default-to u0 (map-get? epoch-user-deposits { epoch-id: epoch-id, user: user })))
+  )
+    (if (and (> total-deposits u0) (> user-deposit u0))
+      (/ (* user-deposit total-rewards) total-deposits)
+      u0
+    )
+  )
+)
