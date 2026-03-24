@@ -89,7 +89,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('walletBtn').addEventListener('click', handleWalletClick);
     document.getElementById('depositBtn').addEventListener('click', handleDeposit);
     document.getElementById('withdrawBtn').addEventListener('click', handleWithdraw);
+    var refreshBtn = document.getElementById('refreshTxBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadContractEvents);
     loadProtocolRates();
+    loadContractEvents();
+    loadNetworkStatus();
     checkExistingSession();
 });
 
@@ -253,6 +257,108 @@ function loadVaultMetrics() {
     } catch (err) {
         console.error('loadVaultMetrics error:', err);
     }
+}
+
+/**
+ * Load recent contract events from yield-aggregator and display in the transactions panel.
+ */
+function loadContractEvents() {
+    var contractId = CONTRACT_ADDRESS + '.yield-aggregator';
+    var listEl = document.getElementById('txList');
+    if (listEl) {
+        listEl.textContent = '';
+        var loadingP = document.createElement('p');
+        loadingP.className = 'tx-loading';
+        loadingP.textContent = 'Loading events...';
+        listEl.appendChild(loadingP);
+    }
+
+    getContractEvents(contractId, 10)
+        .then(function (data) {
+            renderContractEvents(data);
+        })
+        .catch(function (err) {
+            console.error('Failed to load contract events:', err);
+            if (listEl) {
+                listEl.textContent = '';
+                var emptyP = document.createElement('p');
+                emptyP.className = 'tx-empty';
+                emptyP.textContent = 'Could not load events. Check API connectivity.';
+                listEl.appendChild(emptyP);
+            }
+        });
+}
+
+/**
+ * Render contract events into the transactions panel using safe DOM methods.
+ * @param {object} data - API response with results array
+ */
+function renderContractEvents(data) {
+    var listEl = document.getElementById('txList');
+    if (!listEl) return;
+
+    listEl.textContent = '';
+
+    if (!data || !data.results || data.results.length === 0) {
+        var emptyP = document.createElement('p');
+        emptyP.className = 'tx-empty';
+        emptyP.textContent = 'No recent contract events found.';
+        listEl.appendChild(emptyP);
+        return;
+    }
+
+    data.results.forEach(function (event) {
+        var eventType = event.event_type || 'unknown';
+        var txId = event.tx_id || '';
+        var shortTx = txId ? txId.slice(0, 10) + '...' : 'N/A';
+        var contractLogRepr = '';
+        if (event.contract_log && event.contract_log.value) {
+            contractLogRepr = event.contract_log.value.repr || '';
+        }
+
+        var itemDiv = document.createElement('div');
+        itemDiv.className = 'tx-item';
+
+        var typeSpan = document.createElement('span');
+        typeSpan.className = 'tx-type';
+        typeSpan.textContent = eventType;
+        itemDiv.appendChild(typeSpan);
+
+        var idSpan = document.createElement('span');
+        idSpan.className = 'tx-id';
+        idSpan.title = txId;
+        idSpan.textContent = shortTx;
+        itemDiv.appendChild(idSpan);
+
+        if (contractLogRepr) {
+            var logSpan = document.createElement('span');
+            logSpan.className = 'tx-log';
+            logSpan.textContent = contractLogRepr.slice(0, 80);
+            itemDiv.appendChild(logSpan);
+        }
+
+        listEl.appendChild(itemDiv);
+    });
+}
+
+/**
+ * Load and display network status information.
+ */
+function loadNetworkStatus() {
+    getNetworkInfo()
+        .then(function (data) {
+            var blockEl = document.getElementById('blockHeight');
+            var versionEl = document.getElementById('serverVersion');
+            if (blockEl && data.stacks_tip_height != null) {
+                blockEl.textContent = data.stacks_tip_height.toLocaleString();
+            }
+            if (versionEl && data.server_version) {
+                versionEl.textContent = data.server_version;
+            }
+        })
+        .catch(function (err) {
+            console.error('Failed to load network status:', err);
+        });
 }
 
 function encodePrincipal(address) {
