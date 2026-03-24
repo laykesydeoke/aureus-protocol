@@ -41,6 +41,12 @@
 (define-constant TIER_GOLD_THRESHOLD u50000000)   ;; 50M sats
 (define-constant TIER_PLATINUM_THRESHOLD u100000000) ;; 100M sats
 
+;; Tier-based yield bonus in basis points (added on top of base yield)
+(define-constant TIER_BONUS_BRONZE u0)       ;; 0% bonus
+(define-constant TIER_BONUS_SILVER u500)     ;; 5% bonus
+(define-constant TIER_BONUS_GOLD u1000)      ;; 10% bonus
+(define-constant TIER_BONUS_PLATINUM u2000)  ;; 20% bonus
+
 (define-map user-tier principal uint)
 
 ;; Per-user deposit cap
@@ -282,6 +288,10 @@
 (define-read-only (get-max-total-deposits)
   (ok (var-get max-total-deposits)))
 
+;; Get yield bonus for a user based on their tier (basis points)
+(define-read-only (get-user-tier-bonus (user principal))
+  (ok (get-tier-bonus (default-to TIER_BRONZE (map-get? user-tier user)))))
+
 ;; Get user deposit history
 (define-read-only (get-user-deposit-history (user principal))
   (ok (default-to (list) (map-get? deposit-history user)))
@@ -334,14 +344,25 @@
   (if (< a b) a b)
 )
 
-;; Calculate proportional yield for a user
+;; Get yield bonus for a given tier (basis points)
+(define-private (get-tier-bonus (tier uint))
+  (if (is-eq tier TIER_PLATINUM) TIER_BONUS_PLATINUM
+    (if (is-eq tier TIER_GOLD) TIER_BONUS_GOLD
+      (if (is-eq tier TIER_SILVER) TIER_BONUS_SILVER
+        TIER_BONUS_BRONZE))))
+
+;; Calculate proportional yield for a user with tier bonus
 (define-private (calculate-user-yield (user principal) (total-yield uint))
   (let (
     (user-deposit (default-to u0 (map-get? user-deposits user)))
     (contract-total-deposits (var-get total-deposits))
+    (user-current-tier (default-to TIER_BRONZE (map-get? user-tier user)))
+    (tier-bonus (get-tier-bonus user-current-tier))
   )
     (if (> contract-total-deposits u0)
-      (/ (* user-deposit total-yield) contract-total-deposits)
+      (let ((base-yield (/ (* user-deposit total-yield) contract-total-deposits)))
+        ;; Apply tier bonus: base-yield * (10000 + bonus) / 10000
+        (/ (* base-yield (+ u10000 tier-bonus)) u10000))
       u0
     )
   )
